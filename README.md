@@ -14,7 +14,8 @@
 ### Organization
 
 Keep in mind the name of the branch you are associated to.  
-Member | Branch |
+
+Member | Branch
 --- | ---
 Arielle| `character-recognition`
 Ferdinand | `character-recognition`
