@@ -2,6 +2,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "NeuralNetwork.h"
 #include "Image.h"
 
 int main()
@@ -32,6 +33,8 @@ int main()
 	// -------------------------------
 	// STEP 3 : CHARACTERS RECOGNITION
 	// -------------------------------
+
+	HelloWorld();
 
 	// ----------------------------
 	// STEP 4 : GUI AND TEXT EXPORT
