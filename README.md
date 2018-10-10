@@ -13,7 +13,7 @@
 
 ### Organization
 
-Keep in mind the name of the branch you are associated to.
+Keep in mind the name of the branch you are associated to.  
 Member | Branch |
 --- | ---
 Arielle| `character-recognition`
@@ -32,8 +32,8 @@ At the beginning (if you use git in the terminal):
 6. `git branch [your branch]`
 7. `git checkout [your branch]`
 
-Make sure you are working on your branch: 
-View your current branch with `git branch`. 
+Make sure you are working on your branch:  
+View your current branch with `git branch`.  
 Switch to your branch with `git checkout [your branch]`. 
 
 After each significant modification:
