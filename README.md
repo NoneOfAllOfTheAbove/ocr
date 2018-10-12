@@ -4,6 +4,8 @@
 
 ## Usage
 
+Requirements: `SDL2`, `SDL2_image` and `GTK+ 3`.  
+
 1. Clone this repository with `git clone git@github.com:NoneOfAllOfTheAbove/OCR.git`.
 2. Compile the project by running the command `make` in the project folder.
 3. Execute the program with `./OCR`.
