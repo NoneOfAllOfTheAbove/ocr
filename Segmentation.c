@@ -31,10 +31,10 @@ void Labelling(double **matrix)
       }
     }
   }
-  
+
 }
 
-void _CheckNeighbours(int x, int y, int[][] labels, double **matrix)
+void _CheckNeighbours(int x, int y, int labels[][], double **matrix)
 {
   //Checking the 8 neighbours.
   //For each neighbours, if it is black we check in labels for labels
