@@ -1,6 +1,6 @@
 CC = gcc
 BIN = OCR
-SRC = main.c Image.c
+SRC = main.c Image.c Segmentation.c
 CFLAGS = -Wall -Wextra -std=c99
 GTK = $$(pkg-config --libs --cflags gtk+-3.0)
 
