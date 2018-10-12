@@ -3,10 +3,10 @@
 #include <SDL2/SDL_image.h>
 
 #include "Image.h"
+#include "DemoGUI.h"
 
 int main()
 {
-
 	// ----------------------------------------
 	// STEP 1 : IMAGE LOADING AND PREPROCESSING
 	// ----------------------------------------
@@ -24,6 +24,8 @@ int main()
 		*(matrix + i) = (double *)malloc(sizeof(double) * imageHeight);
 	}
 	ImageToMatrix(imageSurface, matrix);
+
+	StartDemoGUI(imageWidth, imageHeight, matrix);
 
 	// -----------------------------
 	// STEP 2 : CHARACTERS DETECTION
