@@ -15,35 +15,34 @@
 
 Keep in mind the name of the branch you are associated to.  
 
-Member | Branch
---- | ---
-Arielle| `character-recognition`
-Ferdinand | `character-recognition`
-Louis| `character-detection`
-Theo| `master`
+Member | Branch | Source file
+--- | --- | --- |
+Arielle| `character-recognition`| `NeuralNetwork.c`
+Ferdinand | `character-recognition`| `NeuralNetwork.c`
+Louis| `character-detection`| `Segmentation.c`
+Theo| `master`| `*.c`
 
 ### Workflow
 
 At the beginning (if you use git in the terminal):
 1. Configure the connection to github.com by [refering to this](https://help.github.com/articles/connecting-to-github-with-ssh/).
-2. `git config --global user.name [your first name]` and `git config --global user.email [mail adress used on github.com]`
-3. `git clone git@github.com:NoneOfAllOfTheAbove/OCR.git`
-4. Go inside the repository folder and initalize git with 'git init'.
-5. `git remote add origin git@github.com:NoneOfAllOfTheAbove/OCR.git`
-6. `git branch [your branch]`
-7. `git checkout [your branch]`
+2. `git config --global user.name [your first name]`  
+`git config --global user.email [mail adress used on github.com]`
+3. `git clone git@github.com:NoneOfAllOfTheAbove/OCR.git --branch [your branch]` *(see above for branch name)*
 
-Make sure you are working on your branch:  
-View your current branch with `git branch`.  
-Switch to your branch with `git checkout [your branch]`. 
+Before working:
+1. Make sure you are working on your branch: `git branch`
+2. Pull potential modifications (if you work on a branch with collaborators): `git pull`
 
 After each significant modification:
-1. `git add *`
-2. `git commit -m "Well detailed message."`
-3. `git push origin [your branch]` *(see above)*
+1. `git status`
+2. `git add *`
+3. `git commit -m "Well detailed message."`
+4. `git push`
 
 ### Rules
 
 1. Respect the book of specifications (work on Linux, code guidelines...).
-2. Push only on your corresponding branch (the branch with the name of the feature you are working on, refer to the list of branches).
+2. Push only on your corresponding branch (the branch with the name of the feature you are working on, refer to the table above).
 3. Do commit regularly and describe what you have done in the commit message.
+4. Your functions must be put inside a separate .c file (with its corresponding .h file) and called from main.c (refer to the table above).
