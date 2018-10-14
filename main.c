@@ -5,9 +5,9 @@
 #include "NeuralNetwork.h"
 #include "Image.h"
 
+
 int main()
 {
-
 	// ----------------------------------------
 	// STEP 1 : IMAGE LOADING AND PREPROCESSING
 	// ----------------------------------------
@@ -34,11 +34,12 @@ int main()
 	// STEP 3 : CHARACTERS RECOGNITION
 	// -------------------------------
 
-	HelloWorld();
+	Start(2, 3, 2);
+	PrintGlobalValues();
+
 
 	// ----------------------------
 	// STEP 4 : GUI AND TEXT EXPORT
 	// ----------------------------
-
 	return 0;
 }
