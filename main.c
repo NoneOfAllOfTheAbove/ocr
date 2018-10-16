@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <math.h>
 
 #include "NeuralNetwork.h"
 #include "Image.h"
@@ -82,6 +83,10 @@ printf ("\n\nb = \t");
         printf("%f\n\t\t", output[i]);
     }
 	printf("\n");
+
+	printf("%f\n", exp(1.6578));
+
+	//printf("\n%f\n\n", exp(1.0000));
 
 
 	// ----------------------------

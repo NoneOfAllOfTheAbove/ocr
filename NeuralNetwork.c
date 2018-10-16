@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
-// Define global values that represents our neural network. The names are explicit you should be able to understand to what each value correspond.
+// Define global values that represents our neural network. The names are
+// explicit you should be able to understand to what each value correspond.
 
 size_t numberInputNodes;
 size_t numberHiddenNodes;
@@ -17,7 +19,8 @@ double **weightHiddenToOutput;
 
 
 
-// Define the functions that are going to be needed when calling Start to prevent compile errors and warnings.
+// Define the functions that are going to be needed when calling Start to
+// prevent compile errors and warnings.
 
 double** ConstructMatrix(size_t line, size_t column);
 double* ConstructArray(size_t size);
@@ -26,9 +29,10 @@ double* ConstructArray(size_t size);
 
 
 
-// Start is the function that initializes all the global values ~ thus, our neural network ~ , defined previously 
-// according to the numbers of neurons in the Input Layer, in the Hidden Layer and in the Output Layer. 
-// Then it fills all the matrices and arrays with random doubles between -1 and 1.
+// Start is the function that initializes all the global values ~ thus, our
+// neural network ~ , defined previously according to the numbers of neurons
+// in the Input Layer, in the Hidden Layer and in the Output Layer. Then it
+// fills all the matrices and arrays with random doubles between -1 and 1.
 
 void Start(size_t inputNodes, size_t hiddenNodes, size_t outputNodes)
 {
@@ -38,21 +42,26 @@ void Start(size_t inputNodes, size_t hiddenNodes, size_t outputNodes)
 	
 	srand(time(NULL)); // seed the rand()
 
-	biasHiddenLayer = ConstructArray(hiddenNodes); // construction of the array biasHiddenLayer, fill it with random values
+
+        // construction of the array biasHiddenLayer, fill it with random values
+	biasHiddenLayer = ConstructArray(hiddenNodes); 
         for (size_t i = 0; i < hiddenNodes; i++)
         {
                 biasHiddenLayer[i] = (rand()/(double)RAND_MAX) * 2 - 1;
         }
 
 
-	biasOutput = ConstructArray(outputNodes); // construction of the array biasOutput, fill it with random values
+        // construction of the array biasOutput, fill it with random values
+	biasOutput = ConstructArray(outputNodes); 
         for (size_t i = 0; i < outputNodes; i++)
         {
                 biasOutput[i] = (rand()/(double)RAND_MAX) * 2 - 1;
         }
 	
 
-	weightInputToHidden = ConstructMatrix(inputNodes, hiddenNodes); // construction of the 2-dimensional matrix weigthInputToHidden, fill it with random values
+        // construction of the 2-dimensional matrix weigthInputToHidden,
+        // fill it with random values
+	weightInputToHidden = ConstructMatrix(inputNodes, hiddenNodes); 
 	for (size_t j = 0; j < inputNodes; j++)
         {
                 for (size_t k = 0; k < hiddenNodes; k++)
@@ -60,11 +69,14 @@ void Start(size_t inputNodes, size_t hiddenNodes, size_t outputNodes)
         }
 
 	
-	weightHiddenToOutput = ConstructMatrix(hiddenNodes, outputNodes); // construction of the 2-dimensional matrix weigthHiddenToOutput, fill it with random values
+        // construction of the 2-dimensional matrix weigthHiddenToOutput,
+        // fill it with random values
+	weightHiddenToOutput = ConstructMatrix(hiddenNodes, outputNodes); 
 	for (size_t j = 0; j < hiddenNodes; j++)
         {
                 for (size_t k = 0; k < outputNodes; k++)
-                        weightHiddenToOutput[j][k] = (rand()/(double)RAND_MAX) * 2 - 1;
+                    
+		        weightHiddenToOutput[j][k] = (rand()/(double)RAND_MAX) * 2 - 1;
         }
 }
                                                                                 
@@ -72,9 +84,11 @@ void Start(size_t inputNodes, size_t hiddenNodes, size_t outputNodes)
 
 
 
-// This function creates and return a 2-dimensional matrix of size line * column, to do so it is going to return a **pointer.
-// The dynamic allocation of the memory (malloc) permit to let the sizes of the matrix to determine at the moment of the compilation
-// and create a matrix of the exact needed size.
+// This function creates and return a 2-dimensional matrix of size
+// line * column, to do so it is going to return a **pointer.
+// The dynamic allocation of the memory (malloc) permit to let the sizes of
+// the matrix to determine at the moment of the compilation and create a matrix
+// of the exact needed size.
 
 double** ConstructMatrix(size_t line, size_t column) 
 {
@@ -89,9 +103,10 @@ double** ConstructMatrix(size_t line, size_t column)
 
 
 
-// This function creates and return a 1-dimensional matrix (an array) of size size, to do so it is going to return a *pointer.
-// The dynamic allocation of the memory (malloc) permit to let the size of the matrix to determine at the moment of the compilation
-// and create a matrix of the exact needed size.
+// This function creates and return a 1-dimensional matrix (an array) of size
+// size, to do so it is going to return a *pointer. The dynamic allocation of
+// the memory (malloc) permit to let the size of the matrix to determine at 
+// the moment of the compilation and create a matrix of the exact needed size.
 
 double* ConstructArray(size_t size)
 {
@@ -104,7 +119,7 @@ double* ConstructArray(size_t size)
 
 
 
-//  ------------------------------------------- if you want to print your global values decomment the part you need --------------------------------------------------
+//-----If you want to print your global values decomment the part you need-----
 
 void PrintGlobalValues()
 {
@@ -155,27 +170,50 @@ void PrintGlobalValues()
 
 double* Predict(double inputs[])
 {
-	double *hiddenres = ConstructArray(numberHiddenNodes);
+        // get the result from the transition of Input to Hidden
+        // layer by computing the weighted sum add the bias and apply
+        // sigmoid to every element of hiddenres.
+
+	double *hiddenRes = ConstructArray(numberHiddenNodes);
         for (size_t i = 0; i < numberHiddenNodes; i++)
-                hiddenres[i] = 0;
+                hiddenRes[i] = 0;
         for (size_t j = 0; j < numberHiddenNodes; j++)
         {
                 for (size_t i = 0; i < numberInputNodes; i++)
-                        hiddenres[j] += inputs[i] * weightInputToHidden[i][j];
+                {
+                        hiddenRes[j] += inputs[i] * weightInputToHidden[i][j];
+                }
+                hiddenRes[j] += biasHiddenLayer[j];
         }
-        // bias et sigmoid
-        
-        double *output = ConstructArray(numberOutputNodes);
+
+        // Sigmoid
+        for (size_t i = 0; i < numberHiddenNodes; i++)
+                hiddenRes[i] = 1 / (1 + exp(-hiddenRes[i]));
+
+
+        // get the result from the transition of Hidden to Output
+        // layer by computing the weighted sum add the bias and apply
+        // sigmoid to every element of output.
+
+        double *outputs = ConstructArray(numberOutputNodes);
+        double sumsoftmax = 0;
         for (size_t i = 0; i < numberOutputNodes; i++)
-                output[i] = 0;
+                outputs[i] = 0;
         for (size_t j = 0; j < numberOutputNodes; j++)
         {
                 for (size_t i = 0; i < numberHiddenNodes; i++)
-                        output[j] += hiddenres[i] * weightHiddenToOutput[i][j];
+                        outputs[j] += hiddenRes[i] * weightHiddenToOutput[i][j];
+                outputs[j] += biasOutput[j];
+                // Create the sum of exp(outputs[j]) needed for the softmax
+                // activation function.
+                sumsoftmax += exp(outputs[j]);
         }
-        // bias et softmax
 
-        return output;
+        // softmax
+        for (size_t i = 0; i < numberOutputNodes; i++)
+                outputs[i] = exp(outputs[i]) / sumsoftmax;
+
+        return outputs; // matrix containing each output neuron's probability
 }
 
 
@@ -187,9 +225,9 @@ double* Predict(double inputs[])
 
 //double* MultArrayMatrix(double arrayInput[], double matrixWeight[][])
 //{
-//        size_t lengthArrayInput = sizeof(arrayInput) / sizeof(arrayInput[0]);
-//        size_t lengthMatrixWeight = sizeof(matrixWeight) / sizeof(matrixWeight[0][0]);
-//        double* res = ConstructArray(lengthArrayInput, length);
+//size_t lengthArrayInput = sizeof(arrayInput) / sizeof(arrayInput[0]);
+//size_t lengthMatrixWeight = sizeof(matrixWeight) / sizeof(matrixWeight[0][0]);
+//double* res = ConstructArray(lengthArrayInput, length);
 //}
 
 
