@@ -1,7 +1,11 @@
-void Start(int inputNodes, int hiddenNodes, int outputNodes);
+void Start(size_t inputNodes, size_t hiddenNodes, size_t outputNodes);
 
-double** ConstructMatrix(int line, int column);
+double** ConstructMatrix(size_t line, size_t column);
 
-double* ConstructArray(int size);
+double* ConstructArray(size_t size);
 
 void PrintGlobalValues();
+
+double* Predict(double input[]);
+
+//double* MultArrayMatrix(double arrayInput[], double matrixWeight[][]);
