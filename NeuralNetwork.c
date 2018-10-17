@@ -19,11 +19,38 @@ double **weightHiddenToOutput;
 
 
 
-// Define the functions that are going to be needed when calling Start to
-// prevent compile errors and warnings.
+// This function creates and return a 2-dimensional matrix of size
+// line * column, to do so it is going to return a **pointer.
+// The dynamic allocation of the memory (malloc) permit to let the sizes of
+// the matrix to determine at the moment of the compilation and create a matrix
+// of the exact needed size.
 
-double** ConstructMatrix(size_t line, size_t column);
-double* ConstructArray(size_t size);
+double** ConstructMatrix(size_t line, size_t column) 
+{
+	double **matrix = (double **) malloc(sizeof(double *) * column);
+	for (size_t i = 0; i < line; i++)
+        {
+                *(matrix + i) = (double *)malloc(sizeof(double) * column);
+        }
+	return matrix;
+}
+
+
+
+
+// This function creates and return a 1-dimensional matrix (an array) of size
+// size, to do so it is going to return a *pointer. The dynamic allocation of
+// the memory (malloc) permit to let the size of the matrix to determine at 
+// the moment of the compilation and create a matrix of the exact needed size.
+
+double* ConstructArray(size_t size)
+{
+	double *array = (double *) malloc(sizeof(double) * size);
+	return array;
+}
+
+
+
 
 
 
@@ -83,87 +110,7 @@ void Start(size_t inputNodes, size_t hiddenNodes, size_t outputNodes)
 
 
 
-
-// This function creates and return a 2-dimensional matrix of size
-// line * column, to do so it is going to return a **pointer.
-// The dynamic allocation of the memory (malloc) permit to let the sizes of
-// the matrix to determine at the moment of the compilation and create a matrix
-// of the exact needed size.
-
-double** ConstructMatrix(size_t line, size_t column) 
-{
-	double **matrix = (double **) malloc(sizeof(double *) * column);
-	for (size_t i = 0; i < line; i++)
-        {
-                *(matrix + i) = (double *)malloc(sizeof(double) * column);
-        }
-	return matrix;
-}
-
-
-
-
-// This function creates and return a 1-dimensional matrix (an array) of size
-// size, to do so it is going to return a *pointer. The dynamic allocation of
-// the memory (malloc) permit to let the size of the matrix to determine at 
-// the moment of the compilation and create a matrix of the exact needed size.
-
-double* ConstructArray(size_t size)
-{
-	double *array = (double *) malloc(sizeof(double) * size);
-	return array;
-}
-
-
-
-
-
-
-//-----If you want to print your global values decomment the part you need-----
-
-void PrintGlobalValues()
-{
-/*
-        printf("\nnumberInputNodes = %d\n", numberInputNodes);
-        printf("\nnumberHiddenNodes = %d\n", numberHiddenNodes);
-        printf("\nnumberOutputNodes = %d\n", numberOutputNodes);
-
-
-	printf ("\n\nweightInputToHidden = \t");
-        for (int i = 0; i < numberInputNodes; i++)
-        {
-                for (int j = 0; j < numberHiddenNodes; j++)
-                {
-                        printf("%f      ", weightInputToHidden[i][j]);
-                }
-                printf("\n\t\t\t");
-        }
-
-        printf ("\n\nweightHiddenToOutput = \t");
-        for (int i = 0; i < numberHiddenNodes; i++)
-        {
-                for (int j = 0; j < numberOutputNodes; j++)
-                {
-                        printf("%f      ", weightHiddenToOutput[i][j]);
-                }
-                printf("\n\t\t\t");
-        }
-
-        printf ("\n\nbiasHiddenLayer = \t");
-        for (int i = 0; i < numberHiddenNodes; i++)
-        {
-                printf("%f\n\t\t\t", biasHiddenLayer[i]);
-        }
-
-        printf ("\n\nbiasOutput = \t");
-        for (int i = 0; i < numberOutputNodes; i++)
-        {
-                printf("%f\n\t\t", biasOutput[i]);
-        }
-        printf("\n");
-*/
-}
-
+// --------------------------------Predict-------------------------------------
 
 
 
@@ -191,6 +138,18 @@ double* Predict(double inputs[])
                 hiddenRes[i] = 1 / (1 + exp(-hiddenRes[i]));
 
 
+        // just to test
+        printf ("\n\nhidden = \t");
+        for (size_t i = 0; i < numberOutputNodes; i++)
+        {
+                printf("%f\n\t\t", hiddenRes[i]);
+        }
+        printf("\n");
+
+
+
+
+
         // get the result from the transition of Hidden to Output
         // layer by computing the weighted sum add the bias and apply
         // sigmoid to every element of output.
@@ -213,6 +172,14 @@ double* Predict(double inputs[])
         for (size_t i = 0; i < numberOutputNodes; i++)
                 outputs[i] = exp(outputs[i]) / sumsoftmax;
 
+        // just to test 
+        printf ("\n\nprediction = \t");
+        for (size_t i = 0; i < numberOutputNodes; i++)
+        {
+                printf("%f\n\t\t", outputs[i]);
+        }
+        printf("\n");
+
         return outputs; // matrix containing each output neuron's probability
 }
 
@@ -223,12 +190,6 @@ double* Predict(double inputs[])
 
 
 
-//double* MultArrayMatrix(double arrayInput[], double matrixWeight[][])
-//{
-//size_t lengthArrayInput = sizeof(arrayInput) / sizeof(arrayInput[0]);
-//size_t lengthMatrixWeight = sizeof(matrixWeight) / sizeof(matrixWeight[0][0]);
-//double* res = ConstructArray(lengthArrayInput, length);
-//}
 
 
 
@@ -242,9 +203,52 @@ double* Predict(double inputs[])
 
 
 
+//-----------------------------------------------------------------------------
+
+//-----If you want to print your global values decomment the part you need-----
+
+void PrintGlobalValues()
+{
+
+        printf("\nnumberInputNodes = %ld\n", numberInputNodes);
+        printf("\nnumberHiddenNodes = %ld\n", numberHiddenNodes);
+        printf("\nnumberOutputNodes = %ld\n", numberOutputNodes);
 
 
+	printf ("\n\nweightInputToHidden = \t");
+        for (size_t i = 0; i < numberInputNodes; i++)
+        {
+                for (size_t j = 0; j < numberHiddenNodes; j++)
+                {
+                        printf("%f      ", weightInputToHidden[i][j]);
+                }
+                printf("\n\t\t\t");
+        }
 
+        printf ("\n\nweightHiddenToOutput = \t");
+        for (size_t i = 0; i < numberHiddenNodes; i++)
+        {
+                for (size_t j = 0; j < numberOutputNodes; j++)
+                {
+                        printf("%f      ", weightHiddenToOutput[i][j]);
+                }
+                printf("\n\t\t\t");
+        }
+
+        printf ("\n\nbiasHiddenLayer = \t");
+        for (size_t i = 0; i < numberHiddenNodes; i++)
+        {
+                printf("%f\n\t\t\t", biasHiddenLayer[i]);
+        }
+
+        printf ("\n\nbiasOutput = \t");
+        for (size_t i = 0; i < numberOutputNodes; i++)
+        {
+                printf("%f\n\t\t", biasOutput[i]);
+        }
+        printf("\n");
+
+}
 
 
 

@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <math.h>
 
 #include "NeuralNetwork.h"
 #include "Image.h"
@@ -35,10 +34,13 @@ int main()
 	// STEP 3 : CHARACTERS RECOGNITION
 	// -------------------------------
 
-	//Start(2, 3, 2);
-	//PrintGlobalValues();
+	double input[] = {1, 0};
 
-	double a[] = {4, 5, 6};
+	Start(2, 2, 2);
+	PrintGlobalValues();
+	Predict(input);
+
+/*	double a[] = {4, 5, 6};
 	double **b = ConstructMatrix(3, 3);
 	int k = 1;
 	for (int i = 0; i < 3; i++)
@@ -87,7 +89,7 @@ printf ("\n\nb = \t");
 	printf("%f\n", exp(1.6578));
 
 	//printf("\n%f\n\n", exp(1.0000));
-
+*/
 
 	// ----------------------------
 	// STEP 4 : GUI AND TEXT EXPORT
