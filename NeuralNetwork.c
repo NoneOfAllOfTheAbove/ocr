@@ -173,7 +173,7 @@ double* Predict(double inputs[])
                 outputs[i] = 1 / (1 + exp(-outputs[i]));
 
         /*double sumsoftmax = 0;
-        for (size_t i = 0; i < numberOutputNodes; i++)
+        for (size_t i = 0; i < numberOutputNodes; i++) with a 2 x 2 x 1 neural net, with a bias in the input and hidden layers, using the sigmoid activation funct
                 outputs[i] = 0;
         for (size_t j = 0; j < numberOutputNodes; j++)
         {
@@ -227,6 +227,7 @@ void Train(double inputs[], double targets[])
                 hiddenRes[j] += biasHiddenLayer[j];
         }
 
+
         // Sigmoid
         for (size_t i = 0; i < numberHiddenNodes; i++)
                 hiddenRes[i] = 1 / (1 + exp(-hiddenRes[i]));
@@ -235,9 +236,8 @@ void Train(double inputs[], double targets[])
         //layer and the hidden layer. It is also the input to the 
         //feedforward between hidden and output.
 
-
         double *outputs = ConstructArray(numberOutputNodes);
-        /*double sumsoftmax = 0;
+        //double sumsoftmax = 0;
         for (size_t i = 0; i < numberOutputNodes; i++)
                 outputs[i] = 0;
         for (size_t j = 0; j < numberOutputNodes; j++)
@@ -247,14 +247,15 @@ void Train(double inputs[], double targets[])
                 outputs[j] += biasOutput[j];
                 // Create the sum of exp(outputs[j]) needed for the softmax
                 // activation function.
-                sumsoftmax += exp(outputs[j]);
+                //sumsoftmax += exp(outputs[j]);
         }
 
         // softmax
-        for (size_t i = 0; i < numberOutputNodes; i++)
-                outputs[i] = exp(outputs[i]) / sumsoftmax;
+        /**for (size_t i = 0; i < numberOutputNodes; i++)
+                outputs[i] = exp(outputs[i]) / sumsoftmax;**/
         
-*/
+        
+
         for (size_t i = 0; i < numberOutputNodes; i++)
                 outputs[i] = 0;
         for (size_t j = 0; j < numberOutputNodes; j++)
@@ -316,12 +317,13 @@ void Train(double inputs[], double targets[])
         double *errorHidden = ConstructArray(numberHiddenNodes);
         for (size_t i = 0; i < numberHiddenNodes; i++)
                 errorHidden[i] = 0;
+        
         for (size_t i = 0; i < numberHiddenNodes; i++)
         {
                 for (size_t j = 0; j < numberOutputNodes; j++)
-                        errorHidden[i] += errorOutput[j] * weightInputToHidden[i][j];
+                        errorHidden[i] += errorOutput[j] * weightHiddenToOutput[i][j];
         }
-
+        
         // Calculate the gradient
         for (size_t i = 0; i < numberHiddenNodes; i++)
         {
@@ -344,7 +346,6 @@ void Train(double inputs[], double targets[])
                 for (size_t j = 0; j < numberHiddenNodes; j++)
                         weightInputToHidden[i][j] += deltaWeightInputToHidden[i][j];
         }
-
         for (size_t i = 0; i < numberHiddenNodes; i++)
                 biasHiddenLayer[i] += hiddenRes[i];
 }

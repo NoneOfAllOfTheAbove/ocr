@@ -37,19 +37,20 @@ int main()
 	// -------------------------------
 
 	double input1[] = {1, 0};
-	double output1[] = {1, 0};
+	double output1[] = {1};
 
 	double input2[] = {0, 1};
-	double output2[] = {1, 0};
+	double output2[] = {1};
 	
 	double input3[] = {1, 1};
-	double output3[] = {0, 1};
+	double output3[] = {0};
 
 	double input4[] = {0, 0};
-	double output4[] = {0, 1};
+	double output4[] = {0};
 
-	Start(2, 3, 2);
+	Start(2, 2, 1);
 	PrintGlobalValues();
+	Predict(input1);
 	Predict(input1);
 	Predict(input2);
 	Predict(input3);
@@ -57,20 +58,21 @@ int main()
 
 	//printf("\n\n----------------------------------------------------------\n\n");
 
-	/*srand(time(NULL));
+	srand(time(NULL));
 	long t;
-	for (int i = 0; i < 5000; i++)
+	for (int i = 0; i < 50; i++)
 	{
 		t = rand() % 4;
-		if (t = 0)
+		printf("%ld \n", t);
+		if (t == 0)
 		{
 			Train(input1, output1);
 		}
-		if (t = 1)
+		if (t == 1)
 		{
 			Train(input2, output2);
 		}
-		if (t = 3)
+		if (t == 3)
 		{
 			Train(input3, output3);
 		}
@@ -78,14 +80,9 @@ int main()
 		{
 			Train(input4, output4);
 		}
-	}*/
-
-
-	for (int i = 0; i < 50; i++)
-	{
-		printf("hello lol");
-		Train(input1, output1);
 	}
+
+
 	
 	PrintGlobalValues();
 	Predict(input1);
