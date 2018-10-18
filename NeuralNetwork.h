@@ -8,4 +8,6 @@ void PrintGlobalValues();
 
 double* Predict(double input[]);
 
+void Train(double inputs[], double targets[]);
+
 //double* MultArrayMatrix(double arrayInput[], double matrixWeight[][]);

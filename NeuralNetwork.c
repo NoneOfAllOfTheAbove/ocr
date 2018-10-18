@@ -52,6 +52,7 @@ double* ConstructArray(size_t size)
 
 
 
+// ----------------------------------Start----------------------------------
 
 
 
@@ -138,13 +139,13 @@ double* Predict(double inputs[])
                 hiddenRes[i] = 1 / (1 + exp(-hiddenRes[i]));
 
 
-        // just to test
+        /*// just to test
         printf ("\n\nhidden = \t");
         for (size_t i = 0; i < numberOutputNodes; i++)
         {
                 printf("%f\n\t\t", hiddenRes[i]);
         }
-        printf("\n");
+        printf("\n");*/
 
 
 
@@ -155,7 +156,23 @@ double* Predict(double inputs[])
         // sigmoid to every element of output.
 
         double *outputs = ConstructArray(numberOutputNodes);
-        double sumsoftmax = 0;
+
+          for (size_t i = 0; i < numberOutputNodes; i++)
+                outputs[i] = 0;
+        for (size_t j = 0; j < numberOutputNodes; j++)
+        {
+                for (size_t i = 0; i < numberHiddenNodes; i++)
+                {
+                        outputs[j] += hiddenRes[i] * weightHiddenToOutput[i][j];
+                }
+                outputs[j] += biasOutput[j];
+        }
+
+        // Sigmoid
+        for (size_t i = 0; i < numberOutputNodes; i++)
+                outputs[i] = 1 / (1 + exp(-outputs[i]));
+
+        /*double sumsoftmax = 0;
         for (size_t i = 0; i < numberOutputNodes; i++)
                 outputs[i] = 0;
         for (size_t j = 0; j < numberOutputNodes; j++)
@@ -170,7 +187,7 @@ double* Predict(double inputs[])
 
         // softmax
         for (size_t i = 0; i < numberOutputNodes; i++)
-                outputs[i] = exp(outputs[i]) / sumsoftmax;
+                outputs[i] = exp(outputs[i]) / sumsoftmax;*/
 
         // just to test 
         printf ("\n\nprediction = \t");
@@ -187,19 +204,150 @@ double* Predict(double inputs[])
 
 
 
+// ---------------------------------Train--------------------------------------
 
 
 
 
+void Train(double inputs[], double targets[])
+{
+        // get the result from the transition of Input to Hidden
+        // layer by computing the weighted sum add the bias and apply
+        // sigmoid to every element of hiddenres.
+
+	double *hiddenRes = ConstructArray(numberHiddenNodes);
+        for (size_t i = 0; i < numberHiddenNodes; i++)
+                hiddenRes[i] = 0;
+        for (size_t j = 0; j < numberHiddenNodes; j++)
+        {
+                for (size_t i = 0; i < numberInputNodes; i++)
+                {
+                        hiddenRes[j] += inputs[i] * weightInputToHidden[i][j];
+                }
+                hiddenRes[j] += biasHiddenLayer[j];
+        }
+
+        // Sigmoid
+        for (size_t i = 0; i < numberHiddenNodes; i++)
+                hiddenRes[i] = 1 / (1 + exp(-hiddenRes[i]));
+
+        // hiddenRes is the output of the feedforwad between the input
+        //layer and the hidden layer. It is also the input to the 
+        //feedforward between hidden and output.
 
 
+        double *outputs = ConstructArray(numberOutputNodes);
+        /*double sumsoftmax = 0;
+        for (size_t i = 0; i < numberOutputNodes; i++)
+                outputs[i] = 0;
+        for (size_t j = 0; j < numberOutputNodes; j++)
+        {
+                for (size_t i = 0; i < numberHiddenNodes; i++)
+                        outputs[j] += hiddenRes[i] * weightHiddenToOutput[i][j];
+                outputs[j] += biasOutput[j];
+                // Create the sum of exp(outputs[j]) needed for the softmax
+                // activation function.
+                sumsoftmax += exp(outputs[j]);
+        }
+
+        // softmax
+        for (size_t i = 0; i < numberOutputNodes; i++)
+                outputs[i] = exp(outputs[i]) / sumsoftmax;
+        
+*/
+        for (size_t i = 0; i < numberOutputNodes; i++)
+                outputs[i] = 0;
+        for (size_t j = 0; j < numberOutputNodes; j++)
+        {
+                for (size_t i = 0; i < numberHiddenNodes; i++)
+                {
+                        outputs[j] += hiddenRes[i] * weightHiddenToOutput[i][j];
+                }
+                outputs[j] += biasOutput[j];
+        }
+
+        // Sigmoid
+        for (size_t i = 0; i < numberOutputNodes; i++)
+                outputs[i] = 1 / (1 + exp(-outputs[i]));
+
+        double learningRate = 0.1;
+
+        //----------------------Hidden to Output---------------------------
+        // calculate the error of the output layer
+        double *errorOutput = ConstructArray(numberOutputNodes);
+        for (size_t i = 0; i < numberOutputNodes; i++)
+                errorOutput[i] = targets[i] - outputs[i];
+
+        // calculate the gradient
+        for (size_t i = 0; i < numberOutputNodes; i++)
+        {
+                outputs[i] = (outputs[i] * (1 - outputs[i])) * errorOutput[i] 
+                * learningRate;
+        }
+
+        // Finally create the delta weight matrix
+        // if error look here first ! (matrix dimension)
+        double **deltaWeightHiddenToOutput = 
+        ConstructMatrix(numberHiddenNodes, numberOutputNodes);
+
+        for (size_t i = 0; i < numberHiddenNodes; i++)
+        {
+                for (size_t j = 0; j < numberOutputNodes; j++)
+                        deltaWeightHiddenToOutput[i][j] = hiddenRes[i] * outputs[j];
+        }
+
+        // Add the deltaweight to the weight between the hidden layer and the output layer
+        // and the outputs matrix to the bias of the ouputs matrix
+        for (size_t i = 0; i < numberHiddenNodes; i++)
+        {
+                for (size_t j = 0; j < numberOutputNodes; j++)
+                        weightHiddenToOutput[i][j] += deltaWeightHiddenToOutput[i][j];
+        }
+        for (size_t i = 0; i < numberOutputNodes; i++)
+                biasOutput[i] += outputs[i];
+        
 
 
+        // ---------------------------Input to Hidden------------------------------------
+        // calculate the error of the hidden layer which is the matrix product :
+        // weight*errorOutput
 
+        // LOOK HERE IF THERE ARE ERRORS
+        double *errorHidden = ConstructArray(numberHiddenNodes);
+        for (size_t i = 0; i < numberHiddenNodes; i++)
+                errorHidden[i] = 0;
+        for (size_t i = 0; i < numberHiddenNodes; i++)
+        {
+                for (size_t j = 0; j < numberOutputNodes; j++)
+                        errorHidden[i] += errorOutput[j] * weightInputToHidden[i][j];
+        }
 
+        // Calculate the gradient
+        for (size_t i = 0; i < numberHiddenNodes; i++)
+        {
+                hiddenRes[i] = (hiddenRes[i] * (1 - hiddenRes[i])) * errorOutput[i]
+                * learningRate;
+        }
 
+        // Finally create the deltaweight matrix
+        double **deltaWeightInputToHidden = ConstructMatrix(numberInputNodes, numberHiddenNodes);
 
+        for (size_t i = 0; i < numberInputNodes; i++)
+        {
+                for (size_t j = 0; j < numberHiddenNodes; j++)
+                        deltaWeightInputToHidden[i][j] = inputs[i] * outputs[j];
+        }
 
+        // Add everything
+        for (size_t i = 0; i < numberInputNodes; i++)
+        {
+                for (size_t j = 0; j < numberHiddenNodes; j++)
+                        weightInputToHidden[i][j] += deltaWeightInputToHidden[i][j];
+        }
+
+        for (size_t i = 0; i < numberHiddenNodes; i++)
+                biasHiddenLayer[i] += hiddenRes[i];
+}
 
 
 
@@ -249,25 +397,3 @@ void PrintGlobalValues()
         printf("\n");
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

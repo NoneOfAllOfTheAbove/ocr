@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+// just for tests
+#include <time.h>
 
 #include "NeuralNetwork.h"
 #include "Image.h"
@@ -34,11 +36,65 @@ int main()
 	// STEP 3 : CHARACTERS RECOGNITION
 	// -------------------------------
 
-	double input[] = {1, 0};
+	double input1[] = {1, 0};
+	double output1[] = {1, 0};
 
-	Start(2, 2, 2);
+	double input2[] = {0, 1};
+	double output2[] = {1, 0};
+	
+	double input3[] = {1, 1};
+	double output3[] = {0, 1};
+
+	double input4[] = {0, 0};
+	double output4[] = {0, 1};
+
+	Start(2, 3, 2);
 	PrintGlobalValues();
-	Predict(input);
+	Predict(input1);
+	Predict(input2);
+	Predict(input3);
+	Predict(input4);
+
+	//printf("\n\n----------------------------------------------------------\n\n");
+
+	/*srand(time(NULL));
+	long t;
+	for (int i = 0; i < 5000; i++)
+	{
+		t = rand() % 4;
+		if (t = 0)
+		{
+			Train(input1, output1);
+		}
+		if (t = 1)
+		{
+			Train(input2, output2);
+		}
+		if (t = 3)
+		{
+			Train(input3, output3);
+		}
+		else
+		{
+			Train(input4, output4);
+		}
+	}*/
+
+
+	for (int i = 0; i < 50; i++)
+	{
+		printf("hello lol");
+		Train(input1, output1);
+	}
+	
+	PrintGlobalValues();
+	Predict(input1);
+	Predict(input2);
+	Predict(input3);
+	Predict(input4);
+
+
+
 
 /*	double a[] = {4, 5, 6};
 	double **b = ConstructMatrix(3, 3);
