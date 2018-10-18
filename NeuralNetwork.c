@@ -238,6 +238,7 @@ void Train(double inputs[], double targets[])
 
         double *outputs = ConstructArray(numberOutputNodes);
         //double sumsoftmax = 0;
+       /*
         for (size_t i = 0; i < numberOutputNodes; i++)
                 outputs[i] = 0;
         for (size_t j = 0; j < numberOutputNodes; j++)
@@ -251,10 +252,10 @@ void Train(double inputs[], double targets[])
         }
 
         // softmax
-        /**for (size_t i = 0; i < numberOutputNodes; i++)
-                outputs[i] = exp(outputs[i]) / sumsoftmax;**/
-        
-        
+        for (size_t i = 0; i < numberOutputNodes; i++)
+                outputs[i] = exp(outputs[i]) / sumsoftmax;
+
+        */
 
         for (size_t i = 0; i < numberOutputNodes; i++)
                 outputs[i] = 0;
@@ -271,7 +272,7 @@ void Train(double inputs[], double targets[])
         for (size_t i = 0; i < numberOutputNodes; i++)
                 outputs[i] = 1 / (1 + exp(-outputs[i]));
 
-        double learningRate = 0.1;
+        double learningRate = 0.3;
 
         //----------------------Hidden to Output---------------------------
         // calculate the error of the output layer
@@ -327,7 +328,7 @@ void Train(double inputs[], double targets[])
         // Calculate the gradient
         for (size_t i = 0; i < numberHiddenNodes; i++)
         {
-                hiddenRes[i] = (hiddenRes[i] * (1 - hiddenRes[i])) * errorOutput[i]
+                hiddenRes[i] = (hiddenRes[i] * (1 - hiddenRes[i])) * errorHidden[i] // *errorHidden instead 
                 * learningRate;
         }
 
@@ -337,7 +338,7 @@ void Train(double inputs[], double targets[])
         for (size_t i = 0; i < numberInputNodes; i++)
         {
                 for (size_t j = 0; j < numberHiddenNodes; j++)
-                        deltaWeightInputToHidden[i][j] = inputs[i] * outputs[j];
+                        deltaWeightInputToHidden[i][j] = inputs[i] * hiddenRes[j]; //CHECK HERE ! * hiddenRes[j]
         }
 
         // Add everything
@@ -369,7 +370,7 @@ void PrintGlobalValues()
         {
                 for (size_t j = 0; j < numberHiddenNodes; j++)
                 {
-                        printf("%f      ", weightInputToHidden[i][j]);
+                        printf("%f", weightInputToHidden[i][j]);
                 }
                 printf("\n\t\t\t");
         }
@@ -379,7 +380,7 @@ void PrintGlobalValues()
         {
                 for (size_t j = 0; j < numberOutputNodes; j++)
                 {
-                        printf("%f      ", weightHiddenToOutput[i][j]);
+                        printf("%f", weightHiddenToOutput[i][j]);
                 }
                 printf("\n\t\t\t");
         }

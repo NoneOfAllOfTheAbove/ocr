@@ -50,20 +50,27 @@ int main()
 
 	Start(2, 2, 1);
 	PrintGlobalValues();
+	
+	printf("[1-0 -> 1]");
 	Predict(input1);
-	Predict(input1);
+	
+	printf("[0-1 -> 1]");
 	Predict(input2);
+
+	printf("[1-1 -> 0]");
 	Predict(input3);
+
+	printf("[0-0 -> 0]");
 	Predict(input4);
 
 	//printf("\n\n----------------------------------------------------------\n\n");
 
 	srand(time(NULL));
 	long t;
-	for (int i = 0; i < 50; i++)
+	for (int i = 0; i < 50000; i++)
 	{
 		t = rand() % 4;
-		printf("%ld \n", t);
+		//printf("%ld \n", t);
 		if (t == 0)
 		{
 			Train(input1, output1);
@@ -72,7 +79,7 @@ int main()
 		{
 			Train(input2, output2);
 		}
-		if (t == 3)
+		if (t == 2)
 		{
 			Train(input3, output3);
 		}
@@ -85,9 +92,16 @@ int main()
 
 	
 	PrintGlobalValues();
+	printf("[1-0 -> 1]");
 	Predict(input1);
+	
+	printf("[0-1 -> 1]");
 	Predict(input2);
+
+	printf("[1-1 -> 0]");
 	Predict(input3);
+
+	printf("[0-0 -> 0]");
 	Predict(input4);
 
 
