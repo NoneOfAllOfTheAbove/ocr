@@ -3,6 +3,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "Image.h"
+#include "DemoGUI.h"
 
 int main()
 {
@@ -20,6 +21,8 @@ int main()
 	double **grayscaleImageMatrix = CreateMatrix(imageWidth, imageHeight);
 	double **binarizedImageMatrix = CreateMatrix(imageWidth, imageHeight);
 	ImageToMatrices(imageSurface, grayscaleImageMatrix, binarizedImageMatrix);
+
+	StartDemoGUI(imageWidth, imageHeight, matrix);
 
 	// -----------------------------
 	// STEP 2 : CHARACTERS DETECTION
