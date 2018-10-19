@@ -399,3 +399,136 @@ void PrintGlobalValues()
         printf("\n");
 
 }
+
+// ***
+//
+// SAVE AND LOAD
+//
+// ***
+
+void Load(char *path)
+{
+        FILE *f = fopen(path, "r");
+
+        // Count number of lines in file
+        int numberLines = 0;
+        char str[1000];
+        while (fgets(str, 1000, f) != NULL)
+        {
+                numberLines++;
+        }
+
+        // Make an array of the value (a double) of each line
+        double lines[numberLines];
+        size_t currentLineNumber = 0;
+        rewind(f);
+        while (fgets(str, 1000, f) != NULL)
+        {
+                if (str[0] != '#' && str[0] != '\n' && str[0] != ' ' && str[0] != '\0')
+                {
+                        double a;
+                        sscanf(str, "%le", &a);
+                        lines[currentLineNumber] = a;
+
+                        //printf("%ld : %f\n", currentLineNumber, a);
+
+                        currentLineNumber++;
+                }
+        }
+
+        /**for (int i = 0; i < numberLines; i++)
+	{
+		printf("%d : %f \n", i, lines[i]);
+	}**/
+
+        // Load values of lines in global values
+
+        numberInputNodes = lines[0];
+        numberHiddenNodes = lines[1];
+        numberOutputNodes = lines[2];
+        currentLineNumber = 3;
+
+        // biasHiddenLayer
+        for (size_t i = 0; i < numberHiddenNodes; i++)
+        {
+                biasHiddenLayer[i] = lines[currentLineNumber];
+                currentLineNumber++;
+        }
+
+        // biasOutput
+        for (size_t i = 0; i < numberOutputNodes; i++)
+        {
+                biasOutput[i] = lines[currentLineNumber];
+                currentLineNumber++;
+        }
+
+        // weightInputToHidden
+        for (size_t i = 0; i < numberInputNodes; i++)
+        {
+                for (size_t j = 0; j < numberHiddenNodes; j++)
+                {
+                        weightInputToHidden[i][j] = lines[currentLineNumber];
+                        currentLineNumber++;
+                }
+        }
+
+        // weightHiddenToOutput
+        for (size_t i = 0; i < numberHiddenNodes; i++)
+        {
+                for (size_t j = 0; j < numberOutputNodes; j++)
+                {
+                        weightHiddenToOutput[i][j] = lines[currentLineNumber];
+                        currentLineNumber++;
+                }
+        }
+
+        fclose(f);
+}
+
+void Save(char *path)
+{
+        FILE *f = fopen(path, "w");
+        fprintf(f, "NEURAL NETWORK DATA\n\n");
+
+        // Write NN's structure
+        fprintf(f, "Structure\n");
+        fprintf(f, "%zu\n", numberInputNodes);
+        fprintf(f, "%zu\n", numberHiddenNodes);
+        fprintf(f, "%zu\n\n", numberOutputNodes);
+
+        // biasHiddenLayer
+        fprintf(f, "biasHiddenLayer\n");
+        for (size_t i = 0; i < numberHiddenNodes; i++)
+        {
+                fprintf(f, "%f\n", biasHiddenLayer[i]);
+        }
+
+        // biasOutput
+        fprintf(f, "\nbiasOutput\n");
+        for (size_t j = 0; j < numberOutputNodes; j++)
+        {
+                fprintf(f, "%f\n", biasOutput[j]);
+        }
+
+        // weightInputToHidden
+        fprintf(f, "\nweightInputToHidden\n");
+        for (size_t i = 0; i < numberInputNodes; i++)
+        {
+                for (size_t j = 0; j < numberHiddenNodes; j++)
+                {
+                        fprintf(f, "%f\n", weightInputToHidden[i][j]);
+                }
+        }
+
+        // weightHiddenToOutput
+        fprintf(f, "\nweightHiddenToOutput\n");
+        for (size_t i = 0; i < numberHiddenNodes; i++)
+        {
+                for (size_t j = 0; j < numberOutputNodes; j++)
+                {
+                        fprintf(f, "%f\n", weightHiddenToOutput[i][j]);
+                }
+        }
+
+        fclose(f);
+}

@@ -10,4 +10,9 @@ double* Predict(double input[]);
 
 void Train(double inputs[], double targets[]);
 
+
+void Save(char *path);
+void Load(char *path);
+
+
 //double* MultArrayMatrix(double arrayInput[], double matrixWeight[][]);
