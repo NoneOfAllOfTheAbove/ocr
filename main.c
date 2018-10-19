@@ -6,7 +6,6 @@
 
 int main()
 {
-
 	// ----------------------------------------
 	// STEP 1 : IMAGE LOADING AND PREPROCESSING
 	// ----------------------------------------
@@ -17,13 +16,10 @@ int main()
 	int imageWidth, imageHeight;
 	LoadImage(&imageSurface, imagePath, &imageWidth, &imageHeight);
 
-	// Create the matrix (height * width, representing grayscale of the image, each value is a double between 0 and 1)
-	double **matrix = (double **) malloc(sizeof(double *) * imageHeight);
-	for (int i = 0; i < imageWidth; i++)
-	{
-		*(matrix + i) = (double *)malloc(sizeof(double) * imageHeight);
-	}
-	ImageToMatrix(imageSurface, matrix);
+	// Create the grayscale and binarized matrices of the image
+	double **grayscaleImageMatrix = CreateMatrix(imageWidth, imageHeight);
+	double **binarizedImageMatrix = CreateMatrix(imageWidth, imageHeight);
+	ImageToMatrices(imageSurface, grayscaleImageMatrix, binarizedImageMatrix);
 
 	// -----------------------------
 	// STEP 2 : CHARACTERS DETECTION
