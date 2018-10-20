@@ -4,7 +4,8 @@
 
 unsigned char **CreateImageMatrix(int width, int height)
 {
-	unsigned char **matrix = (unsigned char **)malloc(sizeof(unsigned char *) * height);
+	unsigned char **matrix =
+		(unsigned char **)malloc(sizeof(unsigned char *) * height);
 	for (int i = 0; i < height; i++)
 	{
 		*(matrix + i) = (unsigned char *)malloc(sizeof(unsigned char) * width);
@@ -12,7 +13,11 @@ unsigned char **CreateImageMatrix(int width, int height)
 	return matrix;
 }
 
-unsigned char **ImageToGrayscale(char imagePath[], int *imageWidth, int *imageHeight)
+unsigned char **ImageToGrayscale(
+	char imagePath[],
+	int *imageWidth,
+	int *imageHeight
+)
 {
 	// Load image
 	//IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF);
@@ -22,14 +27,18 @@ unsigned char **ImageToGrayscale(char imagePath[], int *imageWidth, int *imageHe
 	*imageHeight = imageSurface->h;
 
 	// Create matrix
-	unsigned char **matrix = CreateImageMatrix(imageSurface->w, imageSurface->h);
+	unsigned char **matrix = CreateImageMatrix(
+		imageSurface->w,
+		imageSurface->h
+	);
 
 	// Fill matrix with grayscale's values of image
 	for (int y = 0; y < imageSurface->h; y++)
 	{
 		for (int x = 0; x < imageSurface->w; x++)
 		{
-			Uint8 *p = (Uint8 *)imageSurface->pixels + y * imageSurface->pitch + x * imageSurface->format->BytesPerPixel;
+			Uint8 *p = (Uint8 *)imageSurface->pixels + y * imageSurface->pitch
+				+ x * imageSurface->format->BytesPerPixel;
 			Uint32 pixel = *(Uint32 *)p;
 
 			Uint8 r, g, b;
@@ -42,7 +51,11 @@ unsigned char **ImageToGrayscale(char imagePath[], int *imageWidth, int *imageHe
 	return matrix;
 }
 
-unsigned char **GrayscaleToBinarized(unsigned char **grayscaleImageMatrix, int imageWidth, int imageHeight)
+unsigned char **GrayscaleToBinarized(
+	unsigned char **grayscaleImageMatrix,
+	int imageWidth,
+	int imageHeight
+)
 {
 	// Create matrix
 	unsigned char **matrix = CreateImageMatrix(imageWidth, imageHeight);

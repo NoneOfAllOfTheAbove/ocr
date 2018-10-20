@@ -1,8 +1,8 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
-unsigned char **CreateImageMatrix(int width, int height);
-unsigned char **ImageToGrayscale(char imagePath[], int *imageWidth, int *imageHeight);
-unsigned char **GrayscaleToBinarized(unsigned char **grayscaleImageMatrix, int imageWidth, int imageHeight);
+unsigned char **CreateImageMatrix(int, int);
+unsigned char **ImageToGrayscale(char[], int*, int*);
+unsigned char **GrayscaleToBinarized(unsigned char**, int, int);
 
 #endif

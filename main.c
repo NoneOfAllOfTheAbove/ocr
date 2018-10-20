@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+
 // just for tests
 #include <time.h>
 
@@ -8,65 +9,41 @@
 #include "Image.h"
 #include "DemoGUI.h"
 
-
-int main()
+void PrintXORSolutions()
 {
-	// ----------------------------------------
-	// STEP 1 : IMAGE LOADING AND PREPROCESSING
-	// ----------------------------------------
+	double input1[] = {1, 0};
+	double input2[] = {0, 1};
+	double input3[] = {1, 1};
+	double input4[] = {0, 0};
 
-	char imagePath[] = "test.png";
-	int imageWidth, imageHeight;
-	unsigned char **grayscaleImageMatrix = ImageToGrayscale(imagePath, &imageWidth, &imageHeight);
-	unsigned char **binarizedImageMatrix = GrayscaleToBinarized(grayscaleImageMatrix, imageWidth, imageHeight);
+	printf("[1-0 -> 1]\n");
+	Predict(input1);
+	printf("[0-1 -> 1]\n");
+	Predict(input2);
+	printf("[1-1 -> 0]\n");
+	Predict(input3);
+	printf("[0-0 -> 0]\n");
+	Predict(input4);
+}
 
-	StartDemoGUI(imageWidth, imageHeight, grayscaleImageMatrix, binarizedImageMatrix);
-
-	// -----------------------------
-	// STEP 2 : CHARACTERS DETECTION
-	// -----------------------------
-
-	// -------------------------------
-	// STEP 3 : CHARACTERS RECOGNITION
-	// -------------------------------
-
+void TrainXOR()
+{
+	// Prepare XOR expected outuputs according to inputs
 	double input1[] = {1, 0};
 	double output1[] = {1, 0};
-
 	double input2[] = {0, 1};
 	double output2[] = {1, 0};
-	
 	double input3[] = {1, 1};
 	double output3[] = {0, 1};
-
 	double input4[] = {0, 0};
 	double output4[] = {0, 1};
 
-	Start(2, 4, 2);
-	
-
-	printf("\n    Before Training :\n\n[1-0 -> 1]");
-	Predict(input1);
-	
-	printf("[0-1 -> 1]");
-	Predict(input2);
-
-	printf("[1-1 -> 0]");
-	Predict(input3);
-
-	printf("[0-0 -> 0]");
-	Predict(input4);
-
-	printf("\n\n\n");
-
-	//printf("\n\n----------------------------------------------------------\n\n");
-
+	// Train NN
 	srand(time(NULL));
 	long t;
 	for (int i = 0; i < 150000; i++)
 	{
 		t = rand() % 4;
-		//printf("%ld \n", t);
 		if (t == 0)
 		{
 			Train(input1, output1);
@@ -84,21 +61,58 @@ int main()
 			Train(input4, output4);
 		}
 	}
+}
 
-	printf("    After training :\n\n[1-0 -> 1]");
-	Predict(input1);
+int main()
+{
+	// ----------------------------------------
+	// STEP 1 : IMAGE LOADING AND PREPROCESSING
+	// ----------------------------------------
+
+	char imagePath[] = "test.png";
+	int imageWidth, imageHeight;
 	
-	printf("[0-1 -> 1]");
-	Predict(input2);
+	unsigned char **grayscaleImageMatrix =
+		ImageToGrayscale(imagePath, &imageWidth, &imageHeight);
+	unsigned char **binarizedImageMatrix =
+		GrayscaleToBinarized(grayscaleImageMatrix, imageWidth, imageHeight);
 
-	printf("[1-1 -> 0]");
-	Predict(input3);
+	StartDemoGUI(
+		imageWidth,
+		imageHeight,
+		grayscaleImageMatrix,
+		binarizedImageMatrix
+	);
 
-	printf("[0-0 -> 0]");
-	Predict(input4);
+	// -----------------------------
+	// STEP 2 : CHARACTERS DETECTION
+	// -----------------------------
+
+	// -------------------------------
+	// STEP 3 : CHARACTERS RECOGNITION
+	// -------------------------------
+
+	// Solve XOR
+	int mode = 1;
+	if(mode == 0)
+	{
+		Start(2, 4, 2);
+		printf("\n\n\nBefore training:\n\n");
+		PrintXORSolutions();
+		TrainXOR();
+		printf("\n\n\nAfter training:\n\n");
+		PrintXORSolutions();
+		Save("nn.txt");
+	} else {
+		Start(2, 4, 2);
+		Load("nn.txt");
+		printf("\n\n\nPredictions of loaded NN:\n\n");
+		PrintXORSolutions();
+	}
 
 	// ----------------------------
 	// STEP 4 : GUI AND TEXT EXPORT
 	// ----------------------------
+
 	return 0;
 }

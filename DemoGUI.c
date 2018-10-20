@@ -1,7 +1,12 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 
-void DrawMatrix(SDL_Renderer *renderer, int width, int height, unsigned char **matrix)
+void DrawMatrix(
+	SDL_Renderer *renderer,
+	int width,
+	int height,
+	unsigned char **matrix
+)
 {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	SDL_RenderClear(renderer);
@@ -9,14 +14,25 @@ void DrawMatrix(SDL_Renderer *renderer, int width, int height, unsigned char **m
 	{
 		for (int x = 0; x < width; x++)
 		{
-			SDL_SetRenderDrawColor(renderer, matrix[y][x], matrix[y][x], matrix[y][x], 255);
+			SDL_SetRenderDrawColor(
+				renderer,
+				matrix[y][x],
+				matrix[y][x],
+				matrix[y][x],
+				255
+			);
 			SDL_RenderDrawPoint(renderer, x, y);
 		}
 	}
 	SDL_RenderPresent(renderer);
 }
 
-void StartDemoGUI(int width, int height, unsigned char **grayscaleImageMatrix, unsigned char **binarizedImageMatrix)
+void StartDemoGUI(
+	int width,
+	int height,
+	unsigned char **grayscaleImageMatrix,
+	unsigned char **binarizedImageMatrix
+)
 {
 	SDL_Event event;
 	SDL_Renderer *renderer;
