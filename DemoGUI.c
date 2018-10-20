@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 
+int demoGUIStep = 0;
+
 void DrawMatrix(
 	SDL_Renderer *renderer,
 	int width,
@@ -27,6 +29,17 @@ void DrawMatrix(
 	SDL_RenderPresent(renderer);
 }
 
+void DemoGUINextStep()
+{
+	if(demoGUIStep == 0) {
+		DrawMatrix(renderer, width, height, binarizedImageMatrix);
+	}
+	else if(demoGUIStep == 1) {
+		// draw Louis work
+	}
+	demoGUIStep++;
+}
+
 void StartDemoGUI(
 	int width,
 	int height,
@@ -51,7 +64,7 @@ void StartDemoGUI(
 		}
 		if (SDL_PollEvent(&event) && event.type == SDL_KEYDOWN)
 		{
-			DrawMatrix(renderer, width, height, binarizedImageMatrix);
+			DemoGUINextStep();
 		}
 	}
 
