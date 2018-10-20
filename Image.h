@@ -1,2 +1,8 @@
-void LoadImage(SDL_Surface **imageSurface, char imagePath[], int *imageWidth, int *imageHeight);
-void ImageToMatrix(SDL_Surface *imageSurface, double **matrix);
+#ifndef IMAGE_H
+#define IMAGE_H
+
+unsigned char **CreateImageMatrix(int, int);
+unsigned char **ImageToGrayscale(char[], int*, int*);
+unsigned char **GrayscaleToBinarized(unsigned char**, int, int);
+
+#endif
