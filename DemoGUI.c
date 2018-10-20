@@ -9,14 +9,7 @@ void DrawMatrix(SDL_Renderer *renderer, int width, int height, unsigned char **m
 	{
 		for (int x = 0; x < width; x++)
 		{
-			if (width <= height)
-			{
-				SDL_SetRenderDrawColor(renderer, matrix[x][y], matrix[x][y], matrix[x][y], 255);
-			}
-			else
-			{
-				SDL_SetRenderDrawColor(renderer, matrix[y][x], matrix[y][x], matrix[y][x], 255);
-			}
+			SDL_SetRenderDrawColor(renderer, matrix[y][x], matrix[y][x], matrix[y][x], 255);
 			SDL_RenderDrawPoint(renderer, x, y);
 		}
 	}

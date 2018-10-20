@@ -2,26 +2,13 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-unsigned char **CreateImageMatrix(int imageWidth, int imageHeight)
+unsigned char **CreateImageMatrix(int width, int height)
 {
-	unsigned char **matrix;
-	if (imageWidth <= imageHeight)
+	unsigned char **matrix = (unsigned char **)malloc(sizeof(unsigned char *) * height);
+	for (int i = 0; i < height; i++)
 	{
-		matrix = (unsigned char **)malloc(sizeof(unsigned char *) * imageHeight);
-		for (int i = 0; i < imageWidth; i++)
-		{
-			*(matrix + i) = (unsigned char *)malloc(sizeof(unsigned char) * imageHeight);
-		}
+		*(matrix + i) = (unsigned char *)malloc(sizeof(unsigned char) * width);
 	}
-	else
-	{
-		matrix = (unsigned char **)malloc(sizeof(unsigned char *) * imageWidth);
-		for (int i = 0; i < imageHeight; i++)
-		{
-			*(matrix + i) = (unsigned char *)malloc(sizeof(unsigned char) * imageWidth);
-		}
-	}
-
 	return matrix;
 }
 
@@ -47,12 +34,7 @@ unsigned char **ImageToGrayscale(char imagePath[], int *imageWidth, int *imageHe
 
 			Uint8 r, g, b;
 			SDL_GetRGB(pixel, imageSurface->format, &r, &g, &b);
-			if (imageSurface->w <= imageSurface->h)
-			{
-				matrix[x][y] = (r + g + b) / 3;
-			} else {
-				matrix[y][x] = (r + g + b) / 3;
-			}
+			matrix[y][x] = (r + g + b) / 3;
 		}
 	}
 
@@ -71,12 +53,7 @@ unsigned char **GrayscaleToBinarized(unsigned char **grayscaleImageMatrix, int i
 	{
 		for (int x = 0; x < imageWidth; x++)
 		{
-			if (imageWidth <= imageHeight)
-			{
-				totalIntensity += grayscaleImageMatrix[x][y];
-			} else {
-				totalIntensity += grayscaleImageMatrix[y][x];
-			}
+			totalIntensity += grayscaleImageMatrix[y][x];
 		}
 	}
 	int averageIntensity = totalIntensity / (imageWidth * imageHeight);
@@ -86,27 +63,13 @@ unsigned char **GrayscaleToBinarized(unsigned char **grayscaleImageMatrix, int i
 	{
 		for (int x = 0; x < imageWidth; x++)
 		{
-			if (imageWidth <= imageHeight)
+			if (grayscaleImageMatrix[y][x] > averageIntensity)
 			{
-				if (grayscaleImageMatrix[x][y] > averageIntensity)
-				{
-					matrix[x][y] = 255;
-				}
-				else
-				{
-					matrix[x][y] = 0;
-				}
+				matrix[y][x] = 255;
 			}
 			else
 			{
-				if (grayscaleImageMatrix[y][x] > averageIntensity)
-				{
-					matrix[y][x] = 255;
-				}
-				else
-				{
-					matrix[y][x] = 0;
-				}
+				matrix[y][x] = 0;
 			}
 		}
 	}
