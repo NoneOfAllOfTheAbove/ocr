@@ -40,7 +40,8 @@ _Bool first_node_created = false;
 // ---------**labels has the same size of **matrix and contains labels
 // -------------------------------------------------------------------
 
-double** ConstructMatrix(size_t line, size_t column)
+double** ConstructMatrix(size_t line, size_t column);
+/*double** ConstructMatrix(size_t line, size_t column)
 {
 	double **matrix = (double **) malloc(sizeof(double *) * line);
         if (matrix == NULL)
@@ -51,7 +52,7 @@ double** ConstructMatrix(size_t line, size_t column)
 
         }
 	return matrix;
-}
+}*/
 
 double **labels;
 int label_count = 1;
@@ -297,4 +298,4 @@ Array Labelling(double **matrix)
   return Labelling_GetCharacters();
 }
 
-int main(){return 0;}
+//int main(){return 0;}

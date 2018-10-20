@@ -29,17 +29,6 @@ void DrawMatrix(
 	SDL_RenderPresent(renderer);
 }
 
-void DemoGUINextStep()
-{
-	if(demoGUIStep == 0) {
-		DrawMatrix(renderer, width, height, binarizedImageMatrix);
-	}
-	else if(demoGUIStep == 1) {
-		// draw Louis work
-	}
-	demoGUIStep++;
-}
-
 void StartDemoGUI(
 	int width,
 	int height,
@@ -62,9 +51,15 @@ void StartDemoGUI(
 		{
 			break;
 		}
-		if (SDL_PollEvent(&event) && event.type == SDL_KEYDOWN)
+		else if (SDL_PollEvent(&event) && event.type == SDL_KEYDOWN)
 		{
-			DemoGUINextStep();
+			if(demoGUIStep == 0) {
+				DrawMatrix(renderer, width, height, binarizedImageMatrix);
+			}
+			else if(demoGUIStep == 1) {
+				// draw Louis work
+			}
+			demoGUIStep++;
 		}
 	}
 
