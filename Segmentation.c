@@ -194,7 +194,7 @@ void Labelling_FirstPass(double **matrix)
 
 }
 
-// useful_labels is an array containing only labels without lower equivalences
+// useful_labels is an array containing only labels without smaller equivalences
 Array useful_labels;
 
 void Labelling_SecondPass()
@@ -284,6 +284,11 @@ Array Labelling_GetCharacters()
   freeArray(&useful_labels);
   return characters;
 }
+
+// -------------------------------------------------------------------
+// ---------------------------------------------------- Main functions
+// -------------------------------------------------------------------
+
 // Input the matrix in B&W only (0-1 matrix)
 Array Labelling(double **matrix)
 {
