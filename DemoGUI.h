@@ -1,7 +1,7 @@
 #ifndef DEMOGUI_H
 #define DEMOGUI_H
 
-void DrawMatrix(SDL_Renderer *renderer, int width, int height, unsigned char **matrix);
-void StartDemoGUI(int width, int height, unsigned char **grayscaleImageMatrix, unsigned char **binarizedImageMatrix);
+void DrawMatrix(SDL_Renderer*, int, int, unsigned char**);
+void StartDemoGUI(int, int, unsigned char**, unsigned char**);
 
 #endif
