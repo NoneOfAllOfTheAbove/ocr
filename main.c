@@ -77,13 +77,6 @@ int main()
 	unsigned char **binarizedImageMatrix =
 		GrayscaleToBinarized(grayscaleImageMatrix, imageWidth, imageHeight);
 
-	StartDemoGUI(
-		imageWidth,
-		imageHeight,
-		grayscaleImageMatrix,
-		binarizedImageMatrix
-	);
-
 	// -----------------------------
 	// STEP 2 : CHARACTERS DETECTION
 	// -----------------------------
@@ -113,6 +106,13 @@ int main()
 	// ----------------------------
 	// STEP 4 : GUI AND TEXT EXPORT
 	// ----------------------------
+
+	StartDemoGUI(
+		imageWidth,
+		imageHeight,
+		grayscaleImageMatrix,
+		binarizedImageMatrix
+	);
 
 	return 0;
 }
