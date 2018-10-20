@@ -10,6 +10,7 @@ double* Predict(double input[]);
 
 void Train(double inputs[], double targets[]);
 
+void FreeMatrix(double **mat, size_t line);
 
 void Save(char *path);
 void Load(char *path);

@@ -37,21 +37,21 @@ int main()
 	// -------------------------------
 
 	double input1[] = {1, 0};
-	double output1[] = {1};
+	double output1[] = {1, 0};
 
 	double input2[] = {0, 1};
-	double output2[] = {1};
+	double output2[] = {1, 0};
 	
 	double input3[] = {1, 1};
-	double output3[] = {0};
+	double output3[] = {0, 1};
 
 	double input4[] = {0, 0};
-	double output4[] = {0};
+	double output4[] = {0, 1};
 
-	Start(2, 2, 1);
-	PrintGlobalValues();
+	Start(2, 4, 2);
 	
-	printf("[1-0 -> 1]");
+
+	printf("\n    Before Training :\n\n[1-0 -> 1]");
 	Predict(input1);
 	
 	printf("[0-1 -> 1]");
@@ -63,11 +63,13 @@ int main()
 	printf("[0-0 -> 0]");
 	Predict(input4);
 
+	printf("\n\n\n");
+
 	//printf("\n\n----------------------------------------------------------\n\n");
 
 	srand(time(NULL));
 	long t;
-	for (int i = 0; i < 50000; i++)
+	for (int i = 0; i < 150000; i++)
 	{
 		t = rand() % 4;
 		//printf("%ld \n", t);
@@ -89,10 +91,7 @@ int main()
 		}
 	}
 
-
-	
-	PrintGlobalValues();
-	printf("[1-0 -> 1]");
+	printf("    After training :\n\n[1-0 -> 1]");
 	Predict(input1);
 	
 	printf("[0-1 -> 1]");
@@ -103,60 +102,6 @@ int main()
 
 	printf("[0-0 -> 0]");
 	Predict(input4);
-
-
-
-
-/*	double a[] = {4, 5, 6};
-	double **b = ConstructMatrix(3, 3);
-	int k = 1;
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{	b[i][j] = k;
-			k += 1;
-		}
-	}
-
-	printf ("\n\na = \t");
-	for (int i = 0; i < 3; i++)
-	{
-			printf("%f\n\t", a[i]);
-	}
-	printf("\n");
-
-printf ("\n\nb = \t");
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			printf("%f      ", b[i][j]);
-		}
-		printf("\n\t");
-	}
-	
-
-	double *output = ConstructArray(3);
-        for (size_t i = 0; i < 3; i++)
-                output[i] = 0;
-        for (size_t j = 0; j < 3; j++)
-        {
-                for (size_t i = 0; i < 3; i++)
-                        output[j] += a[i] * b[i][j];
-        }
-        // bias et softmax
-
-	printf ("\n\nOutput = \t");
-    for (int i = 0; i < 3; i++)
-    {
-        printf("%f\n\t\t", output[i]);
-    }
-	printf("\n");
-
-	printf("%f\n", exp(1.6578));
-
-	//printf("\n%f\n\n", exp(1.0000));
-*/
 
 	// ----------------------------
 	// STEP 4 : GUI AND TEXT EXPORT

@@ -27,10 +27,13 @@ double **weightHiddenToOutput;
 
 double** ConstructMatrix(size_t line, size_t column) 
 {
-	double **matrix = (double **) malloc(sizeof(double *) * column);
+	double **matrix = (double **) malloc(sizeof(double *) * line);
+        if (matrix == NULL)
+                exit(0);
 	for (size_t i = 0; i < line; i++)
         {
-                *(matrix + i) = (double *)malloc(sizeof(double) * column);
+                *(matrix + i) = (double *) malloc(sizeof(double) * column);
+
         }
 	return matrix;
 }
@@ -46,11 +49,22 @@ double** ConstructMatrix(size_t line, size_t column)
 double* ConstructArray(size_t size)
 {
 	double *array = (double *) malloc(sizeof(double) * size);
+        if (array == NULL)
+                exit(0);
 	return array;
 }
 
 
 
+// free a matrix
+void FreeMatrix(double **mat, size_t line)
+{
+        for (size_t i = 0; i < line; i++) 
+	{
+  		free(mat[i]);
+	}
+	free(mat);
+}
 
 // ----------------------------------Start----------------------------------
 
@@ -153,11 +167,11 @@ double* Predict(double inputs[])
 
         // get the result from the transition of Hidden to Output
         // layer by computing the weighted sum add the bias and apply
-        // sigmoid to every element of output.
+        // sigmoid to every element of output. CCC
 
         double *outputs = ConstructArray(numberOutputNodes);
 
-          for (size_t i = 0; i < numberOutputNodes; i++)
+        for (size_t i = 0; i < numberOutputNodes; i++)
                 outputs[i] = 0;
         for (size_t j = 0; j < numberOutputNodes; j++)
         {
@@ -168,12 +182,13 @@ double* Predict(double inputs[])
                 outputs[j] += biasOutput[j];
         }
 
-        // Sigmoid
+        // Sigmoid CCC
         for (size_t i = 0; i < numberOutputNodes; i++)
                 outputs[i] = 1 / (1 + exp(-outputs[i]));
 
         /*double sumsoftmax = 0;
-        for (size_t i = 0; i < numberOutputNodes; i++) with a 2 x 2 x 1 neural net, with a bias in the input and hidden layers, using the sigmoid activation funct
+        for (size_t i = 0; i < numberOutputNodes; i++) with a 2 x 2 x 1 neural net, with a bias 
+         in the input and hidden layers, using the sigmoid activation funct
                 outputs[i] = 0;
         for (size_t j = 0; j < numberOutputNodes; j++)
         {
@@ -196,6 +211,8 @@ double* Predict(double inputs[])
                 printf("%f\n\t\t", outputs[i]);
         }
         printf("\n");
+
+        free(hiddenRes);
 
         return outputs; // matrix containing each output neuron's probability
 }
@@ -272,9 +289,9 @@ void Train(double inputs[], double targets[])
         for (size_t i = 0; i < numberOutputNodes; i++)
                 outputs[i] = 1 / (1 + exp(-outputs[i]));
 
-        double learningRate = 0.3;
+        double learningRate = 0.5;
 
-        //----------------------Hidden to Output---------------------------
+        //----------------------Output to Hidden---------------------------
         // calculate the error of the output layer
         double *errorOutput = ConstructArray(numberOutputNodes);
         for (size_t i = 0; i < numberOutputNodes; i++)
@@ -298,8 +315,8 @@ void Train(double inputs[], double targets[])
                         deltaWeightHiddenToOutput[i][j] = hiddenRes[i] * outputs[j];
         }
 
-        // Add the deltaweight to the weight between the hidden layer and the output layer
-        // and the outputs matrix to the bias of the ouputs matrix
+        // Add the deltaweight to the weights between the hidden layer and the output layer
+        // and the outputs matrix to the bias of the ouputs matrix  ccc
         for (size_t i = 0; i < numberHiddenNodes; i++)
         {
                 for (size_t j = 0; j < numberOutputNodes; j++)
@@ -310,7 +327,7 @@ void Train(double inputs[], double targets[])
         
 
 
-        // ---------------------------Input to Hidden------------------------------------
+        // ---------------------------Hidden to Input------------------------------------
         // calculate the error of the hidden layer which is the matrix product :
         // weight*errorOutput
 
@@ -328,7 +345,7 @@ void Train(double inputs[], double targets[])
         // Calculate the gradient
         for (size_t i = 0; i < numberHiddenNodes; i++)
         {
-                hiddenRes[i] = (hiddenRes[i] * (1 - hiddenRes[i])) * errorHidden[i] // *errorHidden instead 
+                hiddenRes[i] = (hiddenRes[i] * (1 - hiddenRes[i])) * errorHidden[i]
                 * learningRate;
         }
 
@@ -338,7 +355,7 @@ void Train(double inputs[], double targets[])
         for (size_t i = 0; i < numberInputNodes; i++)
         {
                 for (size_t j = 0; j < numberHiddenNodes; j++)
-                        deltaWeightInputToHidden[i][j] = inputs[i] * hiddenRes[j]; //CHECK HERE ! * hiddenRes[j]
+                        deltaWeightInputToHidden[i][j] = inputs[i] * hiddenRes[j];
         }
 
         // Add everything
@@ -349,6 +366,14 @@ void Train(double inputs[], double targets[])
         }
         for (size_t i = 0; i < numberHiddenNodes; i++)
                 biasHiddenLayer[i] += hiddenRes[i];
+
+        
+        FreeMatrix(deltaWeightHiddenToOutput, numberHiddenNodes);
+        FreeMatrix(deltaWeightInputToHidden, numberInputNodes);
+        free(hiddenRes);
+        free(outputs);
+        free(errorOutput);
+        free(errorHidden);
 }
 
 
@@ -370,7 +395,7 @@ void PrintGlobalValues()
         {
                 for (size_t j = 0; j < numberHiddenNodes; j++)
                 {
-                        printf("%f", weightInputToHidden[i][j]);
+                        printf("%f\t", weightInputToHidden[i][j]);
                 }
                 printf("\n\t\t\t");
         }
@@ -380,7 +405,7 @@ void PrintGlobalValues()
         {
                 for (size_t j = 0; j < numberOutputNodes; j++)
                 {
-                        printf("%f", weightHiddenToOutput[i][j]);
+                        printf("%f\t", weightHiddenToOutput[i][j]);
                 }
                 printf("\n\t\t\t");
         }
@@ -399,6 +424,9 @@ void PrintGlobalValues()
         printf("\n");
 
 }
+
+
+
 
 // ***
 //
