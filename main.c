@@ -11,18 +11,12 @@ int main()
 	// STEP 1 : IMAGE LOADING AND PREPROCESSING
 	// ----------------------------------------
 
-	// Load image
-	SDL_Surface *imageSurface;
-	char imagePath[] = "test.bmp";
+	char imagePath[] = "test.png";
 	int imageWidth, imageHeight;
-	LoadImage(&imageSurface, imagePath, &imageWidth, &imageHeight);
+	unsigned char **grayscaleImageMatrix = ImageToGrayscale(imagePath, &imageWidth, &imageHeight);
+	unsigned char **binarizedImageMatrix = GrayscaleToBinarized(grayscaleImageMatrix, imageWidth, imageHeight);
 
-	// Create the grayscale and binarized matrices of the image
-	double **grayscaleImageMatrix = CreateMatrix(imageWidth, imageHeight);
-	double **binarizedImageMatrix = CreateMatrix(imageWidth, imageHeight);
-	ImageToMatrices(imageSurface, grayscaleImageMatrix, binarizedImageMatrix);
-
-	StartDemoGUI(imageWidth, imageHeight, matrix);
+	StartDemoGUI(imageWidth, imageHeight, grayscaleImageMatrix, binarizedImageMatrix);
 
 	// -----------------------------
 	// STEP 2 : CHARACTERS DETECTION
