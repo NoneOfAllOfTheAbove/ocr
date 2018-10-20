@@ -1,5 +1,5 @@
-#ifndef IMAGE_H
-#define IMAGE_H
+#ifndef PREPROCESSING_H
+#define PREPROCESSING_H
 
 unsigned char **CreateImageMatrix(int, int);
 unsigned char **ImageToGrayscale(char[], int*, int*);

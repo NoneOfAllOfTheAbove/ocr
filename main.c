@@ -6,7 +6,7 @@
 #include <time.h>
 
 #include "NeuralNetwork.h"
-#include "Image.h"
+#include "Preprocessing.h"
 #include "DemoGUI.h"
 
 void PrintXORSolutions()

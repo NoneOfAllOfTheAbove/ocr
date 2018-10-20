@@ -1,6 +1,6 @@
 CC = gcc
 BIN = OCR
-SRC = main.c Image.c DemoGUI.c NeuralNetwork.c Segmentation.c
+SRC = main.c Preprocessing.c DemoGUI.c NeuralNetwork.c Segmentation.c
 CFLAGS = -Wall -Wextra -std=c99
 GTK = $$(pkg-config --libs --cflags gtk+-3.0)
 
