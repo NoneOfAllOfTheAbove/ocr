@@ -6,6 +6,7 @@
 
 #include "NeuralNetwork.h"
 #include "Image.h"
+#include "DemoGUI.h"
 
 
 int main()
@@ -14,19 +15,12 @@ int main()
 	// STEP 1 : IMAGE LOADING AND PREPROCESSING
 	// ----------------------------------------
 
-	// Load image
-	SDL_Surface *imageSurface;
-	char imagePath[] = "test.bmp";
+	char imagePath[] = "test.png";
 	int imageWidth, imageHeight;
-	LoadImage(&imageSurface, imagePath, &imageWidth, &imageHeight);
+	unsigned char **grayscaleImageMatrix = ImageToGrayscale(imagePath, &imageWidth, &imageHeight);
+	unsigned char **binarizedImageMatrix = GrayscaleToBinarized(grayscaleImageMatrix, imageWidth, imageHeight);
 
-	// Create the matrix (height * width, representing grayscale of the image, each value is a double between 0 and 1)
-	double **matrix = (double **) malloc(sizeof(double *) * imageHeight);
-	for (int i = 0; i < imageWidth; i++)
-	{
-		*(matrix + i) = (double *)malloc(sizeof(double) * imageHeight);
-	}
-	ImageToMatrix(imageSurface, matrix);
+	StartDemoGUI(imageWidth, imageHeight, grayscaleImageMatrix, binarizedImageMatrix);
 
 	// -----------------------------
 	// STEP 2 : CHARACTERS DETECTION
