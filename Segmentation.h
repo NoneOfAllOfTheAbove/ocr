@@ -11,7 +11,7 @@ unsigned char *Bloc_Detection(unsigned char **matrix);
 unsigned char *Labelling_GetCharacters();
 unsigned char *Labelling(unsigned char **matrix, int width, int height);
 unsigned char *Line_Detection(unsigned char **matrix, unsigned char *xblocs);
-void Bloc_Line_Detection(unsigned char **matrix);
+unsigned char *Bloc_Line_Detection(unsigned char **matrix);
 void CheckNeighbours(int x, int y);
 void freeArray(Array *a);
 void initArray(Array *a, size_t initialSize);

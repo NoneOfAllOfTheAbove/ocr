@@ -368,10 +368,13 @@ unsigned char *Labelling(unsigned char **matrix, int width, int height)
     return chars;
 }
 
-/*void Bloc_Line_Detection(unsigned char **matrix)
+unsigned char *Bloc_Line_Detection(unsigned char **matrix)
 {
-    //unsigned char *blocs_x = Bloc_Detection(matrix);
+    unsigned char *blocs_x = Bloc_Detection(matrix);
     freeArray(&blocs);
-}*/
+    unsigned char *lines = Line_Detection(matrix, blocs_x);
+    freeArray(&lines);
+    return lines;
+}
 
 //int main(){return 0;}
