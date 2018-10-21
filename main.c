@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <err.h>
 
 // just for tests
 #include <time.h>
@@ -8,7 +9,6 @@
 #include "NeuralNetwork.h"
 #include "Preprocessing.h"
 #include "DemoGUI.h"
-
 #include "Segmentation.h"
 
 void PrintXORSolutions()
@@ -65,17 +65,20 @@ void TrainXOR()
 	}
 }
 
-int main()
+int main(int argc, char** argv)
 {
 	// ----------------------------------------
 	// STEP 1 : IMAGE LOADING AND PREPROCESSING
 	// ----------------------------------------
 
-	char imagePath[] = "test.png";
+	if(argc != 2) {
+		errx(1, "You must start the program with one argument.");
+	}
+
 	int imageWidth, imageHeight;
 
 	unsigned char **grayscaleImageMatrix =
-		ImageToGrayscale(imagePath, &imageWidth, &imageHeight);
+		ImageToGrayscale(argv[1], &imageWidth, &imageHeight);
 	unsigned char **binarizedImageMatrix =
 		GrayscaleToBinarized(grayscaleImageMatrix, imageWidth, imageHeight);
 
@@ -83,12 +86,14 @@ int main()
 	// STEP 2 : CHARACTERS DETECTION
 	// -----------------------------
 
+	unsigned char *characters = Labelling_GetCharacters();
+
 	// -------------------------------
 	// STEP 3 : CHARACTERS RECOGNITION
 	// -------------------------------
 
 	// Solve XOR
-	int mode = 1;
+	int mode = 0;
 	if(mode == 0)
 	{
 		Start(2, 4, 2);
@@ -113,7 +118,8 @@ int main()
 		imageWidth,
 		imageHeight,
 		grayscaleImageMatrix,
-		binarizedImageMatrix
+		binarizedImageMatrix,
+		characters
 	);
 
 	return 0;
