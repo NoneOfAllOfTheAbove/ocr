@@ -23,7 +23,8 @@ void initArray(Array *a, size_t initialSize) {
 void insertArray(Array *a, unsigned char element) {
   if (a->used == a->size) {
     a->size *= 2;
-    a->array = (unsigned char *)realloc(a->array, a->size * sizeof(unsigned char));
+    a->array =
+    (unsigned char *)realloc(a->array, a->size * sizeof(unsigned char));
   }
   a->array[a->used++] = element;
 }
@@ -41,21 +42,20 @@ Array equivalences;
 // ---------**labels has the same size of **matrix and contains labels
 // -------------------------------------------------------------------
 
-double** ConstructMatrix(size_t line, size_t column);
-/*double** ConstructMatrix(size_t line, size_t column)
+int **BuildMatrix(size_t line, size_t column)
 {
-	double **matrix = (double **) malloc(sizeof(double *) * line);
+	int **matrix = (int **) malloc(sizeof(int *) * line);
         if (matrix == NULL)
                 exit(0);
 	for (size_t i = 0; i < line; i++)
         {
-                *(matrix + i) = (double *) malloc(sizeof(double) * column);
+                *(matrix + i) = (int *) malloc(sizeof(int) * column);
 
         }
 	return matrix;
-}*/
+}
 
-double **labels;
+int **labels;
 int label_count = 1;
 
 
@@ -80,6 +80,10 @@ void CheckNeighbours(int x, int y)
 
   //Neighbours traversal variables
   int neighbours_labels[8];
+  for (size_t i = 0; i < 8; i++)
+  {
+      neighbours_labels[i] = 0;
+  }
   int neighbours_labeled = 0;
   int neighbours_count = 0;
 
@@ -98,11 +102,13 @@ void CheckNeighbours(int x, int y)
       }
       //Checking if neighbour(index_x,index_y) has already a label
       int tmp_label = labels[index_y][index_x];
+      //printf("Neighbour (%i,%i) has label : %i\n", index_x, index_y, labels[index_y][index_x]);
       if (tmp_label != 0)
         {
-          neighbours_labeled +=1;
-          neighbours_labels[neighbours_count] = tmp_label;
-          neighbours_count++;
+            //printf("%s\n", "Label is not zero");
+            neighbours_labeled +=1;
+            neighbours_labels[neighbours_count] = tmp_label;
+            neighbours_count++;
         }
     }
   }
@@ -148,7 +154,7 @@ void Labelling_FirstPass(unsigned char **matrix)
   //We create an array of matrix's size to store labels
 
   // labels[y][x]
-  labels = ConstructMatrix(imageHeight, imageWidth);
+  labels = BuildMatrix(imageHeight, imageWidth);
 
   //Initializing labels[y][x] properly
   for (size_t y = 0; (int) y < imageHeight; y++)
@@ -170,8 +176,10 @@ void Labelling_FirstPass(unsigned char **matrix)
   {
     for (size_t x = 0; (int) x < imageWidth; x++)
     {
+        //printf("(%li,%li) = %u\n", x, y, matrix[y][x]);
         if (matrix[y][x] != 0)
         {
+            //printf("%s\n", "Checking neighbours");
             CheckNeighbours(x, y);
         }
     }
@@ -302,9 +310,10 @@ unsigned char *Bloc_Detection(unsigned char **matrix)
     return blocs.array;
 }
 
+Array lines;
 unsigned char *Line_Detection(unsigned char **matrix, unsigned char *xblocs)
 {
-    Array lines;
+
     initArray(&lines, 1);
 
     for (size_t b = 0; b < xblocs[0]; b+=2)
@@ -359,6 +368,8 @@ unsigned char *Labelling(unsigned char **matrix, int width, int height)
     imageWidth = width;
     imageHeight = height;
 
+    //printf("%s\n", "Calling first pass...");
+
     Labelling_FirstPass(matrix);
     Labelling_SecondPass();
     unsigned char *chars = Labelling_GetCharacters();
@@ -372,9 +383,9 @@ unsigned char *Bloc_Line_Detection(unsigned char **matrix)
 {
     unsigned char *blocs_x = Bloc_Detection(matrix);
     freeArray(&blocs);
-    unsigned char *lines = Line_Detection(matrix, blocs_x);
+    unsigned char *line = Line_Detection(matrix, blocs_x);
     freeArray(&lines);
-    return lines;
+    return line;
 }
 
 //int main(){return 0;}
