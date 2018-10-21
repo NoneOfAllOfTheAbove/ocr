@@ -83,6 +83,8 @@ int main()
 	// STEP 2 : CHARACTERS DETECTION
 	// -----------------------------
 
+	//unsigned char *result = Labelling(binarizedImageMatrix, imageWidth, imageHeight);
+
 	// -------------------------------
 	// STEP 3 : CHARACTERS RECOGNITION
 	// -------------------------------
