@@ -86,7 +86,7 @@ int main(int argc, char** argv)
 	// STEP 2 : CHARACTERS DETECTION
 	// -----------------------------
 
-	unsigned char *result = Labelling(binarizedImageMatrix, imageWidth, imageHeight);
+	//unsigned char *characters = Labelling(binarizedImageMatrix, imageWidth, imageHeight);
 
 	// -------------------------------
 	// STEP 3 : CHARACTERS RECOGNITION
@@ -118,8 +118,7 @@ int main(int argc, char** argv)
 		imageWidth,
 		imageHeight,
 		grayscaleImageMatrix,
-		binarizedImageMatrix,
-		characters
+		binarizedImageMatrix
 	);
 
 	return 0;

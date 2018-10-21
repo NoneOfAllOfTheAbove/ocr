@@ -33,8 +33,7 @@ void StartDemoGUI(
 	int width,
 	int height,
 	unsigned char **grayscaleImageMatrix,
-	unsigned char **binarizedImageMatrix,
-	unsigned char *characters
+	unsigned char **binarizedImageMatrix
 )
 {
 	SDL_Event event;
@@ -58,7 +57,7 @@ void StartDemoGUI(
 				DrawMatrix(renderer, width, height, binarizedImageMatrix);
 			}
 			else if(demoGUIStep == 1) {
-				for(size_t i = 0; i < sizeof(characters); i += 4)
+				/*for(size_t i = 0; i < sizeof(characters); i += 4)
 				{
 					printf("%d %d %d %d", characters[0], characters[1], characters[2], characters[3]);
 					SDL_Rect srcrect;
@@ -67,8 +66,9 @@ void StartDemoGUI(
 					srcrect.w = characters[2] - srcrect.x;
 					srcrect.h = characters[3] - srcrect.y;
 					SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-					SDL_RenderFillRect(renderer, &srcrect);
-				}
+					SDL_RenderDrawRect(renderer, &srcrect);
+					SDL_RenderPresent(renderer);
+				}*/
 			}
 			demoGUIStep++;
 		}
