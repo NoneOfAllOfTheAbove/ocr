@@ -9,6 +9,8 @@
 #include "Preprocessing.h"
 #include "DemoGUI.h"
 
+#include "Segmentation.h"
+
 void PrintXORSolutions()
 {
 	double input1[] = {1, 0};
@@ -71,7 +73,7 @@ int main()
 
 	char imagePath[] = "test.png";
 	int imageWidth, imageHeight;
-	
+
 	unsigned char **grayscaleImageMatrix =
 		ImageToGrayscale(imagePath, &imageWidth, &imageHeight);
 	unsigned char **binarizedImageMatrix =
