@@ -43,7 +43,7 @@ unsigned char **ImageToGrayscale(
 
 			Uint8 r, g, b;
 			SDL_GetRGB(pixel, imageSurface->format, &r, &g, &b);
-			matrix[y][x] = (r + g + b) / 3;
+			matrix[y][x] = (0.3 * r) + (0.59 * g) + (0.11 * b);
 		}
 	}
 
