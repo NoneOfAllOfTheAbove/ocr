@@ -6,10 +6,10 @@
 // just for tests
 #include <time.h>
 
-#include "NeuralNetwork.h"
-#include "Preprocessing.h"
-#include "DemoGUI.h"
-#include "Segmentation.h"
+#include "NeuralNetwork/NeuralNetwork.h"
+#include "Preprocessing/Preprocessing.h"
+#include "GUI/DemoGUI.h"
+#include "Segmentation/Segmentation.h"
 
 void PrintXORSolutions()
 {
@@ -92,6 +92,8 @@ int main(int argc, char** argv)
 	// STEP 3 : CHARACTERS RECOGNITION
 	// -------------------------------
 
+	char nnDataPath[] = "docs/nn.data";
+
 	// Solve XOR
 	int mode = 0;
 	if(mode == 0)
@@ -102,10 +104,10 @@ int main(int argc, char** argv)
 		TrainXOR();
 		printf("\n\n\nAfter training:\n\n");
 		PrintXORSolutions();
-		Save("nn.txt");
+		Save(nnDataPath);
 	} else {
 		Start(2, 4, 2);
-		Load("nn.txt");
+		Load(nnDataPath);
 		printf("\n\n\nPredictions of loaded NN:\n\n");
 		PrintXORSolutions();
 	}
