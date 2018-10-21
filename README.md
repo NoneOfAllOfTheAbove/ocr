@@ -1,6 +1,6 @@
 # OCR
 
-
+![Logo](https://raw.githubusercontent.com/NoneOfAllOfTheAbove/OCR/master/docs/logo.png =50x50)
 
 ## Usage
 
