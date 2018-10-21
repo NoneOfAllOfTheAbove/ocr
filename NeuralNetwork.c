@@ -411,7 +411,7 @@ void Load(char *path)
 	rewind(f);
 	while (fgets(str, 1000, f) != NULL)
 	{
-		if (str[0] != '#' && str[0] != '\n' && str[0] != ' ' && str[0] != '\0')
+		if (str[0] != '#' && str[0] != '\n' && str[0] != ' ' && str[0] != '\0' && (int)str[0] != 13)
 		{
 			double a;
 			sscanf(str, "%le", &a);

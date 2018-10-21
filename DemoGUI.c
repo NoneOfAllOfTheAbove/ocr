@@ -33,7 +33,8 @@ void StartDemoGUI(
 	int width,
 	int height,
 	unsigned char **grayscaleImageMatrix,
-	unsigned char **binarizedImageMatrix
+	unsigned char **binarizedImageMatrix,
+	unsigned char *characters
 )
 {
 	SDL_Event event;
@@ -57,7 +58,17 @@ void StartDemoGUI(
 				DrawMatrix(renderer, width, height, binarizedImageMatrix);
 			}
 			else if(demoGUIStep == 1) {
-				// draw Louis work
+				for(size_t i = 0; i < sizeof(characters); i += 4)
+				{
+					printf("%d %d %d %d", characters[0], characters[1], characters[2], characters[3]);
+					SDL_Rect srcrect;
+					srcrect.x = characters[0];
+					srcrect.y = characters[1];
+					srcrect.w = characters[2] - srcrect.x;
+					srcrect.h = characters[3] - srcrect.y;
+					SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+					SDL_RenderFillRect(renderer, &srcrect);
+				}
 			}
 			demoGUIStep++;
 		}
