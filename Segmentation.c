@@ -188,6 +188,7 @@ void Labelling_FirstPass(unsigned char **matrix)
 }
 
 // useful_labels is an array containing only labels without smaller equivalences
+
 Array useful_labels;
 
 void Labelling_SecondPass()
