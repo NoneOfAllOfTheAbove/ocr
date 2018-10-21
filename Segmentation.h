@@ -7,6 +7,7 @@ typedef struct {
  size_t size;
 } Array ;
 
+int **BuildMatrix(size_t line, size_t column);
 unsigned char *Bloc_Detection(unsigned char **matrix);
 unsigned char *Labelling_GetCharacters();
 unsigned char *Labelling(unsigned char **matrix, int width, int height);
