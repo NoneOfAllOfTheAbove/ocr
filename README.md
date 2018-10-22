@@ -5,6 +5,7 @@
 ## Presentation
 
 ![Logo](https://raw.githubusercontent.com/NoneOfAllOfTheAbove/OCR/master/docs/logo_small.png)  
+
 OCR stands for Optical Character Recognition software. As part of a student project, our objective is to make a program capable of extracting text from images.  
 To learn more you can check documents and reports in `docs/`.
 
@@ -18,4 +19,4 @@ Dependencies: `SDL2`, `SDL2_image` and `GTK+ 3`.
 
 ## Contributing
 
-Refer to `CONTRIBUTING.md`.
+Refer to [CONTRIBUTING.md](https://raw.githubusercontent.com/NoneOfAllOfTheAbove/OCR/master/CONTRIBUTING.md).
