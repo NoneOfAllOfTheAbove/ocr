@@ -38,15 +38,6 @@ double *CreateArray(size_t size)
 	return array;
 }
 
-// free a matrix
-void FreeMatrix(double **mat, size_t line)
-{
-	for (size_t i = 0; i < line; i++)
-	{
-		free(mat[i]);
-	}
-	free(mat);
-}
 
 // ----------------------------------Start----------------------------------
 
