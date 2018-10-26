@@ -23,7 +23,7 @@ int **CreateAMatrixInt(int width, int height)
 	return matrix;
 }
 
-int GetNumberHorizontalWhiteNeighbors(unsigned char **array, int x, int y, int maxPos)
+int GetNumberHorizontalWhiteNeighbors(unsigned char **array, int x, int y, int maxPos, int step)
 {
 	int count = 0;
 	int i = x + 1;
@@ -32,6 +32,8 @@ int GetNumberHorizontalWhiteNeighbors(unsigned char **array, int x, int y, int m
 		count++;
 		i++;
 	}
+	if(i == maxPos)
+		count += step;
 
 	i = x;
 	while (i > 0 && array[y][i] == 0)
@@ -39,10 +41,13 @@ int GetNumberHorizontalWhiteNeighbors(unsigned char **array, int x, int y, int m
 		count++;
 		i--;
 	}
+	if(i == 0)
+		count += step;
+
 	return count;
 }
 
-int GetNumberVerticalWhiteNeighbors(unsigned char **array, int x, int y, int maxPos)
+int GetNumberVerticalWhiteNeighbors(unsigned char **array, int x, int y, int maxPos, int step)
 {
 	int count = 0;
 	int i = y + 1;
@@ -51,19 +56,25 @@ int GetNumberVerticalWhiteNeighbors(unsigned char **array, int x, int y, int max
 		count++;
 		i++;
 	}
+	if(i == maxPos)
+		count += step;
+
 	i = y;
 	while (i > 0 && array[i][x] == 0)
 	{
 		count++;
 		i--;
 	}
+	if(i == 0)
+		count += step;
+
 	return count;
 }
 
 unsigned char **DetectBlocks(unsigned char **binarizedImageMatrix, int imageWidth, int imageHeight)
 {
 	// if white space > 4 => two different blocs
-	int horizontalStep = 12; 
+	int horizontalStep = 20; 
 	int verticalStep = 30; 
 	unsigned char **horizontalResult = CreateAMatrix(imageWidth, imageHeight);
 	unsigned char **verticalResult = CreateAMatrix(imageWidth, imageHeight);
@@ -77,7 +88,7 @@ unsigned char **DetectBlocks(unsigned char **binarizedImageMatrix, int imageWidt
 		{
 			if(binarizedImageMatrix[y][x] == 0)
 			{
-				int n = GetNumberHorizontalWhiteNeighbors(binarizedImageMatrix, x, y, imageWidth);
+				int n = GetNumberHorizontalWhiteNeighbors(binarizedImageMatrix, x, y, imageWidth, horizontalStep);
 				if(n <= horizontalStep)
 				{
 					horizontalResult[y][x] = 1;
@@ -95,9 +106,9 @@ unsigned char **DetectBlocks(unsigned char **binarizedImageMatrix, int imageWidt
 	{
 		for(int x = 0; x < imageWidth; x++)
 		{
-			if(binarizedImageMatrix[y][x] == 0)
+			if(horizontalResult[y][x] == 0)
 			{
-				int n = GetNumberVerticalWhiteNeighbors(binarizedImageMatrix, x, y, imageHeight);
+				int n = GetNumberVerticalWhiteNeighbors(horizontalResult, x, y, imageHeight, verticalStep);
 				if(n <= verticalStep)
 				{
 					verticalResult[y][x] = 1;
@@ -110,18 +121,18 @@ unsigned char **DetectBlocks(unsigned char **binarizedImageMatrix, int imageWidt
 		}
 	}
 
-	// Combine both results
+	/*/ Combine both results
 	for(int y = 0; y < imageHeight; y++)
 	{
 		for(int x = 0; x < imageWidth; x++)
 		{
-			if(horizontalResult[y][x] == 0 && verticalResult[y][x] == 0)
+			if(horizontalResult[y][x] == 1 && verticalResult[y][x] == 1)
 			{
-				combinedResult[y][x] = 0;
+				combinedResult[y][x] = 1;
 			}
 			else
 			{
-				combinedResult[y][x] = 1;
+				combinedResult[y][x] = 0;
 			}
 		}
 	}
@@ -133,7 +144,7 @@ unsigned char **DetectBlocks(unsigned char **binarizedImageMatrix, int imageWidt
 		{
 			if(combinedResult[y][x] == 0)
 			{
-				int n = GetNumberHorizontalWhiteNeighbors(combinedResult, x, y, imageWidth);
+				int n = GetNumberHorizontalWhiteNeighbors(combinedResult, x, y, imageWidth, horizontalStep);
 				if(n <= horizontalStep)
 				{
 					finalResult[y][x] = 1;
@@ -144,9 +155,9 @@ unsigned char **DetectBlocks(unsigned char **binarizedImageMatrix, int imageWidt
 				finalResult[y][x] = 1;
 			}
 		}
-	}
+	}*/
 
-	return finalResult;
+	return verticalResult;
 }
 
 
@@ -204,7 +215,7 @@ int **GetBlocks(unsigned char** matrix, int imageWidth, int imageHeight)
 				Labeling(matrix, x, y, imageWidth, imageHeight, &xMin, &yMin, &xMax, &yMax, k);
 				blocks[0][i] = xMin;
 				blocks[0][i + 1] = yMin;
-				blocks[0][i + 2] = xMax;
+				blocks[0][i + 2] = xMax + 5;
 				blocks[0][i + 3] = yMax + 5;
 				i += 4;
 				k++;
