@@ -205,7 +205,7 @@ int **GetBlocks(unsigned char** matrix, int imageWidth, int imageHeight)
 				blocks[0][i] = xMin;
 				blocks[0][i + 1] = yMin;
 				blocks[0][i + 2] = xMax;
-				blocks[0][i + 3] = yMax;
+				blocks[0][i + 3] = yMax + 5;
 				i += 4;
 				k++;
 			}
@@ -221,6 +221,55 @@ To do
 
 - Fix sticky to borders
 - Fix problem blocks size
-- LinesDetection
+- Organization objects
 
 */
+
+int** GetLines(unsigned char **matrix, int **blocks, int imageWidth, int imageHeight)
+{
+	int** lines = CreateAMatrixInt(100, 1);
+
+	int state = 0;
+	int numberOfLines = 0;
+	int x1 = blocks[0][0];
+	int y1 = blocks[0][1];
+	int x2 = blocks[0][2];
+	int y2 = blocks[0][3];
+
+	for(int y = y1; y < y2; y++)
+	{
+		if(state == 0)
+		{
+			int x = x1;
+			while(x < x2 && matrix[y][x] != 1)
+			{
+				x++;
+			}
+			if(x == x2)
+			{
+				lines[0][numberOfLines] = y;
+				numberOfLines++;
+				state = 1;
+			}
+		} 
+		else
+		{
+			int x = x1;
+			int blackPixel = 0;
+			while(x < x2 && blackPixel == 0)
+			{
+				if(matrix[y][x] == 1)
+				{
+					blackPixel = 1;
+				}
+				x++;
+			}
+			if(blackPixel)
+			{
+				state = 0;
+			}
+		}
+	}
+
+	return lines;
+}
