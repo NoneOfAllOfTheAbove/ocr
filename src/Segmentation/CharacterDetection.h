@@ -1,5 +1,5 @@
-#ifndef SEGMENTATION_H
-#define  SEGMENTATION_H
+#ifndef CHARACTERDETECTION_H
+#define CHARACTERDETECTION_H
 
 typedef struct {
  unsigned char *array;
