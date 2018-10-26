@@ -57,26 +57,58 @@ unsigned char **GrayscaleToBinarized(
 	int imageHeight
 )
 {
-	// Create matrix
-	unsigned char **matrix = CreateImageMatrix(imageWidth, imageHeight);
-
-	// Compute average intensity
-	int totalIntensity = 0;
+	// Otsu's method: https://en.wikipedia.org/wiki/Otsu%27s_method
+	
+	// Prepare variables
+	int histogram[256];
+	int threshold = 0, var_max = 0, sum = 0, sumB = 0, q1 = 0, q2 = 0, u1 = 0, u2 = 0;
+	
+	// Prepare histogram
+	for(int i = 0; i <= 255; i++)
+	{
+		histogram[i] = 0;
+	}
 	for (int y = 0; y < imageHeight; y++)
 	{
 		for (int x = 0; x < imageWidth; x++)
 		{
-			totalIntensity += grayscaleImageMatrix[y][x];
+			int value = grayscaleImageMatrix[y][x];
+			histogram[value]++;
 		}
 	}
-	int averageIntensity = totalIntensity / (imageWidth * imageHeight);
+	for(int i = 0; i <= 255; i++)
+	{
+		sum += i * histogram[i];
+	}
 
-	// Fill matrix
+	// Otsu's main algorithm
+	for(int t = 0; t <= 255; t++)
+	{
+		q1 += histogram[t];
+		if(q1 == 0)
+		{
+			continue;
+		}
+		q2 += (imageWidth * imageHeight) - q1;
+		sumB += t * histogram[t];
+		u1 = sumB / q1;
+		u2 = (sum - sumB) / q2;
+		int current = q1 * q2 * (u1 - u2) * (u1 - u2);
+
+		if(current > var_max)
+		{
+			threshold = t;
+			var_max = current;
+		}
+	}
+
+	// Create binarized matrix
+	unsigned char **matrix = CreateImageMatrix(imageWidth, imageHeight);
 	for (int y = 0; y < imageHeight; y++)
 	{
 		for (int x = 0; x < imageWidth; x++)
 		{
-			if (grayscaleImageMatrix[y][x] > averageIntensity)
+			if(grayscaleImageMatrix[y][x] > threshold)
 			{
 				matrix[y][x] = 0;
 			}
