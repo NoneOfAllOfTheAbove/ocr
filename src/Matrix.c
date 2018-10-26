@@ -34,3 +34,12 @@ double **CreateDoubleMatrix(size_t line, size_t column)
 	}
 	return matrix;
 }
+
+void FreeMatrix(double **matrix, size_t line)
+{
+	for (size_t i = 0; i < line; i++)
+	{
+		free(matrix[i]);
+	}
+	free(matrix);
+}
