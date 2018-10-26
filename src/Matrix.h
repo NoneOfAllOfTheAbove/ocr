@@ -7,4 +7,6 @@ double **CreateDoubleMatrix(size_t line, size_t column);
 
 void FreeMatrix(double**, size_t);
 
+unsigned char **GetSubMatrix(unsigned char **matrix, int x1, int y1, int x2, int y2);
+
 #endif
