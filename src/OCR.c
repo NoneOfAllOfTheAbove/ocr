@@ -94,6 +94,8 @@ int main(int argc, char** argv)
 
 	int **lines = DetectLines(binarizedImageMatrix, blocks, blockNumber);
 
+	DetectCharacters(binarizedImageMatrix, imageWidth, imageHeight, blocks, blockNumber, lines);
+	
 	// -------------------------------
 	// STEP 3 : CHARACTERS RECOGNITION
 	// -------------------------------

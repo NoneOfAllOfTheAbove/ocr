@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <SDL2/SDL_image.h>
+#include <err.h>
 
 #include "../Matrix.h"
 
@@ -13,6 +14,10 @@ unsigned char **ImageToGrayscale(
 	//IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF);
 	SDL_Surface *imageSurface;
 	imageSurface = IMG_Load(imagePath);
+	if(!imageSurface)
+	{
+		errx(1, "%s", IMG_GetError());
+	}
 	*imageWidth = imageSurface->w;
 	*imageHeight = imageSurface->h;
 
