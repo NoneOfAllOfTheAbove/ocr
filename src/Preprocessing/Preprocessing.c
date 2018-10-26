@@ -78,11 +78,11 @@ unsigned char **GrayscaleToBinarized(
 		{
 			if (grayscaleImageMatrix[y][x] > averageIntensity)
 			{
-				matrix[y][x] = 255;
+				matrix[y][x] = 0;
 			}
 			else
 			{
-				matrix[y][x] = 0;
+				matrix[y][x] = 1;
 			}
 		}
 	}
