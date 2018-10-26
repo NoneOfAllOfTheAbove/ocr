@@ -3,7 +3,7 @@
 #include <stdbool.h>
 
 
-#include "Segmentation.h"
+#include "CharacterDetection.h"
 // -------------------------------------------------------------------
 // ---------------- Building structure for label equivalences storing
 // -------------------------------------------------------------------
