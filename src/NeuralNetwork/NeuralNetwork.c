@@ -3,6 +3,8 @@
 #include <time.h>
 #include <math.h>
 
+#include "../Matrix.h"
+
 // Define global values that represents our neural network. The names are
 // explicit you should be able to understand to what each value correspond.
 
@@ -21,24 +23,14 @@ double **weightHiddenToOutput;
 // the matrix to determine at the moment of the compilation and create a matrix
 // of the exact needed size.
 
-double **ConstructMatrix(size_t line, size_t column)
-{
-	double **matrix = (double **)malloc(sizeof(double *) * line);
-	if (matrix == NULL)
-		exit(0);
-	for (size_t i = 0; i < line; i++)
-	{
-		*(matrix + i) = (double *)malloc(sizeof(double) * column);
-	}
-	return matrix;
-}
+// placed in Matrix.c now
 
 // This function creates and return a 1-dimensional matrix (an array) of size
 // size, to do so it is going to return a *pointer. The dynamic allocation of
 // the memory (malloc) permit to let the size of the matrix to determine at
 // the moment of the compilation and create a matrix of the exact needed size.
 
-double *ConstructArray(size_t size)
+double *CreateArray(size_t size)
 {
 	double *array = (double *)malloc(sizeof(double) * size);
 	if (array == NULL)
@@ -72,14 +64,14 @@ void Start(size_t inputNodes, size_t hiddenNodes, size_t outputNodes)
 	srand(time(NULL)); // seed the rand()
 
 	// construction of the array biasHiddenLayer, fill it with random values
-	biasHiddenLayer = ConstructArray(hiddenNodes);
+	biasHiddenLayer = CreateArray(hiddenNodes);
 	for (size_t i = 0; i < hiddenNodes; i++)
 	{
 		biasHiddenLayer[i] = (rand() / (double)RAND_MAX) * 2 - 1;
 	}
 
 	// construction of the array biasOutput, fill it with random values
-	biasOutput = ConstructArray(outputNodes);
+	biasOutput = CreateArray(outputNodes);
 	for (size_t i = 0; i < outputNodes; i++)
 	{
 		biasOutput[i] = (rand() / (double)RAND_MAX) * 2 - 1;
@@ -87,7 +79,7 @@ void Start(size_t inputNodes, size_t hiddenNodes, size_t outputNodes)
 
 	// construction of the 2-dimensional matrix weigthInputToHidden,
 	// fill it with random values
-	weightInputToHidden = ConstructMatrix(inputNodes, hiddenNodes);
+	weightInputToHidden = CreateDoubleMatrix(inputNodes, hiddenNodes);
 	for (size_t j = 0; j < inputNodes; j++)
 	{
 		for (size_t k = 0; k < hiddenNodes; k++)
@@ -96,7 +88,7 @@ void Start(size_t inputNodes, size_t hiddenNodes, size_t outputNodes)
 
 	// construction of the 2-dimensional matrix weigthHiddenToOutput,
 	// fill it with random values
-	weightHiddenToOutput = ConstructMatrix(hiddenNodes, outputNodes);
+	weightHiddenToOutput = CreateDoubleMatrix(hiddenNodes, outputNodes);
 	for (size_t j = 0; j < hiddenNodes; j++)
 	{
 		for (size_t k = 0; k < outputNodes; k++)
@@ -113,7 +105,7 @@ double *Predict(double inputs[])
 	// layer by computing the weighted sum add the bias and apply
 	// sigmoid to every element of hiddenres.
 
-	double *hiddenRes = ConstructArray(numberHiddenNodes);
+	double *hiddenRes = CreateArray(numberHiddenNodes);
 	for (size_t i = 0; i < numberHiddenNodes; i++)
 		hiddenRes[i] = 0;
 	for (size_t j = 0; j < numberHiddenNodes; j++)
@@ -141,7 +133,7 @@ double *Predict(double inputs[])
 	// layer by computing the weighted sum add the bias and apply
 	// sigmoid to every element of output. CCC
 
-	double *outputs = ConstructArray(numberOutputNodes);
+	double *outputs = CreateArray(numberOutputNodes);
 
 	for (size_t i = 0; i < numberOutputNodes; i++)
 		outputs[i] = 0;
@@ -198,7 +190,7 @@ void Train(double inputs[], double targets[])
 	// layer by computing the weighted sum add the bias and apply
 	// sigmoid to every element of hiddenres.
 
-	double *hiddenRes = ConstructArray(numberHiddenNodes);
+	double *hiddenRes = CreateArray(numberHiddenNodes);
 	for (size_t i = 0; i < numberHiddenNodes; i++)
 		hiddenRes[i] = 0;
 	for (size_t j = 0; j < numberHiddenNodes; j++)
@@ -218,7 +210,7 @@ void Train(double inputs[], double targets[])
 	//layer and the hidden layer. It is also the input to the
 	//feedforward between hidden and output.
 
-	double *outputs = ConstructArray(numberOutputNodes);
+	double *outputs = CreateArray(numberOutputNodes);
 	//double sumsoftmax = 0;
 	/*
 		for (size_t i = 0; i < numberOutputNodes; i++)
@@ -258,7 +250,7 @@ void Train(double inputs[], double targets[])
 
 	//----------------------Output to Hidden---------------------------
 	// calculate the error of the output layer
-	double *errorOutput = ConstructArray(numberOutputNodes);
+	double *errorOutput = CreateArray(numberOutputNodes);
 	for (size_t i = 0; i < numberOutputNodes; i++)
 		errorOutput[i] = targets[i] - outputs[i];
 
@@ -272,7 +264,7 @@ void Train(double inputs[], double targets[])
 	// Finally create the delta weight matrix
 	// if error look here first ! (matrix dimension)
 	double **deltaWeightHiddenToOutput =
-		ConstructMatrix(numberHiddenNodes, numberOutputNodes);
+		CreateDoubleMatrix(numberHiddenNodes, numberOutputNodes);
 
 	for (size_t i = 0; i < numberHiddenNodes; i++)
 	{
@@ -296,7 +288,7 @@ void Train(double inputs[], double targets[])
 	// weight*errorOutput
 
 	// LOOK HERE IF THERE ARE ERRORS
-	double *errorHidden = ConstructArray(numberHiddenNodes);
+	double *errorHidden = CreateArray(numberHiddenNodes);
 	for (size_t i = 0; i < numberHiddenNodes; i++)
 		errorHidden[i] = 0;
 
@@ -314,7 +306,7 @@ void Train(double inputs[], double targets[])
 	}
 
 	// Finally create the deltaweight matrix
-	double **deltaWeightInputToHidden = ConstructMatrix(
+	double **deltaWeightInputToHidden = CreateDoubleMatrix(
 		numberInputNodes,
 		numberHiddenNodes
 	);

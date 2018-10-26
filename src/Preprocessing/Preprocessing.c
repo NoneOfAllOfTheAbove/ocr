@@ -1,17 +1,7 @@
 #include <stdio.h>
-#include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-unsigned char **CreateImageMatrix(int width, int height)
-{
-	unsigned char **matrix =
-		(unsigned char **)malloc(sizeof(unsigned char *) * height);
-	for (int i = 0; i < height; i++)
-	{
-		*(matrix + i) = (unsigned char *)malloc(sizeof(unsigned char) * width);
-	}
-	return matrix;
-}
+#include "../Matrix.h"
 
 unsigned char **ImageToGrayscale(
 	char imagePath[],
@@ -27,7 +17,7 @@ unsigned char **ImageToGrayscale(
 	*imageHeight = imageSurface->h;
 
 	// Create matrix
-	unsigned char **matrix = CreateImageMatrix(
+	unsigned char **matrix = CreateCharMatrix(
 		imageSurface->w,
 		imageSurface->h
 	);
@@ -103,7 +93,7 @@ unsigned char **GrayscaleToBinarized(
 	}
 
 	// Create binarized matrix
-	unsigned char **matrix = CreateImageMatrix(imageWidth, imageHeight);
+	unsigned char **matrix = CreateCharMatrix(imageWidth, imageHeight);
 	for (int y = 0; y < imageHeight; y++)
 	{
 		for (int x = 0; x < imageWidth; x++)
