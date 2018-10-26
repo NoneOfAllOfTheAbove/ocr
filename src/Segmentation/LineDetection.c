@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "../Matrix.h"
 
@@ -27,7 +26,7 @@ int** DetectLines(unsigned char **matrix, int **blocks, int blockNumber)
 				}
 				if(x == x2)
 				{
-					lines[i][numberOfLines] = y;
+					lines[i][numberOfLines + 1] = y;
 					numberOfLines++;
 					state = 1;
 				}
@@ -50,6 +49,9 @@ int** DetectLines(unsigned char **matrix, int **blocks, int blockNumber)
 				}
 			}
 		}
+	
+		lines[i][0] = numberOfLines;
+	
 	}
 
 	return lines;

@@ -70,7 +70,7 @@ void StartDemoGUI(
 		SDL_RenderDrawRect(renderer, &rect);
 
 		// Lines
-		for(int j = 0; j < 4; j++)
+		for(int j = 1; j < lines[i][0] + 1; j++)
 		{
 			SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 			SDL_RenderDrawLine(renderer, blocks[i][0], lines[i][j], blocks[i][2], lines[i][j]);
