@@ -5,8 +5,9 @@
 #include <time.h> // just for tests
 
 #include "Preprocessing/Preprocessing.h"
-#include "Segmentation/Segmentation.h"
 #include "Segmentation/BlockDetection.h"
+#include "Segmentation/LineDetection.h"
+#include "Segmentation/CharacterDetection.h"
 #include "NeuralNetwork/NeuralNetwork.h"
 #include "GUI/DemoGUI.h"
 
@@ -88,18 +89,19 @@ int main(int argc, char** argv)
 	// STEP 2 : SEGMENTATION
 	// ---------------------
 
-	unsigned char **blocksMap = DetectBlocks(binarizedImageMatrix, imageWidth, imageHeight);
-	int **blocks = GetBlocks(blocksMap, imageWidth, imageHeight);
-	int **lines = GetLines(binarizedImageMatrix, blocks, imageWidth, imageHeight);
+	int blockNumber = 0;
+	int **blocks = DetectBlocks(binarizedImageMatrix, &blockNumber, imageWidth, imageHeight);
+
+	int **lines = DetectLines(binarizedImageMatrix, blocks, blockNumber);
 
 	// -------------------------------
 	// STEP 3 : CHARACTERS RECOGNITION
 	// -------------------------------
 
-	//char nnDataPath[] = "docs/nn.data";
+	/*char nnDataPath[] = "docs/nn.data";
 
 	// Solve XOR
-	/*int mode = 0;
+	int mode = 0;
 	if(mode == 0)
 	{
 		Start(2, 4, 2);
@@ -124,8 +126,8 @@ int main(int argc, char** argv)
 		imageWidth,
 		imageHeight,
 		binarizedImageMatrix,
-		blocksMap,
 		blocks,
+		blockNumber,
 		lines
 	);
 
