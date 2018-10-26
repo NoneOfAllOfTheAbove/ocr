@@ -2,14 +2,13 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <err.h>
+#include <time.h> // just for tests
 
-// just for tests
-#include <time.h>
-
-#include "NeuralNetwork/NeuralNetwork.h"
 #include "Preprocessing/Preprocessing.h"
-#include "GUI/DemoGUI.h"
 #include "Segmentation/Segmentation.h"
+#include "Segmentation/BlockDetection.h"
+#include "NeuralNetwork/NeuralNetwork.h"
+#include "GUI/DemoGUI.h"
 
 void PrintXORSolutions()
 {
@@ -67,9 +66,9 @@ void TrainXOR()
 
 int main(int argc, char** argv)
 {
-	// ----------------------------------------
-	// STEP 1 : IMAGE LOADING AND PREPROCESSING
-	// ----------------------------------------
+	// ----------------------
+	// STEP 1 : PREPROCESSING
+	// ----------------------
 
 	if(argc != 2) {
 		errx(1, "You must start the program with one argument.");
@@ -77,25 +76,29 @@ int main(int argc, char** argv)
 
 	int imageWidth, imageHeight;
 
+	// Each pixel is represented as a char between 0 (black) and 255 (white).
 	unsigned char **grayscaleImageMatrix =
 		ImageToGrayscale(argv[1], &imageWidth, &imageHeight);
+
+	// Each pixel is represented as a char either of value 0 (white) or of a value 1 (black).
 	unsigned char **binarizedImageMatrix =
 		GrayscaleToBinarized(grayscaleImageMatrix, imageWidth, imageHeight);
 
-	// -----------------------------
-	// STEP 2 : CHARACTERS DETECTION
-	// -----------------------------
+	// ---------------------
+	// STEP 2 : SEGMENTATION
+	// ---------------------
 
-	//unsigned char *characters = Labelling(binarizedImageMatrix, imageWidth, imageHeight);
+	unsigned char **blocksMap = DetectBlocks(binarizedImageMatrix, imageWidth, imageHeight);
+	int **blocks = GetBlocks(blocksMap, imageWidth, imageHeight);
 
 	// -------------------------------
 	// STEP 3 : CHARACTERS RECOGNITION
 	// -------------------------------
 
-	char nnDataPath[] = "docs/nn.data";
+	//char nnDataPath[] = "docs/nn.data";
 
 	// Solve XOR
-	int mode = 0;
+	/*int mode = 0;
 	if(mode == 0)
 	{
 		Start(2, 4, 2);
@@ -110,7 +113,7 @@ int main(int argc, char** argv)
 		Load(nnDataPath);
 		printf("\n\n\nPredictions of loaded NN:\n\n");
 		PrintXORSolutions();
-	}
+	}*/
 
 	// ----------------------------
 	// STEP 4 : GUI AND TEXT EXPORT
@@ -119,8 +122,9 @@ int main(int argc, char** argv)
 	StartDemoGUI(
 		imageWidth,
 		imageHeight,
-		grayscaleImageMatrix,
-		binarizedImageMatrix
+		binarizedImageMatrix,
+		blocksMap,
+		blocks
 	);
 
 	return 0;
