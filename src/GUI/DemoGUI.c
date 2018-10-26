@@ -46,48 +46,39 @@ void StartDemoGUI(
 	int width,
 	int height,
 	unsigned char **binarizedImageMatrix,
-	unsigned char **blocksMap,
 	int **blocks,
+	int blockNumber,
 	int **lines
 )
 {
-	SDL_Event event;
 	SDL_Renderer *renderer;
 	SDL_Window *window;
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_CreateWindowAndRenderer(width, height, 0, &window, &renderer);
 
 	DrawMatrix(renderer, width, height, binarizedImageMatrix, 255);
-	//waitForKeyPressed();
-	//DrawMatrix(renderer, width, height, blocksMap, 255);
 	waitForKeyPressed();
-	for(int i = 0; i < 80; i += 4)
+	for(int i = 0; i < blockNumber; i++)
 	{
 		// Blocks
 		SDL_Rect rect;
-		rect.x = blocks[0][i];
-		rect.y = blocks[0][i + 1];
-		rect.w = blocks[0][i + 2] - blocks[0][i];
-		rect.h = blocks[0][i + 3] - blocks[0][i + 1];
+		rect.x = blocks[i][0];
+		rect.y = blocks[i][1];
+		rect.w = blocks[i][2] - blocks[i][0];
+		rect.h = blocks[i][3] - blocks[i][1];
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 		SDL_RenderDrawRect(renderer, &rect);
 
 		// Lines
-		for(int i = 0; i < 4; i++)
+		for(int j = 0; j < 4; j++)
 		{
 			SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-			SDL_RenderDrawLine(renderer, blocks[0][0], lines[0][i], blocks[0][2], lines[0][i]);
+			SDL_RenderDrawLine(renderer, blocks[i][0], lines[i][j], blocks[i][2], lines[i][j]);
 		}
 	}
 	SDL_RenderPresent(renderer);
 
-	while (1)
-	{
-		if (SDL_PollEvent(&event) && event.type == SDL_QUIT)
-		{
-			break;
-		}
-	}
+	waitForKeyPressed();
 
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
