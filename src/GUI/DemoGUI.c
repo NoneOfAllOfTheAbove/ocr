@@ -58,6 +58,9 @@ void StartDemoGUI(
 	SDL_CreateWindowAndRenderer(width, height, 0, &window, &renderer);
 
 	DrawMatrix(renderer, width, height, binarizedImageMatrix, 255);
+	//waitForKeyPressed();
+	//DrawMatrix(renderer, width, height, blocksMap, 255);
+	waitForKeyPressed();
 	for(int i = 0; i < 80; i += 4)
 	{
 		// Blocks
@@ -75,9 +78,8 @@ void StartDemoGUI(
 			SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 			SDL_RenderDrawLine(renderer, blocks[0][0], lines[0][i], blocks[0][2], lines[0][i]);
 		}
-
-		SDL_RenderPresent(renderer);
 	}
+	SDL_RenderPresent(renderer);
 
 	while (1)
 	{
