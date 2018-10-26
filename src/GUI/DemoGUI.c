@@ -1,13 +1,27 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 
-int demoGUIStep = 0;
+void waitForKeyPressed()
+{
+	SDL_Event event;
+
+	do
+	{
+		SDL_PollEvent(&event);
+	} while(event.type != SDL_KEYDOWN);
+
+	do
+	{
+		SDL_PollEvent(&event);
+	} while(event.type != SDL_KEYUP);
+}
 
 void DrawMatrix(
 	SDL_Renderer *renderer,
 	int width,
 	int height,
-	unsigned char **matrix
+	unsigned char **matrix,
+	int opacity
 )
 {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
@@ -16,13 +30,12 @@ void DrawMatrix(
 	{
 		for (int x = 0; x < width; x++)
 		{
-			SDL_SetRenderDrawColor(
-				renderer,
-				matrix[y][x],
-				matrix[y][x],
-				matrix[y][x],
-				255
-			);
+			int color = 0;
+			if(matrix[y][x] == 0)
+			{
+				color = 255;
+			}
+			SDL_SetRenderDrawColor(renderer, color, color, color, opacity);
 			SDL_RenderDrawPoint(renderer, x, y);
 		}
 	}
@@ -32,8 +45,9 @@ void DrawMatrix(
 void StartDemoGUI(
 	int width,
 	int height,
-	unsigned char **grayscaleImageMatrix,
-	unsigned char **binarizedImageMatrix
+	unsigned char **binarizedImageMatrix,
+	unsigned char **blocksMap,
+	int **blocks
 )
 {
 	SDL_Event event;
@@ -43,34 +57,28 @@ void StartDemoGUI(
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_CreateWindowAndRenderer(width, height, 0, &window, &renderer);
 
-	DrawMatrix(renderer, width, height, grayscaleImageMatrix);
+	DrawMatrix(renderer, width, height, binarizedImageMatrix, 255);
+	waitForKeyPressed();
+	//DrawMatrix(renderer, width, height, blocksMap, 100);
+	//waitForKeyPressed();
+
+	for(int i = 0; i < 80; i += 4)
+	{
+		SDL_Rect rect;
+		rect.x = blocks[0][i];
+		rect.y = blocks[0][i + 1];
+		rect.w = blocks[0][i + 2] - blocks[0][i];
+		rect.h = blocks[0][i + 3] - blocks[0][i + 1];
+		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+		SDL_RenderDrawRect(renderer, &rect);
+		SDL_RenderPresent(renderer);
+	}
 
 	while (1)
 	{
 		if (SDL_PollEvent(&event) && event.type == SDL_QUIT)
 		{
 			break;
-		}
-		else if (SDL_PollEvent(&event) && event.type == SDL_KEYDOWN)
-		{
-			if(demoGUIStep == 0) {
-				DrawMatrix(renderer, width, height, binarizedImageMatrix);
-			}
-			else if(demoGUIStep == 1) {
-				/*for(size_t i = 0; i < sizeof(characters); i += 4)
-				{
-					printf("%d %d %d %d", characters[0], characters[1], characters[2], characters[3]);
-					SDL_Rect srcrect;
-					srcrect.x = characters[0];
-					srcrect.y = characters[1];
-					srcrect.w = characters[2] - srcrect.x;
-					srcrect.h = characters[3] - srcrect.y;
-					SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-					SDL_RenderDrawRect(renderer, &srcrect);
-					SDL_RenderPresent(renderer);
-				}*/
-			}
-			demoGUIStep++;
 		}
 	}
 
