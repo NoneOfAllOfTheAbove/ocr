@@ -90,6 +90,7 @@ int main(int argc, char** argv)
 
 	unsigned char **blocksMap = DetectBlocks(binarizedImageMatrix, imageWidth, imageHeight);
 	int **blocks = GetBlocks(blocksMap, imageWidth, imageHeight);
+	int **lines = GetLines(binarizedImageMatrix, blocks, imageWidth, imageHeight);
 
 	// -------------------------------
 	// STEP 3 : CHARACTERS RECOGNITION
@@ -124,7 +125,8 @@ int main(int argc, char** argv)
 		imageHeight,
 		binarizedImageMatrix,
 		blocksMap,
-		blocks
+		blocks,
+		lines
 	);
 
 	return 0;
