@@ -47,12 +47,12 @@ void FreeMatrix(double **matrix, size_t line)
 unsigned char **GetSubMatrix(unsigned char **matrix, int x1, int y1, int x2, int y2)
 {
 	unsigned char **result = CreateCharMatrix(x2 - x1, y2 - y1);
-
+	
 	for(int y = 0; y < y2 - y1; y++)
 	{
 		for(int x = 0; x < x2 - x1; x++)
 		{
-			result[y][x] = matrix[y + y1][x + x1];
+			result[y][x] = matrix[y1 + y][x1 + x];
 		}
 	}
 
