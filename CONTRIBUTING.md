@@ -11,9 +11,9 @@ Keep in mind the name of the branch you are associated to.
 Member | Branch
 --- | --- |
 Arielle| `nn-training`
-Ferdinand | `nn-training`
-Louis| `segmentation`
-Theo| `segmentation`
+Ferdinand | `gui`
+Louis| `improve-preprocessing`
+Theo| `improve-segmentation`
 
 ### Workflow
 
