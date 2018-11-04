@@ -73,22 +73,17 @@ void DetectCharacters(unsigned char **binarizedImageMatrix, int imageWidth, int 
 							cx2 += 1;
 							cy2 += 1;
 							unsigned char **characterMatrix = GetSubMatrix(binarizedImageMatrix, cx1, cy1, cx2, cy2);
-							printf("\n");	
-							for(int b = 0; b < cy2 - cy1; b++)
+							characterMatrix = ResizeMatrix(characterMatrix, cx2 - cx1, cy2 -  cy1);
+							printf("\n");
+							for(int b = 0; b < 16; b++)
 							{
-								for(int a = 0; a < cx2 - cx1; a++)
+								for(int a = 0; a < 16; a++)
 								{
-									if(characterMatrix[b][a] == 1)
-									{
-										printf("%d ", characterMatrix[b][a]);
-									} else {
-										printf("  ");
-									}
+									printf("%d ", characterMatrix[b][a]);
 								}
 								printf("\n");
 							}
 						}
-						// put in matrix of 16x16 (RESIZE)
 					}
 				}
 			}
