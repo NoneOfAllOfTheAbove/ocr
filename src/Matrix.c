@@ -1,17 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int **CreateIntMatrix(int width, int height)
-{
-	int **matrix =
-		(int **)malloc(sizeof(int *) * height);
-	for (int i = 0; i < height; i++)
-	{
-		*(matrix + i) = (int *)malloc(sizeof(int) * width);
-	}
-	return matrix;
-}
-
 unsigned char **CreateCharMatrix(int width, int height)
 {
 	unsigned char **matrix =
