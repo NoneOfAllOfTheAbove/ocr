@@ -1,16 +1,15 @@
 TODO
 
 
-
-- Know blockline size => still bug?
-- Resize matrix
-- Detect spaces
-
-
-
-- Detect i/j/,
+Clean:
+- Classes in src/OCR.h
+- Count characters
+- Text manipulated only in Segmentation.c
 - Free segmentation
+-> Push and recreate improve-* branches
 
+
+- Detect spaces/i/j/,
 
 
 - Merge + text export
