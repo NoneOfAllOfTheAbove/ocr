@@ -1,84 +1,76 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 
-void waitForKeyPressed()
+#include "../Preprocessing/Preprocessing.h"
+#include "../Segmentation/Segmentation.h"
+
+void WaitSDL()
 {
 	SDL_Event event;
+	SDL_PollEvent(&event);
 
-	do
+	while(event.type != SDL_KEYDOWN || event.key.keysym.sym != SDLK_RETURN)
 	{
 		SDL_PollEvent(&event);
-	} while(event.type != SDL_KEYDOWN);
-
-	do
-	{
-		SDL_PollEvent(&event);
-	} while(event.type != SDL_KEYUP);
+	}
 }
 
-void DrawMatrix(
-	SDL_Renderer *renderer,
-	int width,
-	int height,
-	unsigned char **matrix,
-	int opacity
-)
+void DrawMatrix(SDL_Renderer *renderer, Image image)
 {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	SDL_RenderClear(renderer);
-	for (int y = 0; y < height; y++)
+	for (int y = 0; y < image.height; y++)
 	{
-		for (int x = 0; x < width; x++)
+		for (int x = 0; x < image.width; x++)
 		{
 			int color = 0;
-			if(matrix[y][x] == 0)
+			if(image.binarized[y][x] == 0)
 			{
 				color = 255;
 			}
-			SDL_SetRenderDrawColor(renderer, color, color, color, opacity);
+			SDL_SetRenderDrawColor(renderer, color, color, color, 255);
 			SDL_RenderDrawPoint(renderer, x, y);
 		}
 	}
-	SDL_RenderPresent(renderer);
+	//SDL_RenderPresent(renderer);
 }
 
-void StartDemoGUI(
-	int width,
-	int height,
-	unsigned char **binarizedImageMatrix,
-	int **blocks,
-	int blockNumber,
-	int **lines
-)
+void StartDemoGUI(Image image, Text text)
 {
 	SDL_Renderer *renderer;
 	SDL_Window *window;
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_CreateWindowAndRenderer(width, height, 0, &window, &renderer);
+	SDL_CreateWindowAndRenderer(image.width, image.height, 0, &window, &renderer);
 
-	DrawMatrix(renderer, width, height, binarizedImageMatrix, 255);
-	waitForKeyPressed();
-	for(int i = 0; i < blockNumber; i++)
+	DrawMatrix(renderer, image);
+	for(int i = 0; i < text.numberOfParagraphs; i++)
 	{
-		// Blocks
+		// Paragraphs
+		Paragraph paragraph = text.paragraphs[i];
 		SDL_Rect rect;
-		rect.x = blocks[i][0];
-		rect.y = blocks[i][1];
-		rect.w = blocks[i][2] - blocks[i][0];
-		rect.h = blocks[i][3] - blocks[i][1];
+		rect.x = paragraph.x;
+		rect.y = paragraph.y;
+		rect.w = paragraph.width;
+		rect.h = paragraph.height;
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 		SDL_RenderDrawRect(renderer, &rect);
 
 		// Lines
-		for(int j = 1; j < lines[i][0] + 1; j++)
+		for(int j = 0; j < paragraph.numberOfLines; j++)
 		{
 			SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-			SDL_RenderDrawLine(renderer, blocks[i][0], lines[i][j], blocks[i][2], lines[i][j]);
+			SDL_RenderDrawLine(
+					renderer,
+					paragraph.x,
+					paragraph.lines[j].y,
+					paragraph.x + paragraph.width,
+					paragraph.lines[j].y
+			);
 		}
 	}
 	SDL_RenderPresent(renderer);
 
-	waitForKeyPressed();
+	WaitSDL();
 
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
