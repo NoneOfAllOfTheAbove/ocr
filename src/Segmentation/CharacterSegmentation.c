@@ -38,6 +38,27 @@ void __DetectCharacters(unsigned char **matrix, int x, int y, int *cx1, int *cy1
 
 }
 
+void __CountCharacters(unsigned char **matrix, int x, int y)
+{
+	if(matrix[y][x] != 1)
+	{
+		return;
+	}
+
+	matrix[y][x] = 2;
+
+	__CountCharacters(matrix, x + 1, y);
+	__CountCharacters(matrix, x - 1, y);
+	__CountCharacters(matrix, x, y + 1);
+	__CountCharacters(matrix, x, y - 1);
+
+	__CountCharacters(matrix, x + 1, y + 1);
+	__CountCharacters(matrix, x - 1, y + 1);
+	__CountCharacters(matrix, x + 1, y - 1);
+	__CountCharacters(matrix, x - 1, y - 1);
+
+}
+
 Text GetCharacters(Image image, Text text)
 {
 	unsigned char **matrix = CreateCharMatrix(image.width, image.height);
@@ -54,8 +75,6 @@ Text GetCharacters(Image image, Text text)
 		int lastY = 0;
 		for(int j = 0; j < text.paragraphs[i].numberOfLines; j++)
 		{
-			Character *characters = (Character*)malloc(sizeof(Character) * 100);
-
 			// Select area of the line
 			int x1 = text.paragraphs[i].x;
 			int y1 = lastY;
@@ -63,13 +82,37 @@ Text GetCharacters(Image image, Text text)
 			int y2 = text.paragraphs[i].lines[j].y;
 			lastY = y2;
 
+			// Count characters
+			int numberOfCharacters = 0;
+			for(int x = x1; x < x2; x++)
+			{
+				for(int y = y1; y < y2; y++)
+				{
+					if(matrix[y][x] == 1)
+					{
+						if(i == 1 && j == 1)
+						{
+							printf("Found character at %d %d \n", x, y);
+						}
+						__CountCharacters(matrix, x, y);
+						numberOfCharacters++;
+					}
+				}
+			}
+			if(i == 1 && j == 1)
+			{
+				printf("RESULT = %d (expected 54))\n", numberOfCharacters);
+			}
+			Character *characters = (Character*)malloc(sizeof(Character) * numberOfCharacters);
+
+
 			// Look for characters
 			int characterId = 0;
 			for(int x = x1; x < x2; x++)
 			{
 				for(int y = y1; y < y2; y++)
 				{
-					if(matrix[y][x] == 1)
+					if(matrix[y][x] == 2)
 					{
 						int cx1 = x, cy1 = y, cx2 = x, cy2 = y;
 						__DetectCharacters(matrix, x, y, &cx1, &cy1, &cx2, &cy2);
@@ -90,7 +133,7 @@ Text GetCharacters(Image image, Text text)
 					}
 				}
 			}
-
+			text.paragraphs[i].lines[j].numberOfCharacters = numberOfCharacters;
 			text.paragraphs[i].lines[j].characters = characters;
 		}
 	}
