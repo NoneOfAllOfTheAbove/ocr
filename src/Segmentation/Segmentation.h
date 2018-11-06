@@ -8,6 +8,8 @@ struct Character
 	int y;
 	
 	unsigned char **matrix;
+
+	char character;
 };
 
 typedef struct Line Line;

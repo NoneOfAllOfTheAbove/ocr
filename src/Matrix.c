@@ -48,7 +48,7 @@ unsigned char **GetSubMatrix(unsigned char **matrix, int x1, int y1, int x2, int
 	return result;
 }
 
-unsigned char **ResizeMatrix(unsigned char **matrix, int oldX, int oldY)
+unsigned char **ResizeMatrix(unsigned char **matrix, int oldX, int oldY, int yOffset)
 {
 	// Step 1: Put matrix in a new matrix of size a * (16 * 16) 	
 	int side = oldX;
@@ -74,7 +74,11 @@ unsigned char **ResizeMatrix(unsigned char **matrix, int oldX, int oldY)
 		}
 	}
 	int leftOffset = (side - oldX) / 2;
-	int topOffset = (side - oldY) / 2;
+	int topOffset = (16 - oldY);
+	if(yOffset > 8)
+	{
+		topOffset = 0;
+	}
 	for(int y = 0; y < oldY; y++)
 	{
 		for(int x = 0; x < oldX; x++)
@@ -115,6 +119,9 @@ unsigned char **ResizeMatrix(unsigned char **matrix, int oldX, int oldY)
 
 		result = resized;
 	}
+
+	result[0][0] = yOffset; 
+
 
 	return result;
 }
