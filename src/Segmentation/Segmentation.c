@@ -9,14 +9,14 @@
 
 void DebugSegmentation(Text text)
 {
-	printf("Text (%d paragraphs)\n\n", text.numberOfParagraphs);
+	/*printf("Text (%d paragraphs)\n\n", text.numberOfParagraphs);
 	for(int i = 0; i < text.numberOfParagraphs; i++)
 	{
 		printf("\t Paragraph %d (%d lines)\n\n", i, text.paragraphs[i].numberOfLines);
 		for(int j = 0; j < text.paragraphs[i].numberOfLines; j++)
 		{
 			printf("\t\t Line %d (%d characters) \n", j, text.paragraphs[i].lines[j].numberOfCharacters);
-			for(int c = 0; c < 3; c++)
+			for(int c = 0; c < text.paragraphs[i].lines[j].numberOfCharacters; c++)
 			{
 				for(int a = 0; a < 16; a++)
 				{
@@ -37,7 +37,29 @@ void DebugSegmentation(Text text)
 			printf("\n\n");
 		}
 		printf("\n\n");
-	}
+	}*/
+
+	/*int i = 1;
+	int j = 1;
+	for(int c = 0; c < text.paragraphs[i].lines[j].numberOfCharacters - 4; c++)
+	{
+		for(int a = 0; a < 16; a++)
+		{
+			for(int b = 0; b < 16; b++)
+			{
+				if(text.paragraphs[i].lines[j].characters[c].matrix[a][b] == 1)
+				{
+					printf("%d ", text.paragraphs[i].lines[j].characters[c].matrix[a][b]);
+				} else
+				{
+					printf("  ");
+				}
+			}
+			printf("\n");
+		}
+		printf("\n");
+	}*/
+
 }
 
 Text Segmentation(Image image)
