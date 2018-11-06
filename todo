@@ -1,16 +1,10 @@
 TODO
 
 
-Clean:
-- Classes in src/OCR.h
-- Count characters
-- Text manipulated only in Segmentation.c
-- Free segmentation
--> Push and recreate improve-* branches
-
-
 - Detect spaces/i/j/,
+- Free segmentation
 
 
 - Merge + text export
 - Font size, layout, images...
+- Clean code (go c++?)
