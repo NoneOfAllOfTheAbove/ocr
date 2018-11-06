@@ -90,49 +90,62 @@ Text GetCharacters(Image image, Text text)
 				{
 					if(matrix[y][x] == 1)
 					{
-						if(i == 1 && j == 1)
-						{
-							printf("Found character at %d %d \n", x, y);
-						}
 						__CountCharacters(matrix, x, y);
 						numberOfCharacters++;
 					}
 				}
 			}
-			if(i == 1 && j == 1)
-			{
-				printf("RESULT = %d (expected 54))\n", numberOfCharacters);
-			}
-			Character *characters = (Character*)malloc(sizeof(Character) * numberOfCharacters);
+			Character *characters = (Character*)malloc(sizeof(Character) * 2 * (1 + numberOfCharacters));
 
 
 			// Look for characters
 			int characterId = 0;
+			int numberRealCharacters = 0;
+			int sumCharacterWidths = 0;
+			int lastX = x1;
 			for(int x = x1; x < x2; x++)
 			{
 				for(int y = y1; y < y2; y++)
 				{
 					if(matrix[y][x] == 2)
 					{
+						// Find character's position
 						int cx1 = x, cy1 = y, cx2 = x, cy2 = y;
 						__DetectCharacters(matrix, x, y, &cx1, &cy1, &cx2, &cy2);
-						
-						if(cx2 - cx1 != 0 && cy2 - cy1 != 0)
+						cx2 += 1;
+						cy2 += 1;
+
+						// Register spaces
+						sumCharacterWidths += cx2 - cx1;
+						int dist = cx1 - lastX;
+						int spaceWidth = sumCharacterWidths / (numberRealCharacters + 1);
+						while(dist >= spaceWidth)
 						{
-							cx2 += 1;
-							cy2 += 1;
-							unsigned char **characterMatrix = GetSubMatrix(image.binarized, cx1, cy1, cx2, cy2);
-							characterMatrix = ResizeMatrix(characterMatrix, cx2 - cx1, cy2 -  cy1);
-							Character character;
-							character.x = x;
-							character.y = y;
-							character.matrix = characterMatrix;
-							characters[characterId] = character;
+							Character space;
+							space.character = ' ';
+							characters[characterId] = space;
 							characterId++;
+							numberOfCharacters++;
+
+							dist -= spaceWidth;
 						}
+						lastX = cx2;
+
+						// Register character
+						unsigned char **characterMatrix = GetSubMatrix(image.binarized, cx1, cy1, cx2, cy2);
+						characterMatrix = ResizeMatrix(characterMatrix, cx2 - cx1, cy2 -  cy1, y2 - cy2);
+						Character character;
+						character.x = x;
+						character.y = y;
+						character.matrix = characterMatrix;
+						character.character = '\0';
+						characters[characterId] = character;
+						characterId++;
+						numberRealCharacters++;
 					}
 				}
 			}
+
 			text.paragraphs[i].lines[j].numberOfCharacters = numberOfCharacters;
 			text.paragraphs[i].lines[j].characters = characters;
 		}

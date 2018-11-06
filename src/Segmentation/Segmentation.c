@@ -7,6 +7,47 @@
 #include "LineSegmentation.h"
 #include "CharacterSegmentation.h"
 
+void PrintCharacter(Character c)
+{
+	if(c.character != '\0')
+	{
+		printf("SPACE");
+	}
+	else
+	{
+		for(int a = 0; a < 16; a++)
+		{
+			for(int b = 0; b < 16; b++)
+			{
+				if(c.matrix[a][b] > 0)
+				{
+					printf("%d ", c.matrix[a][b]);
+				} else
+				{
+					if((a == 0) || (b == 0) || a == 15 || b == 15)
+					{
+						printf("- ");
+					}
+					else
+					{
+						printf("  ");
+					}
+				}
+			}
+			printf("\n");
+		}
+	}
+}
+
+void PrintLine(Line l)
+{
+	for(int c = 0; c < l.numberOfCharacters; c++)
+	{
+		PrintCharacter(l.characters[c]);
+		printf("\n");
+	}
+}
+
 void DebugSegmentation(Text text)
 {
 	/*printf("Text (%d paragraphs)\n\n", text.numberOfParagraphs);
@@ -16,49 +57,11 @@ void DebugSegmentation(Text text)
 		for(int j = 0; j < text.paragraphs[i].numberOfLines; j++)
 		{
 			printf("\t\t Line %d (%d characters) \n", j, text.paragraphs[i].lines[j].numberOfCharacters);
-			for(int c = 0; c < text.paragraphs[i].lines[j].numberOfCharacters; c++)
-			{
-				for(int a = 0; a < 16; a++)
-				{
-					for(int b = 0; b < 16; b++)
-					{
-						if(text.paragraphs[i].lines[j].characters[c].matrix[a][b] == 1)
-						{
-							printf("%d ", text.paragraphs[i].lines[j].characters[c].matrix[a][b]);
-						} else
-						{
-							printf("  ");
-						}
-					}
-					printf("\n");
-				}
-				printf("\n");
-			}
+			PrintLine(text.paragraphs[i].lines[j]);
 			printf("\n\n");
 		}
-		printf("\n\n");
 	}*/
-
-	/*int i = 1;
-	int j = 1;
-	for(int c = 0; c < text.paragraphs[i].lines[j].numberOfCharacters - 4; c++)
-	{
-		for(int a = 0; a < 16; a++)
-		{
-			for(int b = 0; b < 16; b++)
-			{
-				if(text.paragraphs[i].lines[j].characters[c].matrix[a][b] == 1)
-				{
-					printf("%d ", text.paragraphs[i].lines[j].characters[c].matrix[a][b]);
-				} else
-				{
-					printf("  ");
-				}
-			}
-			printf("\n");
-		}
-		printf("\n");
-	}*/
+	PrintLine(text.paragraphs[1].lines[1]);
 
 }
 
