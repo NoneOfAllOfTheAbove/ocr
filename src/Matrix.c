@@ -74,11 +74,7 @@ unsigned char **ResizeMatrix(unsigned char **matrix, int oldX, int oldY, int yOf
 		}
 	}
 	int leftOffset = (side - oldX) / 2;
-	int topOffset = (16 - oldY);
-	if(yOffset > 8)
-	{
-		topOffset = 0;
-	}
+	int topOffset = (side - oldY) / 2;
 	for(int y = 0; y < oldY; y++)
 	{
 		for(int x = 0; x < oldX; x++)
@@ -120,6 +116,26 @@ unsigned char **ResizeMatrix(unsigned char **matrix, int oldX, int oldY, int yOf
 		result = resized;
 	}
 
+	// Step 3: Adjust character position in matrix depending on its relative position
+	unsigned char **adjusted = CreateCharMatrix(16, 16);
+	
+	if(scale > 1)
+		topOffset = (16 - (oldY / scale)) / 2;
+	else
+		topOffset = (16 - oldY) / 2;
+	
+	if(yOffset > 8)
+		topOffset = 0;
+	
+	for(int y = topOffset; y < 16; y++)
+	{
+		for(int x = 0; x < 16; x++)
+		{
+			adjusted[y][x] = result[y - topOffset][x];
+		}
+	}
+	
+	result = adjusted;
 	result[0][0] = yOffset; 
 
 
