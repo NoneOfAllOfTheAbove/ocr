@@ -1,6 +1,7 @@
 TODO
 
 
+- Fix bug handle yOffset when resizing
 - i/j/, : matrix fusion
 - Free segmentation
 
