@@ -145,7 +145,7 @@ Text GetCharacters(Image image, Text text)
 					}
 				}
 			}
-
+			printf("%d %d \n", numberOfCharacters, characterId);
 			text.paragraphs[i].lines[j].numberOfCharacters = numberOfCharacters;
 			text.paragraphs[i].lines[j].characters = characters;
 		}
