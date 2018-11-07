@@ -1,0 +1,1 @@
+To compile: gcc -Wall -Wextra -g GUI.c `pkg-config --cflags --libs gtk+-3.0` -o GUI -export-dynamic
