@@ -10,6 +10,9 @@
 #include "Segmentation/CharacterDetection.h"
 #include "NeuralNetwork/NeuralNetwork.h"
 #include "GUI/DemoGUI.h"
+#include "GUI/GUI.h"
+
+
 
 void PrintXORSolutions()
 {
@@ -132,6 +135,8 @@ int main(int argc, char** argv)
 		blockNumber,
 		lines
 	);
-
+    
+    //code added by Ferdinand.
+	StartGUI(argc, argv);
 	return 0;
 }
