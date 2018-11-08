@@ -123,6 +123,28 @@ static void runButton_activated()
     g_print("Run activated.\n");
 }
 
+/*------------------------------------|FOR THEO|------------------------------------*/
+
+/*------------------Write function------------------*/
+
+static const gchar* writeFunction()
+{
+    const gchar* text = "Si tu ne comprends pas, ou ne maîtrises pas, la notion de coefficient binomial,\
+    inutile de chercher à calculer toi-même les nombres de Catalan, que tu découvris dans cette obscure revue américaine d'algèbre,\
+    croyant qu'il s'agissait de “nombres catalans” (l'anglais Catalan numbers est équivoque), avant de faire le chemin historique et de\
+    découvrir qu'ils auraient tout aussi bien pu se nommer suite d'Euler, entiers de Seger, ou nombres de Ming Antu.\
+    Des textes en 16.796 signes ? Un roman de 58.786 mots ? Tu n'y penses pas !";
+    return text;
+}
+
+/*------------------Draw function------------------*/
+
+gboolean drawFunction ()
+{   
+    /*FILL ME*/
+    return TRUE;
+}
+
 //For me, keep int main(). But when have to push, replace int main() -> int StartGUI().
 int StartGUI (int argc, char *argv[])
 {
@@ -161,6 +183,9 @@ int StartGUI (int argc, char *argv[])
     GtkWidget *help;
     GtkWidget *helpMenu;
     GtkWidget *helpMenu_about;
+    
+    //For writing in boxB of case(2) of mainBox
+    GtkWidget *label;
 
     /*For "Run" button*/
     GtkWidget *runButton;
@@ -381,9 +406,11 @@ int StartGUI (int argc, char *argv[])
 
     mainBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     
+    /*----------------------CASE 1----------------------*/
     //Add "menuBar" to case (1) of "mainBox"
     gtk_box_pack_start(GTK_BOX(mainBox), menuBar, FALSE, FALSE, 0);
     
+    /*----------------------CASE 2----------------------*/
     //Add "boxA" and "boxB" to case (2) of "mainBox". Case (2) will be called "box2"
     box2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     boxA = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
@@ -392,6 +419,15 @@ int StartGUI (int argc, char *argv[])
     //Add "boxA" to "box2"
     gtk_box_pack_start(GTK_BOX(box2),boxA, TRUE, TRUE, 0);
 
+    /*----------------------TEST----------------------*/
+    /*
+    GtkWidget *drawing_area = gtk_drawing_area_new ();
+    gtk_widget_set_size_request (drawing_area, 100, 100);
+    gtk_box_pack_start(GTK_BOX(boxA),drawing_area, TRUE, TRUE, 0);
+    g_signal_connect (G_OBJECT (drawing_area), "draw",
+                    G_CALLBACK (draw_callback), NULL);
+    */
+    /*------------------------------------------------*/
     //Add Separator between box A and B
     GtkWidget *separator;
     separator = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
@@ -400,15 +436,31 @@ int StartGUI (int argc, char *argv[])
     //Add "boxB" to "box2"
     gtk_box_pack_start(GTK_BOX(box2),boxB, TRUE, TRUE, 0);
 
-    //Add "box2" to "mainBox"
+    /*Add "label" to "boxB"*/
+    label = gtk_label_new(writeFunction());
+    gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
+    g_object_set (label, "margin", 0, NULL);
+    //Can select and copy from GUI.
+    gtk_label_set_selectable(GTK_LABEL(label), TRUE);
+
+    //Enable us to wrapped the text in multiple line.
+    gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+    gtk_label_set_max_width_chars (GTK_LABEL (label), 30);
+
+    //Add "label" to "boxB"
+    gtk_box_pack_start(GTK_BOX(boxB), label, FALSE, FALSE, 0);
+
+    //Add "box2" to case (2) of "mainBox"
     gtk_box_pack_start(GTK_BOX(mainBox), box2, TRUE, TRUE, 0);
 
+    /*----------------------CASE 3----------------------*/
     //Add "run" to case (3) of "mainBox"
     gtk_box_pack_end(GTK_BOX(mainBox), runButton, FALSE, FALSE, 0);
 
     //Add mainBox to the container window.
     gtk_container_add(GTK_CONTAINER(window), mainBox);
-    
+
+
     /*-------------------- Step 5: Show window --------------------*/ 
     
     //Enable us to quit the program.
