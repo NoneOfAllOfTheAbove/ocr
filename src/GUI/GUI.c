@@ -280,8 +280,8 @@ int StartGUI (int argc, char *argv[])
 
     /*Add "optionMenu" to "option"*/
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(option), optionMenu);
-
-    /*Add "option" to menuBar*/
+                
+    /*Add "option" to menuBar*/                 
     gtk_menu_shell_append(GTK_MENU_SHELL(menuBar), option);
 
     //Connects GCallback function.
@@ -370,10 +370,11 @@ int StartGUI (int argc, char *argv[])
     (2): contains a box that will be seperate in 2.
     |   
     |  
-    =>  --------------------
-        |   (A)   |  (B)   |
-        |         |        |
-        --------------------
+    =>  -------------------
+        |       (A)       |    
+        |-----------------|
+        |       (B)       |
+        -------------------
 
     (3): contain the "Run" button.
     */
@@ -385,11 +386,20 @@ int StartGUI (int argc, char *argv[])
     
     //Add "boxA" and "boxB" to case (2) of "mainBox". Case (2) will be called "box2"
     box2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-    boxA = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-    boxB = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    boxA = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    boxB = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+
+    //Add "boxA" to "box2"
     gtk_box_pack_start(GTK_BOX(box2),boxA, TRUE, TRUE, 0);
+
+    //Add Separator between box A and B
+    GtkWidget *separator;
+    separator = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
+    gtk_box_pack_start(GTK_BOX(box2),separator, FALSE, TRUE, 0);
+
+    //Add "boxB" to "box2"
     gtk_box_pack_start(GTK_BOX(box2),boxB, TRUE, TRUE, 0);
-    
+
     //Add "box2" to "mainBox"
     gtk_box_pack_start(GTK_BOX(mainBox), box2, TRUE, TRUE, 0);
 
@@ -398,9 +408,8 @@ int StartGUI (int argc, char *argv[])
 
     //Add mainBox to the container window.
     gtk_container_add(GTK_CONTAINER(window), mainBox);
-
-
-    /*-------------------- Step n: Show window --------------------*/ 
+    
+    /*-------------------- Step 5: Show window --------------------*/ 
     
     //Enable us to quit the program.
     g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
