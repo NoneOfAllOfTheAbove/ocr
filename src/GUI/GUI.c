@@ -1,15 +1,92 @@
 #include <gtk/gtk.h>
 
 /*------------------File's GCallback------------------*/
-static void exportTest_activated()
-{
-    g_print("File -> Export -> Test activated.\n");
+
+static void loadImage_activated (GtkWidget *fileMenu_loadImage, gpointer window)
+{   
+
+    /*We have to put the first parameter even if we are not using. This is to respect
+    convention. If we don't put it, it will show a warning explaining that we are trying
+    to cast GTKMenuItem to GTKWindow. 
+
+    To counter that, we do the following thing : (void)name_of_variable.
+    */
+    (void)fileMenu_loadImage;
+
+    GtkWidget *dialog;
+    dialog = gtk_file_chooser_dialog_new("Chosse a file", 
+                                        GTK_WINDOW(window), 
+                                        GTK_FILE_CHOOSER_ACTION_OPEN, 
+                                        ("_Cancel"), 
+                                        GTK_RESPONSE_CANCEL, 
+                                        ("_Open the image"),
+                                        GTK_RESPONSE_ACCEPT, 
+                                        NULL);
+
+   
+    gint res = gtk_dialog_run (GTK_DIALOG (dialog));
+    if (res == GTK_RESPONSE_ACCEPT)
+    {   
+        //Creating the path.
+        char *filename;
+        GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
+        filename = gtk_file_chooser_get_filename (chooser);
+        //Print path is here.
+        g_print("%s\n", filename);
+
+        g_free (filename);
+    }
+    else
+    {
+        g_print("You pressed Cancel\n");
+    }
+    gtk_widget_destroy(dialog);
+}
+
+static void exportText_activated(GtkWidget *fileMenu_exportMenu_text, gpointer window)
+{   
+    /*Check if it overwrites a file when we choose an already existing name
+    for our Text File.
+    */
+
+    (void)fileMenu_exportMenu_text;
+    GtkWidget *dialog;
+    GtkFileChooser *chooser;
+
+    dialog = gtk_file_chooser_dialog_new ("Save File",
+                                        GTK_WINDOW(window),
+                                        GTK_FILE_CHOOSER_ACTION_SAVE,
+                                        ("_Cancel"),
+                                        GTK_RESPONSE_CANCEL,
+                                        ("_Save"),
+                                        GTK_RESPONSE_ACCEPT,
+                                        NULL);
+    
+    chooser = GTK_FILE_CHOOSER (dialog);
+    gtk_file_chooser_set_do_overwrite_confirmation (chooser, TRUE);
+    gint res = gtk_dialog_run (GTK_DIALOG (dialog));
+
+    if (res == GTK_RESPONSE_ACCEPT)
+    {   
+         //Creating the path.
+        char *filename;
+        filename = gtk_file_chooser_get_filename (chooser);
+        //Print path is here.
+        g_print("%s\n", filename);
+        g_free (filename);
+    }
+    else
+    {
+        g_print("You pressed Cancel\n");
+    }
+    
+    gtk_widget_destroy (dialog);
 }
 
 static void quit_activated()
 {
     g_print("File -> Quit activated.\n");
-    //gtk_main_quit(); To close interface.
+    gtk_main_quit();
 }
 
 /*------------------Option's GCallback------------------*/
@@ -40,8 +117,14 @@ static void helpAbout_activated()
     g_print("Help -> About activated.\n");
 }
 
+/*------------------Run's GCallback------------------*/
+static void runButton_activated()
+{
+    g_print("Run activated.\n");
+}
 
-int StartGUI(int argc, char *argv[])
+//For me, keep int main(). But when have to push, replace int main() -> int StartGUI().
+int StartGUI (int argc, char *argv[])
 {
 
     GtkWidget *window;
@@ -60,7 +143,7 @@ int StartGUI(int argc, char *argv[])
     GtkWidget *fileMenu_quit;
     GtkWidget *fileMenu_export;
     GtkWidget *fileMenu_exportMenu;
-    GtkWidget *fileMenu_exportMenu_test;
+    GtkWidget *fileMenu_exportMenu_text;
      
     /*For "Option" set*/
     GtkWidget *option;
@@ -108,7 +191,7 @@ int StartGUI(int argc, char *argv[])
             |        |
             |        => fileMenu_exportMenu (GtkMenu type)
             |               |
-            |               => fileMenu_exportMenu_test: "Test"
+            |               => fileMenu_exportMenu_text: "Text"
             |
             =>fileMenu_quit: "Quit" (GtkMenuItem)
     |
@@ -147,11 +230,11 @@ int StartGUI(int argc, char *argv[])
     fileMenu_loadImage = gtk_menu_item_new_with_label("Load Image");
     fileMenu_quit = gtk_menu_item_new_with_label("Quit");
     fileMenu_export = gtk_menu_item_new_with_label("Export");
-    fileMenu_exportMenu_test = gtk_menu_item_new_with_label("Test");
+    fileMenu_exportMenu_text = gtk_menu_item_new_with_label("Text");
     
 
     /*Add "fileMenu_exportMenu_test" to "fileMenu_exportMenu"*/
-    gtk_menu_shell_append(GTK_MENU_SHELL(fileMenu_exportMenu), fileMenu_exportMenu_test);
+    gtk_menu_shell_append(GTK_MENU_SHELL(fileMenu_exportMenu), fileMenu_exportMenu_text);
 
     /*Add "fileMenu_exportMenu" to "fileMenu_export"*/
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(fileMenu_export), fileMenu_exportMenu);
@@ -172,8 +255,10 @@ int StartGUI(int argc, char *argv[])
 
     /*Connects GCallback function*/
 
+    //For Loading Image
+    g_signal_connect(G_OBJECT(fileMenu_loadImage), "activate", G_CALLBACK(loadImage_activated), window);
     //For Export -> Test
-    g_signal_connect(G_OBJECT(fileMenu_exportMenu_test), "activate", G_CALLBACK(exportTest_activated), NULL);
+    g_signal_connect(G_OBJECT(fileMenu_exportMenu_text), "activate", G_CALLBACK(exportText_activated), window);
     //For Quit
     g_signal_connect(G_OBJECT(fileMenu_quit), "activate", G_CALLBACK(quit_activated), NULL);
 
@@ -263,7 +348,8 @@ int StartGUI(int argc, char *argv[])
     /*-------------------- STEP 3: Creation of button Run --------------------*/ 
     
     runButton = gtk_button_new_with_label("Run");
-
+    //For Run button.
+    g_signal_connect(G_OBJECT(runButton), "clicked", G_CALLBACK(runButton_activated), NULL);
     
     /*-------------------- STEP 4: Creation of mainBox --------------------*/ 
     /*
@@ -313,9 +399,6 @@ int StartGUI(int argc, char *argv[])
     //Add mainBox to the container window.
     gtk_container_add(GTK_CONTAINER(window), mainBox);
 
-    
-
-    
 
     /*-------------------- Step n: Show window --------------------*/ 
     
