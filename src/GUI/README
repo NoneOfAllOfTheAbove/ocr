@@ -1,7 +1,6 @@
 To compile: gcc -Wall -Wextra -g GUI.c `pkg-config --cflags --libs gtk+-3.0` -o GUI -export-dynamic
 
-TO DO :
--------
-_Need to add features fo Loading Image. (File chooser + drag and drop)
-_Same for Export -> Text.
-_Check if boxA and boxB have been created.
+For Theo:
+---------
+
+_To write, use the "writeFunction()".
