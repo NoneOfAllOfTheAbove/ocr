@@ -72,7 +72,7 @@ Text GetLines(Image image, Text text)
 					x++;
 				}
 
-				// If the vertical line y is only composed of white pixels
+				// If the horizontal line y is only composed of white pixels
 				if(x == x2)
 				{
 					// Create a line
@@ -95,7 +95,7 @@ Text GetLines(Image image, Text text)
 					x++;
 				}
 
-				// If there is a black pixel on the vertical line y
+				// If there is a black pixel on the horizontal line y
 				if(blackPixel)
 				{
 					topY = y;

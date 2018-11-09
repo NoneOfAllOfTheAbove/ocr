@@ -74,6 +74,18 @@ void StartDemoGUI(Image image, Text text)
 					paragraph.lines[j].y1
 			);
 
+			for(int k = 0; k < paragraph.lines[j].numberOfCharacters; k++)
+			{
+				SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+				Character c = paragraph.lines[j].characters[k];
+				SDL_Rect rect;
+				rect.x = c.x1;
+				rect.y = c.y1;
+				rect.w = c.x2 - c.x1;
+				rect.h = c.y2 - c.y1;
+				SDL_RenderDrawRect(renderer, &rect);
+			}
+
 		}
 	}
 	SDL_RenderPresent(renderer);
