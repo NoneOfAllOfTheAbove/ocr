@@ -62,10 +62,18 @@ void StartDemoGUI(Image image, Text text)
 			SDL_RenderDrawLine(
 					renderer,
 					paragraph.x,
-					paragraph.lines[j].y,
+					paragraph.lines[j].y2,
 					paragraph.x + paragraph.width,
-					paragraph.lines[j].y
+					paragraph.lines[j].y2
 			);
+			SDL_RenderDrawLine(
+					renderer,
+					paragraph.x,
+					paragraph.lines[j].y1,
+					paragraph.x + paragraph.width,
+					paragraph.lines[j].y1
+			);
+
 		}
 	}
 	SDL_RenderPresent(renderer);
