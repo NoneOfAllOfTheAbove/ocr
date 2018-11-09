@@ -51,16 +51,17 @@ Text GetLines(Image image, Text text)
 {
 	for(int i = 0; i < text.numberOfParagraphs; i++)
 	{
+		// Prepare data
 		int state = 0;
 		int lineId = 0;
 		int x1 = text.paragraphs[i].x;
 		int y1 = text.paragraphs[i].y;
 		int x2 = text.paragraphs[i].x + text.paragraphs[i].width;
 		int y2 = text.paragraphs[i].y + text.paragraphs[i].height;
-		
 		int numberOfLines = CountLines(image.binarized, x1, x2, y1, y2);
 		Line* lines = (Line*)malloc(sizeof(Line) * numberOfLines);
 
+		int topY = y1; 
 		for(int y = y1; y < y2; y++)
 		{
 			if(state == 0)
@@ -70,12 +71,17 @@ Text GetLines(Image image, Text text)
 				{
 					x++;
 				}
+
+				// If the vertical line y is only composed of white pixels
 				if(x == x2)
 				{
+					// Create a line
 					Line line;
-					line.y = y;
+					line.y1 = topY;
+					line.y2 = y;
 					lines[lineId] = line;
 					lineId++;
+
 					state = 1;
 				}
 			} 
@@ -85,18 +91,20 @@ Text GetLines(Image image, Text text)
 				int blackPixel = 0;
 				while(x < x2 && blackPixel == 0)
 				{
-					if(image.binarized[y][x] == 1)
-					{
-						blackPixel = 1;
-					}
+					blackPixel = (image.binarized[y][x] == 1) ? 1 : 0;
 					x++;
 				}
+
+				// If there is a black pixel on the vertical line y
 				if(blackPixel)
 				{
+					topY = y;
 					state = 0;
 				}
 			}
 		}
+
+		// Update paragraph
 		text.paragraphs[i].numberOfLines = numberOfLines;
 		text.paragraphs[i].lines = lines;
 	}
