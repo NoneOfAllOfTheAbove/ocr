@@ -79,7 +79,7 @@ Text GetCharacters(Image image, Text text)
 			int x1 = text.paragraphs[i].x;
 			int y1 = lastY;
 			int x2 = text.paragraphs[i].x + text.paragraphs[i].width;
-			int y2 = text.paragraphs[i].lines[j].y;
+			int y2 = text.paragraphs[i].lines[j].y1;
 			lastY = y2;
 
 			// Count characters
@@ -145,7 +145,6 @@ Text GetCharacters(Image image, Text text)
 					}
 				}
 			}
-			printf("%d %d \n", numberOfCharacters, characterId);
 			text.paragraphs[i].lines[j].numberOfCharacters = numberOfCharacters;
 			text.paragraphs[i].lines[j].characters = characters;
 		}
