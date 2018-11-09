@@ -47,7 +47,7 @@ Image LoadImageAsGrayscale(Image image)
 Image BinarizeImage(Image image)
 {
 	// Otsu's method: https://en.wikipedia.org/wiki/Otsu%27s_method
-	int thresholdShift = 15;
+	int thresholdShift = 35;
 
 	// Prepare variables
 	int histogram[256];
