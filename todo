@@ -1,8 +1,7 @@
 TODO
 
 
-- Fix bug handle yOffset when resizing
-- i/j/, : matrix fusion
+- Refactor words+characters segmentation
 - Free segmentation
 
 

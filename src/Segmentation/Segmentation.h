@@ -12,13 +12,23 @@ struct Character
 	char character;
 };
 
+/*typedef struct Word Word;
+struct Word
+{
+	int spacesBefore;
+
+	int numberOfCharacters;
+	Character* characters;
+};*/
+
 typedef struct Line Line;
 struct Line
 {
-	int y;
+	int y1;
+	int y2;
 
 	int numberOfCharacters;
-	Character* characters;	
+	Character* characters;
 };
 
 typedef struct Paragraph Paragraph;
