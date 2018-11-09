@@ -48,7 +48,7 @@ unsigned char **GetSubMatrix(unsigned char **matrix, int x1, int y1, int x2, int
 	return result;
 }
 
-unsigned char **ResizeMatrix(unsigned char **matrix, int oldX, int oldY, int yOffset)
+unsigned char **ToSquareMatrix(unsigned char **matrix, int oldX, int oldY, int size)
 {
 	// Step 1: Put matrix in a new matrix of size a * (16 * 16) 	
 	int side = oldX;
@@ -56,12 +56,12 @@ unsigned char **ResizeMatrix(unsigned char **matrix, int oldX, int oldY, int yOf
 	{
 		side = oldY;
 	}
-	if(side % 16 != 0)
+	if(side % size != 0)
 	{
-		side = (1 + side / 16) * 16;
+		side = (1 + side / size) * size;
 	} else
 	{
-		side = (side / 16) * 16;	
+		side = (side / size) * size;	
 	}
 
 	unsigned char **result = CreateCharMatrix(side, side);
@@ -84,14 +84,14 @@ unsigned char **ResizeMatrix(unsigned char **matrix, int oldX, int oldY, int yOf
 	}
 
 	// Step 2: Scale down matrix with side > 16
-	int scale = side / 16;
+	int scale = side / size;
 	if(scale > 1)
 	{
-		unsigned char **resized = CreateCharMatrix(16, 16);
+		unsigned char **resized = CreateCharMatrix(size, size);
 		
-		for(int y = 0; y < 16; y++)
+		for(int y = 0; y < size; y++)
 		{
-			for(int x = 0; x < 16; x++)
+			for(int x = 0; x < size; x++)
 			{
 				// 1 pixel in resized is scale pixel in result
 				unsigned char sum = 0;
@@ -115,29 +115,6 @@ unsigned char **ResizeMatrix(unsigned char **matrix, int oldX, int oldY, int yOf
 
 		result = resized;
 	}
-
-	// Step 3: Adjust character position in matrix depending on its relative position
-	/*unsigned char **adjusted = CreateCharMatrix(16, 16);
-	
-	if(scale > 1)
-		topOffset = (16 - (oldY / scale)) / 2;
-	else
-		topOffset = (16 - oldY) / 2;
-	
-	//if(yOffset > 8)
-		//topOffset = 0;
-	
-	for(int y = topOffset; y < 16; y++)
-	{
-		for(int x = 0; x < 16; x++)
-		{
-			adjusted[y][x] = result[y - topOffset][x];
-		}
-	}
-	
-	result = adjusted;
-	result[0][0] = yOffset;*/ 
-
 
 	return result;
 }
