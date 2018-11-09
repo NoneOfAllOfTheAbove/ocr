@@ -4,8 +4,10 @@
 typedef struct Character Character;
 struct Character
 {
-	int x;
-	int y;
+	int x1;
+	int x2;
+	int y1;
+	int y2;
 	
 	unsigned char **matrix;
 
