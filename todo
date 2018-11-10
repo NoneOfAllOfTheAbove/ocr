@@ -6,5 +6,12 @@ TODO
 
 
 - Merge + text export
-- Font size, layout, images...
-- Clean code (go c++?)
+- HTML: Font size, layout, images...
+- Defense report
+
+- Clean code
+--- More than 255 paragraphs (iterative)
+--- Manipulation of Text in Segmentation.c
+--- Characters segmentation: improve handling sticked characters
+--- Matrix object
+--- C++
