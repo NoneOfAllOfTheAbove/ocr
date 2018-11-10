@@ -136,9 +136,7 @@ Text GetCharacters(Image image, Text text)
 
 						characterId++;
 						state = 0;
-
 						//printf("Found character %d at %d %d %d %d \n\n", characterId, cx1, cx2, cy1, cy2);
-
 					}
 				}
 			}
