@@ -5,7 +5,7 @@
 #include "Segmentation.h"
 #include "ParagraphSegmentation.h"
 #include "LineSegmentation.h"
-//#include "WordSegmentation.h"
+#include "WordSegmentation.h"
 #include "CharacterSegmentation.h"
 
 void PrintCharacter(Character c)
@@ -42,14 +42,14 @@ void PrintCharacter(Character c)
 
 void PrintLine(Line l)
 {
-	//for(int w = 0; w < l.numberOfWords; w++)
-	//{
+	for(int w = 0; w < l.numberOfWords; w++)
+	{
 		for(int c = 0; c < l.numberOfCharacters; c++)
 		{
-			PrintCharacter(l.characters[c]);
+			PrintCharacter(l.words[w].characters[c]);
 			printf("\n");
 		}
-	//}
+	}
 }
 
 void DebugSegmentation(Text text)
@@ -78,7 +78,7 @@ Text Segmentation(Image image)
 
 	text = GetParagraphs(image, text);	
 	text = GetLines(image, text);
-	//text = GetWords(image, text);
+	text = GetWords(image, text);
 	text = GetCharacters(image, text);
 	
 	DebugSegmentation(text);
