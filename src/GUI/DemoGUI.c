@@ -74,18 +74,31 @@ void StartDemoGUI(Image image, Text text)
 					paragraph.lines[j].y1
 			);
 
-			for(int k = 0; k < paragraph.lines[j].numberOfCharacters; k++)
+			// Words
+			for (int k = 0; k < paragraph.lines[j].numberOfWords; k++)
 			{
-				SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-				Character c = paragraph.lines[j].characters[k];
+				Word word = paragraph.lines[j].words[k];
 				SDL_Rect rect;
-				rect.x = c.x1;
-				rect.y = c.y1;
-				rect.w = c.x2 - c.x1;
-				rect.h = c.y2 - c.y1;
+				rect.x = word.x1;
+				rect.y = paragraph.lines[j].y1;
+				rect.w = word.x2 - word.x1;
+				rect.h = paragraph.lines[j].y2 - paragraph.lines[j].y1;
+				SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
 				SDL_RenderDrawRect(renderer, &rect);
-			}
 
+				// Characters
+				for (int c = 0; c < word.numberOfCharacters; c++)
+				{
+					SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+					Character character = word.characters[c];
+					SDL_Rect rect;
+					rect.x = character.x1;
+					rect.y = character.y1;
+					rect.w = character.x2 - character.x1;
+					rect.h = character.y2 - character.y1;
+					SDL_RenderDrawRect(renderer, &rect);
+				}
+			}
 		}
 	}
 	SDL_RenderPresent(renderer);

@@ -1,7 +1,6 @@
 TODO
 
 
-- Words segmentation
 - Arielle segmentation
 
 
@@ -10,6 +9,7 @@ TODO
 - Defense report
 
 - Clean code
+--- Make settings system (otsu shift, enable fusion)
 --- More than 255 paragraphs (iterative)
 --- Manipulation of Text in Segmentation.c
 --- Characters segmentation: improve handling sticked characters

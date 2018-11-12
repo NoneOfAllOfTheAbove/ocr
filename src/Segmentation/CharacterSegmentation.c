@@ -4,32 +4,19 @@
 #include "../Matrix.h"
 #include "../Preprocessing/Preprocessing.h"
 #include "Segmentation.h"
+#include "WordSegmentation.h"
 
-int __CountCharacters(unsigned char **matrix, int x1, int x2, int y1, int y2, int *sumCharactersWidth)
+Character __PrepareCharacter(int cx1, int cx2, int cy1, int cy2, unsigned char **matrix)
 {
-	int numberOfCharacters = 0;
-	int state = 0;
-	
-	for(int x = x1; x < x2; x++)
-	{
-		// Check for black pixels on vertical line x
-		int y = y1;
-		while(y < y2 && matrix[y][x] != 1)
-			y++;
-
-		if(y != y2)
-		{
-			numberOfCharacters += (state == 0) ? 1 : 0;
-			*sumCharactersWidth += (state == 1) ? 1 : 0;
-			state = 1;
-		}
-		else
-		{
-			state = 0;
-		}
-	}
-
-	return numberOfCharacters;
+	Character character;
+	character.x1 = cx1;
+	character.x2 = cx2;
+	character.y1 = cy1;
+	character.y2 = cy2;
+	character.character = '\0';
+	character.matrix = GetSubMatrix(matrix, cx1, cy1, cx2, cy2);
+	character.matrix = ToSquareMatrix(character.matrix, cx2 - cx1, cy2 - cy1, 16);
+	return character;
 }
 
 Text GetCharacters(Image image, Text text)
@@ -38,112 +25,76 @@ Text GetCharacters(Image image, Text text)
 	{
 		for(int j = 0; j < text.paragraphs[i].numberOfLines; j++)
 		{
-			// Select area of the line
-			int x1 = text.paragraphs[i].x;
-			int y1 = text.paragraphs[i].lines[j].y1;
-			int x2 = text.paragraphs[i].x + text.paragraphs[i].width;
-			int y2 = text.paragraphs[i].lines[j].y2;
-
-			// Count characters
-			int sumCharactersWidth = 0;
-			int numberOfCharacters = __CountCharacters(image.binarized, x1, x2, y1, y2, &sumCharactersWidth);
-			Character *characters = (Character*)malloc(sizeof(Character) * 2 * numberOfCharacters);
-			int averageCharactersWidth = sumCharactersWidth / numberOfCharacters;
-
-			// Handle characters
-			int cx1, cx2, cy1 = 0, cy2 = 0;
-			int characterId = 0, state = 0;
-			for(int x = x1; x < x2; x++)
+			for(int k = 0; k < text.paragraphs[i].lines[j].numberOfWords; k++)
 			{
-				// Check for black pixels on vertical line x
-				int y = y1, foundBlackPixel = 0, yMin = 0, yMax = 0;
-				while(y < y2)
-				{
-					if(!foundBlackPixel && image.binarized[y][x] == 1)
-					{
-						yMin = y;
-						foundBlackPixel = 1;
-					}
-					if(image.binarized[y][x] == 1)
-					{
-						yMax = y + 1;
-					}
-					y++;
-				}
+				// Prepare data
+				Line line = text.paragraphs[i].lines[j];
+				Word word = text.paragraphs[i].lines[j].words[k];
+				Character *characters = (Character *)malloc(sizeof(Character) * 2 * word.numberOfCharacters);
 
-				if(foundBlackPixel)
+				// Handle characters
+				int cx1 = 0, cx2 = 0, cy1 = 0, cy2 = 0;
+				int characterId = 0, state = 0;
+				for (int x = word.x1; x < word.x2; x++)
 				{
-					if(state == 0)
+					// Check for black pixels on vertical line x
+					int y = line.y1, foundBlackPixel = 0, yMin = 0, yMax = 0;
+					while (y < line.y2)
 					{
-						cx1 = x;
-						cy1 = yMin;
-						cy2 = yMax;
-						state = 1;
-					}
-					else
-					{
-						if(yMin < cy1)
-							cy1 = yMin;
-						if(yMax > cy2)
-							cy2 = yMax;
-					}
-				}
-				else
-				{
-					if(state == 1)
-					{
-						cx2 = x;
-						
-						if(cx2 - cx1 >= 2 * averageCharactersWidth)
+						if (!foundBlackPixel && image.binarized[y][x] == 1)
 						{
-							int mid = (cx2 - cx1) / 2;
+							yMin = y;
+							foundBlackPixel = 1;
+						}
+						if (image.binarized[y][x] == 1)
+						{
+							yMax = y + 1;
+						}
+						y++;
+					}
 
-							Character character;
-							character.x1 = cx1;
-							character.x2 = cx1 + mid;
-							character.y1 = cy1;
-							character.y2 = cy2;
-							character.character = '\0';
-							character.matrix = GetSubMatrix(image.binarized, cx1, cy1, cx1 + mid, cy2);
-							character.matrix = ToSquareMatrix(character.matrix, mid, cy2 - cy1, 16);
-							characters[characterId] = character;
-							
-							characterId++;
-							numberOfCharacters++;
-							
-							Character character2;
-							character2.x1 = 1 + cx1 + mid;
-							character2.x2 = cx2;
-							character2.y1 = cy1;
-							character2.y2 = cy2;
-							character2.character = '\0';
-							character2.matrix = GetSubMatrix(image.binarized, 1 + cx1 + mid, cy1, cx2, cy2);
-							character2.matrix = ToSquareMatrix(character2.matrix, mid - 1, cy2 - cy1, 16);
-							characters[characterId] = character2;
+					if (foundBlackPixel)
+					{
+						if (state == 0)
+						{
+							cx1 = x;
+							cy1 = yMin;
+							cy2 = yMax;
+							state = 1;
 						}
 						else
 						{
-							Character character;
-							character.x1 = cx1;
-							character.x2 = cx2;
-							character.y1 = cy1;
-							character.y2 = cy2;
-							character.character = '\0';
-							character.matrix = GetSubMatrix(image.binarized, cx1, cy1, cx2, cy2);
-							character.matrix = ToSquareMatrix(character.matrix, cx2 - cx1, cy2 - cy1, 16);
-							characters[characterId] = character;	
+							if (yMin < cy1)
+								cy1 = yMin;
+							if (yMax > cy2)
+								cy2 = yMax;
 						}
+					}
+					else
+					{
+						if (state == 1)
+						{
+							cx2 = x;
 
-						characterId++;
-						state = 0;
-						//printf("Found character %d at %d %d %d %d \n\n", characterId, cx1, cx2, cy1, cy2);
+							/*if (cx2 - cx1 >= 2 * line.averageCharactersWidth)
+							{
+								int mid = (cx2 - cx1) / 2;
+								characters[characterId] = __PrepareCharacter(cx1, cx1 + mid, cy1, cy2, image.binarized);
+								characterId++;
+								word.numberOfCharacters += 1;
+								characters[characterId] = __PrepareCharacter(1 + cx1 + mid, cx2, cy1, cy2, image.binarized);
+							}*/
+							characters[characterId] = __PrepareCharacter(cx1, cx2, cy1, cy2, image.binarized);
+
+							characterId++;
+							state = 0;
+						}
 					}
 				}
-			}
 
-			// Update paragraph
-			text.paragraphs[i].lines[j].numberOfCharacters = numberOfCharacters;
-			text.paragraphs[i].lines[j].characters = characters;
+				// Update word
+				text.paragraphs[i].lines[j].words[k].characters = characters;
+			}
 		}
 	}
 
