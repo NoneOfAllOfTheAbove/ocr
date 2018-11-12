@@ -20,7 +20,7 @@ struct Word
 	int x1;
 	int x2;
 
-	int spacesBefore;
+	int spaces;
 
 	int numberOfCharacters;
 	Character* characters;
@@ -32,6 +32,8 @@ struct Line
 	int y1;
 	int y2;
 
+	int averageCharactersWidth;
+	
 	int numberOfWords;
 	Word* words;
 };

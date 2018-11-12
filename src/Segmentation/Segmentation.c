@@ -10,33 +10,26 @@
 
 void PrintCharacter(Character c)
 {
-	if(c.character != '\0')
+	for(int a = 0; a < 16; a++)
 	{
-		printf("SPACE");
-	}
-	else
-	{
-		for(int a = 0; a < 16; a++)
+		for(int b = 0; b < 16; b++)
 		{
-			for(int b = 0; b < 16; b++)
+			if(c.matrix[a][b] > 0)
 			{
-				if(c.matrix[a][b] > 0)
+				printf("%d ", c.matrix[a][b]);
+			} else
+			{
+				if((a == 0) || (b == 0) || a == 15 || b == 15)
 				{
-					printf("%d ", c.matrix[a][b]);
-				} else
+					printf("- ");
+				}
+				else
 				{
-					if((a == 0) || (b == 0) || a == 15 || b == 15)
-					{
-						printf("- ");
-					}
-					else
-					{
-						printf("  ");
-					}
+					printf("  ");
 				}
 			}
-			printf("\n");
 		}
+		printf("\n");
 	}
 }
 
@@ -44,11 +37,12 @@ void PrintLine(Line l)
 {
 	for(int w = 0; w < l.numberOfWords; w++)
 	{
-		for(int c = 0; c < l.numberOfCharacters; c++)
+		for(int c = 0; c < l.words[w].numberOfCharacters; c++)
 		{
 			PrintCharacter(l.words[w].characters[c]);
 			printf("\n");
 		}
+		printf("%d spaces \n", l.words[w].spaces);
 	}
 }
 
@@ -66,7 +60,6 @@ void DebugSegmentation(Text text)
 		}
 	}*/
 	PrintLine(text.paragraphs[1].lines[1]);
-
 }
 
 Text Segmentation(Image image)
