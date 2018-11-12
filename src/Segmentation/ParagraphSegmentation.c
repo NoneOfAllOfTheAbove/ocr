@@ -191,6 +191,12 @@ Paragraph* IdentifyBlocks(unsigned char** matrix, int *blockNumber, int imageWid
 				p.y = yMin;
 				p.width = xMax - xMin + 5;
 				p.height = yMax - yMin + 5;
+
+				if (p.width > imageWidth)
+					p.width = (xMax - xMin) + (imageWidth - xMax);
+				if (p.height > imageHeight)
+					p.height = (yMax - yMin) + (imageHeight - yMax);
+
 				list[i] = p;
 				
 				i++;
