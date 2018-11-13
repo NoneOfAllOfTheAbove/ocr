@@ -6,14 +6,8 @@ If you are not a member of NoneOfAllOfTheAbove we encourage you to fork this rep
 
 ### Organization
 
-Keep in mind the name of the branch you are associated to.  
-
-Member | Branch
---- | --- |
-Arielle| `nn-training`
-Ferdinand | `gui`
-Louis| `improve-preprocessing`
-Theo| `improve-segmentation`
+From now on refer to [this page](https://github.com/NoneOfAllOfTheAbove/OCR/projects/1).
+Keep in mind the name of the branch you are associated to.
 
 ### Workflow
 
