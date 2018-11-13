@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "../Matrix.h"
+#include "../Stack.h"
 #include "../Preprocessing/Preprocessing.h"
 #include "Segmentation.h"
 
@@ -103,9 +104,9 @@ unsigned char **RLSA(unsigned char **binarizedImageMatrix, int imageWidth, int i
 	return verticalResult;
 }
 
-void __GetBoundsOfBlock(unsigned char **matrix, int x, int y, int width, int height, int *xMin, int *yMin, int *xMax, int *yMax, int blockId)
+void __GetBoundsOfParagraph(unsigned char **matrix, int x, int y, int width, int height, int *xMin, int *yMin, int *xMax, int *yMax)
 {
-	if(x >= width || x < 0 || y < 0 || y >= height || matrix[y][x] != blockId || matrix[y][x] == 0)
+	if (x >= width || x < 0 || y < 0 || y >= height || matrix[y][x] != 2)
 	{
 		return;
 	}
@@ -127,32 +128,45 @@ void __GetBoundsOfBlock(unsigned char **matrix, int x, int y, int width, int hei
 		*yMin = y;
 	}
 	
-	matrix[y][x] = 0;
+	matrix[y][x] = 3;
 
-	__GetBoundsOfBlock(matrix, x + 1, y, width, height, xMin, yMin, xMax, yMax, blockId);
-	__GetBoundsOfBlock(matrix, x - 1, y, width, height, xMin, yMin, xMax, yMax, blockId);
-	__GetBoundsOfBlock(matrix, x, y + 1, width, height, xMin, yMin, xMax, yMax, blockId);
-	__GetBoundsOfBlock(matrix, x, y - 1, width, height, xMin, yMin, xMax, yMax, blockId);
+	__GetBoundsOfParagraph(matrix, x + 1, y, width, height, xMin, yMin, xMax, yMax);
+	__GetBoundsOfParagraph(matrix, x - 1, y, width, height, xMin, yMin, xMax, yMax);
+	__GetBoundsOfParagraph(matrix, x, y + 1, width, height, xMin, yMin, xMax, yMax);
+	__GetBoundsOfParagraph(matrix, x, y - 1, width, height, xMin, yMin, xMax, yMax);
 }
 
-void __IdentifyBlocks(unsigned char **matrix, int x, int y, int width, int height, int blockId)
+void __CountParagraphs(unsigned char **matrix, int x, int y, int width, int height)
 {
-	//printf("%d %d \n", x, y);
-	if(x < 0 || x >= width || y < 0 || y >= height || matrix[y][x] != 1)
+	Stack stack = StackCreate(width * height);
+	int data[2] = {x, y};
+	StackPush(&stack, data);
+
+	while(!IsStackEmpty(&stack))
 	{
-		return;
-	}
-	
-	matrix[y][x] = blockId;
+		int *data = StackPop(&stack);
+		int x = data[0];
+		int y = data[1];
 
-	__IdentifyBlocks(matrix, x + 1, y, width, height, blockId);
-	__IdentifyBlocks(matrix, x - 1, y, width, height, blockId);
-	__IdentifyBlocks(matrix, x, y + 1, width, height, blockId);
-	__IdentifyBlocks(matrix, x, y - 1, width, height, blockId);
+		if (x >= 0 && x < width && y >= 0 && y < height && matrix[y][x] == 1)
+		{
+			matrix[y][x] = 2;
+
+			int right[2] = {x + 1, y};
+			StackPush(&stack, right);
+			int left[2] = {x - 1, y};
+			StackPush(&stack, left);
+			int top[2] = {x, y + 1};
+			StackPush(&stack, top);
+			int bottom[2] = {x, y - 1};
+			StackPush(&stack, bottom);
+		}
+	}
 }
 
-Paragraph* IdentifyBlocks(unsigned char** blocksMap, int *blockNumber, int imageWidth, int imageHeight)
+Paragraph *IdentifyBlocks(unsigned char **blocksMap, int *blockNumber, int imageWidth, int imageHeight)
 {
+	// Make a copy of blocksMap to not alter it
 	unsigned char **matrix = CreateCharMatrix(imageWidth, imageHeight);
 	for (int y = 0; y < imageHeight; y++)
 	{
@@ -162,56 +176,53 @@ Paragraph* IdentifyBlocks(unsigned char** blocksMap, int *blockNumber, int image
 		}
 	}
 
-	// Count and mark every block with a unique id
-	int numberOfBlocks = 0;
-	unsigned char blockId = 2;
+	// Count paragraphs, matrix[y][x] == 1 => matrix[y][x] == 2
+	int numberOfParagraphs = 0;
 	for(int y = 0; y < imageHeight; y++)
 	{
 		for(int x = 0; x < imageWidth; x++)
 		{
 			if(matrix[y][x] == 1)
 			{
-				__IdentifyBlocks(matrix, x, y, imageWidth, imageHeight, blockId);
-				blockId++;
-				numberOfBlocks++;
+				__CountParagraphs(matrix, x, y, imageWidth, imageHeight);
+				numberOfParagraphs++;
 			}
 		}
 	}
-	*blockNumber = numberOfBlocks;
+	*blockNumber = numberOfParagraphs;
 
-	// Register every block bounds
-	int i = 0;
+	// Register every paragraphs' bounds, matrix[y][x] == 2 => matrix[y][x] == 3
+	int paragraphId = 0;
 	int xMin, yMin, xMax, yMax;
-	Paragraph *list = (Paragraph*)malloc(sizeof(Paragraph) * numberOfBlocks); 
+	Paragraph *paragraphs = (Paragraph*)malloc(sizeof(Paragraph) * numberOfParagraphs); 
 
 	for(int y = 0; y < imageHeight; y++)
 	{
 		for(int x = 0; x < imageWidth; x++)
 		{
-			if(matrix[y][x] > 0)
+			if(matrix[y][x] == 2)
 			{
 				xMin = x, yMin = y, xMax = x, yMax = y;
-				__GetBoundsOfBlock(matrix, x, y, imageWidth, imageHeight, &xMin, &yMin, &xMax, &yMax, matrix[y][x]);
-				
-				Paragraph p;
-				p.x = xMin;
-				p.y = yMin;
-				p.width = xMax - xMin + 5;
-				p.height = yMax - yMin + 5;
+				printf("CRASH 0 \n");
+				__GetBoundsOfParagraph(matrix, x, y, imageWidth, imageHeight, &xMin, &yMin, &xMax, &yMax);
+				printf("CRASH 1 \n");
+				Paragraph paragraph;
+				paragraph.x = xMin;
+				paragraph.y = yMin;
+				paragraph.width = xMax - xMin + 5;
+				paragraph.height = yMax - yMin + 5;
+				if (paragraph.width > imageWidth)
+					paragraph.width = (xMax - xMin) + (imageWidth - xMax);
+				if (paragraph.height > imageHeight)
+					paragraph.height = (yMax - yMin) + (imageHeight - yMax);
+				paragraphs[paragraphId] = paragraph;
 
-				if (p.width > imageWidth)
-					p.width = (xMax - xMin) + (imageWidth - xMax);
-				if (p.height > imageHeight)
-					p.height = (yMax - yMin) + (imageHeight - yMax);
-
-				list[i] = p;
-				
-				i++;
+				paragraphId++;
 			}
 		}
 	}
 
-	return list;
+	return paragraphs;
 }
 
 Text GetParagraphs(Image image, Text text)
