@@ -59,7 +59,7 @@ void DebugSegmentation(Text text)
 			printf("\n\n");
 		}
 	}*/
-	PrintLine(text.paragraphs[0].lines[0]);
+	//PrintLine(text.paragraphs[0].lines[0]);
 }
 
 Text Segmentation(Image image)
@@ -69,7 +69,7 @@ Text Segmentation(Image image)
 	text.numberOfParagraphs = 0;
 	text.paragraphs = p;
 
-	text = GetParagraphs(image, text);	
+	text = GetParagraphs(image, text);
 	text = GetLines(image, text);
 	text = GetWords(image, text);
 	text = GetCharacters(image, text);
