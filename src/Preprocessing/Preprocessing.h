@@ -1,8 +1,18 @@
 #ifndef PREPROCESSING_H
 #define PREPROCESSING_H
 
-unsigned char **CreateImageMatrix(int, int);
-unsigned char **ImageToGrayscale(char[], int*, int*);
-unsigned char **GrayscaleToBinarized(unsigned char**, int, int);
+typedef struct Image Image;
+struct Image
+{
+	char *path;
+	int width;
+	int height;
+	
+	unsigned char **grayscale;
+	unsigned char **binarized;	
+};
+
+Image LoadImageAsGrayscale(Image);
+Image BinarizeImage(Image);
 
 #endif
