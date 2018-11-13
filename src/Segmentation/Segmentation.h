@@ -53,6 +53,8 @@ struct Paragraph
 typedef struct Text Text;
 struct Text
 {
+	unsigned char **blocksMap;
+
 	int numberOfParagraphs;
 	Paragraph *paragraphs;
 };

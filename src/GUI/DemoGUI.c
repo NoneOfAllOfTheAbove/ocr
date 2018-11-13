@@ -15,16 +15,16 @@ void WaitSDL()
 	}
 }
 
-void DrawMatrix(SDL_Renderer *renderer, Image image)
+void DrawMatrix(SDL_Renderer *renderer, unsigned char **matrix, int width, int height)
 {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	SDL_RenderClear(renderer);
-	for (int y = 0; y < image.height; y++)
+	for (int y = 0; y < height; y++)
 	{
-		for (int x = 0; x < image.width; x++)
+		for (int x = 0; x < width; x++)
 		{
 			int color = 0;
-			if(image.binarized[y][x] == 0)
+			if(matrix[y][x] == 0)
 			{
 				color = 255;
 			}
@@ -42,7 +42,10 @@ void StartDemoGUI(Image image, Text text)
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_CreateWindowAndRenderer(image.width, image.height, 0, &window, &renderer);
 
-	DrawMatrix(renderer, image);
+	DrawMatrix(renderer, text.blocksMap, image.width, image.height);
+	SDL_RenderPresent(renderer);
+	WaitSDL();
+	DrawMatrix(renderer, image.binarized, image.width, image.height);
 	for(int i = 0; i < text.numberOfParagraphs; i++)
 	{
 		// Paragraphs
@@ -78,13 +81,13 @@ void StartDemoGUI(Image image, Text text)
 			for (int k = 0; k < paragraph.lines[j].numberOfWords; k++)
 			{
 				Word word = paragraph.lines[j].words[k];
-				SDL_Rect rect;
+				/*SDL_Rect rect;
 				rect.x = word.x1;
 				rect.y = paragraph.lines[j].y1;
 				rect.w = word.x2 - word.x1;
 				rect.h = paragraph.lines[j].y2 - paragraph.lines[j].y1;
 				SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-				SDL_RenderDrawRect(renderer, &rect);
+				SDL_RenderDrawRect(renderer, &rect);*/
 
 				// Characters
 				for (int c = 0; c < word.numberOfCharacters; c++)
