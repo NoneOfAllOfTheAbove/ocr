@@ -55,7 +55,7 @@ int GetNumberVerticalWhiteNeighbors(unsigned char **array, int x, int y, int max
 
 unsigned char **RLSA(unsigned char **binarizedImageMatrix, int imageWidth, int imageHeight)
 {
-	int horizontalStep = 30; 
+	int horizontalStep = 150; 
 	int verticalStep = 30; 
 	unsigned char **horizontalResult = CreateCharMatrix(imageWidth, imageHeight);
 	unsigned char **verticalResult = CreateCharMatrix(imageWidth, imageHeight);
@@ -151,8 +151,17 @@ void __IdentifyBlocks(unsigned char **matrix, int x, int y, int width, int heigh
 	__IdentifyBlocks(matrix, x, y - 1, width, height, blockId);
 }
 
-Paragraph* IdentifyBlocks(unsigned char** matrix, int *blockNumber, int imageWidth, int imageHeight)
+Paragraph* IdentifyBlocks(unsigned char** blocksMap, int *blockNumber, int imageWidth, int imageHeight)
 {
+	unsigned char **matrix = CreateCharMatrix(imageWidth, imageHeight);
+	for (int y = 0; y < imageHeight; y++)
+	{
+		for (int x = 0; x < imageWidth; x++)
+		{
+			matrix[y][x] = blocksMap[y][x];
+		}
+	}
+
 	// Count and mark every block with a unique id
 	int numberOfBlocks = 0;
 	unsigned char blockId = 2;
@@ -169,8 +178,6 @@ Paragraph* IdentifyBlocks(unsigned char** matrix, int *blockNumber, int imageWid
 		}
 	}
 	*blockNumber = numberOfBlocks;
-
-	//printf("%d \n", numberOfBlocks);
 
 	// Register every block bounds
 	int i = 0;
@@ -210,9 +217,9 @@ Paragraph* IdentifyBlocks(unsigned char** matrix, int *blockNumber, int imageWid
 Text GetParagraphs(Image image, Text text)
 {
 	int number = 0;
-	unsigned char **blocksMap = RLSA(image.binarized, image.width, image.height);
-	Paragraph *paragraphs = IdentifyBlocks(blocksMap, &number, image.width, image.height);
-	
+	text.blocksMap = RLSA(image.binarized, image.width, image.height);
+	Paragraph *paragraphs = IdentifyBlocks(text.blocksMap, &number, image.width, image.height);
+
 	text.numberOfParagraphs = number;
 	text.paragraphs = paragraphs;
 	return text;
