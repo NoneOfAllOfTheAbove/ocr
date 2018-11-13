@@ -1,14 +1,15 @@
 TODO
 
 
-- Arielle segmentation
-
-
+- Prepare Dataset utility
 - Merge + text export
+
+
 - HTML: Font size, layout, images...
 - Defense report
 
 - Clean code
+--- Image -> Matrix
 --- Make settings system (otsu shift, enable fusion)
 --- More than 255 paragraphs (iterative)
 --- Manipulation of Text in Segmentation.c
