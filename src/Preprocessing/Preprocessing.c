@@ -46,18 +46,11 @@ Image LoadImageAsGrayscale(Image image)
 
 Image BinarizeImage(Image image)
 {
-	// Otsu's method: https://en.wikipedia.org/wiki/Otsu%27s_method
-	int thresholdShift = 35;
-
 	// Prepare variables
-	int histogram[256];
-	int threshold = 0, var_max = 0, sum = 0, sumB = 0, q1 = 0, q2 = 0, u1 = 0, u2 = 0;
+	float histogram[256] = {0.0F};
+	int threshold = 0;
 	
 	// Prepare histogram
-	for(int i = 0; i <= 255; i++)
-	{
-		histogram[i] = 0;
-	}
 	for (int y = 0; y < image.height; y++)
 	{
 		for (int x = 0; x < image.width; x++)
@@ -66,31 +59,46 @@ Image BinarizeImage(Image image)
 			histogram[value]++;
 		}
 	}
-	for(int i = 0; i <= 255; i++)
+
+	// Otsu's algorithm (https://en.wikipedia.org/wiki/Otsu%27s_method)
+	for(int i = 0; i < 256; i++)
 	{
-		sum += i * histogram[i];
+		histogram[i] /= (image.width * image.height);
+	}
+	
+	float ut = 0;
+	for (int i = 0; i < 256; i++)
+	{
+		ut += i * histogram[i];
 	}
 
-	// Otsu's main algorithm
-	for(int t = 0; t <= 255; t++)
+	int max_k = 0;
+	float max_sigma_k = 0;
+	for(int k = 0; k < 256; k++)
 	{
-		q1 += histogram[t];
-		if(q1 == 0)
+		float wk = 0;
+		for(int i = 0; i <= k; i++)
 		{
-			continue;
+			wk += histogram[i];
 		}
-		q2 += (image.width * image.height) - q1;
-		sumB += t * histogram[t];
-		u1 = sumB / q1;
-		u2 = (sum - sumB) / q2;
-		int current = q1 * q2 * (u1 - u2) * (u1 - u2);
-
-		if(current > var_max)
+		float uk = 0;
+		for(int i = 0; i <= k; i++)
 		{
-			threshold = t;
-			var_max = current;
+			uk += i * histogram[i];
+		}
+
+		float sigma_k = 0;
+		if(wk != 0 && wk != 1)
+		{
+			sigma_k = ((ut * wk - uk) * (ut * wk - uk)) / (wk * (1 - wk));
+		}
+		if(sigma_k > max_sigma_k)
+		{
+			max_k = k;
+			max_sigma_k = sigma_k;
 		}
 	}
+	threshold = max_k;
 
 	// Create binarized matrix
 	unsigned char **matrix = CreateCharMatrix(image.width, image.height);
@@ -98,7 +106,7 @@ Image BinarizeImage(Image image)
 	{
 		for (int x = 0; x < image.width; x++)
 		{
-			if(image.grayscale[y][x] > threshold + thresholdShift)
+			if(image.grayscale[y][x] > threshold)
 			{
 				matrix[y][x] = 0;
 			}
