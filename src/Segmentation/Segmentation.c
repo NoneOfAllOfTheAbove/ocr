@@ -8,6 +8,8 @@
 #include "WordSegmentation.h"
 #include "CharacterSegmentation.h"
 
+#include "../Image/Image.h"
+
 void PrintCharacter(Character c)
 {
 	for(int a = 0; a < 16; a++)
@@ -40,6 +42,10 @@ void PrintLine(Line l)
 		for(int c = 0; c < l.words[w].numberOfCharacters; c++)
 		{
 			PrintCharacter(l.words[w].characters[c]);
+			if(w == 3 && c == 3)
+			{
+				SaveImage(l.words[w].characters[c].matrix, 16, 16, "ooo.bmp");
+			}
 			printf("\n");
 		}
 		printf("%d spaces \n", l.words[w].spaces);
@@ -59,7 +65,7 @@ void DebugSegmentation(Text text)
 			printf("\n\n");
 		}
 	}*/
-	PrintLine(text.paragraphs[1].lines[1]);
+	PrintLine(text.paragraphs[0].lines[0]);
 }
 
 Text Segmentation(Image image)
