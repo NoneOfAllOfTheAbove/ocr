@@ -100,6 +100,7 @@ Text GetWords(Image image, Text text)
 			int sumCharactersWidth = 0;
 			int numberOfCharacters = __IdentifyCharacters(image.binarized, x1, x2, y1, y2, &sumCharactersWidth);
 			int averageCharactersWidth = sumCharactersWidth / numberOfCharacters;
+			averageCharactersWidth = (averageCharactersWidth == 0) ? 1 : averageCharactersWidth;
 
 			int numberOfWords = __CountWords(image.binarized, x1, x2, y1, y2, averageCharactersWidth);
 			Word *words = (Word*)malloc(sizeof(Word) * numberOfWords);
