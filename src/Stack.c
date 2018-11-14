@@ -1,55 +1,48 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <err.h>
 
 #include "Stack.h"
 
-Stack StackCreate(int size)
+void StackCreate(Stack *stack, int size)
 {
-	int **data = (int **)malloc(sizeof(int *) * size);
-	for (int i = 0; i < size; i++)
-	{
-		*(data + i) = (int *)malloc(sizeof(int) * 2);
-	}
+	Coord *data;
+	data = (Coord *)malloc(sizeof(Coord) * size);
 
-	Stack stack;
-	stack.size = size;
-	stack.top = -1;
-	stack.stack = data;
-	return stack;
+	stack->size = size;
+	stack->top = -1;
+	stack->stack = data;
 }
 
 int IsStackFull(Stack *stack)
 {
-	return stack->top == stack->size;
+	return stack->top >= stack->size - 1;
 }
 
 int IsStackEmpty(Stack *stack)
 {
-	return stack->top == -1;
+	return stack->top < 0;
 }
 
-int* PeekStack(Stack *stack)
+Coord StackPeek(Stack *stack)
 {
 	return stack->stack[stack->top];
 }
 
-int *StackPop(Stack *stack)
+Coord StackPop(Stack *stack)
 {
-	if(!IsStackEmpty(stack))
+	if(IsStackEmpty(stack))
 	{
-		int* value = stack->stack[stack->top];
-		stack->top -= 1;
-		return value;
+		errx(1, "Stack empty.");
 	}
-
-	return (int*) -1;
+	return stack->stack[stack->top--];
 }
 
-void StackPush(Stack *stack, int* data)
+void StackPush(Stack *stack, Coord element)
 {
-	if(!IsStackFull(stack))
+	if(IsStackFull(stack))
 	{
-		stack->top += 1;
-		stack->stack[stack->top] = data;
+		errx(1, "Stack full.");
 	}
+	stack->stack[++stack->top] = element;
 }
