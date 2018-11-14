@@ -143,4 +143,5 @@ void SaveMatrixAsImage(unsigned char **matrix, int width, int height, char *path
 
 	// Export SDL surface to file
 	SDL_SaveBMP(surface, path);
+	SDL_FreeSurface(surface);
 }
