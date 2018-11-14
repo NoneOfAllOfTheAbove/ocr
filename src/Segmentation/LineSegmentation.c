@@ -8,6 +8,7 @@
 int CountLines(unsigned char **matrix, int x1, int x2, int y1, int y2)
 {
 	int state = 0;
+	int space = 0;
 	int number = 0;
 
 	for(int y = y1; y < y2; y++)
@@ -21,8 +22,13 @@ int CountLines(unsigned char **matrix, int x1, int x2, int y1, int y2)
 			}
 			if(x == x2)
 			{
-				number++;
-				state = 1;
+				space++;
+				if(space > 2)
+				{
+					number++;
+					state = 1;
+					space = 0;
+				}
 			}
 		}
 		else
@@ -52,8 +58,6 @@ Text GetLines(Image image, Text text)
 	for(int i = 0; i < text.numberOfParagraphs; i++)
 	{
 		// Prepare data
-		int state = 0;
-		int lineId = 0;
 		int x1 = text.paragraphs[i].x;
 		int y1 = text.paragraphs[i].y;
 		int x2 = text.paragraphs[i].x + text.paragraphs[i].width;
@@ -61,6 +65,8 @@ Text GetLines(Image image, Text text)
 		int numberOfLines = CountLines(image.binarized, x1, x2, y1, y2);
 		Line* lines = (Line*)malloc(sizeof(Line) * numberOfLines);
 
+		int state = 0, space = 0;
+		int lineId = 0;
 		int topY = y1; 
 		for(int y = y1; y < y2; y++)
 		{
@@ -75,14 +81,19 @@ Text GetLines(Image image, Text text)
 				// If the horizontal line y is only composed of white pixels
 				if(x == x2)
 				{
-					// Create a line
-					Line line;
-					line.y1 = topY;
-					line.y2 = y;
-					lines[lineId] = line;
-					lineId++;
+					space++;
+					if(space > 2)
+					{
+						// Create a line
+						Line line;
+						line.y1 = topY;
+						line.y2 = y;
+						lines[lineId] = line;
+						lineId++;
 
-					state = 1;
+						state = 1;
+						space = 0;
+					}
 				}
 			} 
 			else
