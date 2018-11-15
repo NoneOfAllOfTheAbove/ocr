@@ -72,7 +72,7 @@ Text GetCharacters(Image image, Text text)
 					}
 					else
 					{
-						if (state == 1)
+						if (state == 1 && x - cx1 > 1)
 						{
 							cx2 = x;
 
