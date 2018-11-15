@@ -1,21 +1,17 @@
 #include <stdio.h>
+#include <err.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <err.h>
 
 #include "Preprocessing/Preprocessing.h"
 #include "Segmentation/Segmentation.h"
 #include "NeuralNetwork/NeuralNetwork.h"
 #include "GUI/DemoGUI.h"
 
-void Process()
-{
-	// Link NN with Segmentation
-	// Export text...
-}
+#include "TrainNeuralNetwork.h"
 
-int main(int argc, char** argv)
-{
+int main()
+{ /*int argc, char** argv
 	// ----------------------
 	// STEP 1 : PREPROCESSING
 	// ----------------------
@@ -39,13 +35,15 @@ int main(int argc, char** argv)
 	// STEP 3 : CHARACTERS RECOGNITION
 	// -------------------------------
 
-	
+	*/
+	Prepare();
+	/*
 
 	// ----------------------------
 	// STEP 4 : GUI AND TEXT EXPORT
 	// ----------------------------
 
 	StartDemoGUI(image, text);
-
+*/
 	return 0;
 }
