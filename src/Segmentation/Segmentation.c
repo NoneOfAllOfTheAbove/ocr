@@ -59,7 +59,9 @@ void DebugSegmentation(Text text)
 			printf("\n\n");
 		}
 	}*/
-	//PrintLine(text.paragraphs[0].lines[0]);
+	// PrintCharacter(text.paragraphs[0].lines[5].words[2].characters[0]);
+	// PrintCharacter(text.paragraphs[0].lines[5].words[2].characters[1]);
+	// printf("---- %d \n", text.paragraphs[0].lines[5].words[2].numberOfCharacters);
 }
 
 Text Segmentation(Image image)

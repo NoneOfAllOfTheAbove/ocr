@@ -9,6 +9,7 @@ int __CountCharacters(unsigned char **matrix, int x1, int x2, int y1, int y2)
 {
 	int numberOfCharacters = 0;
 	int state = 0;
+	int space = 0;
 
 	for (int x = x1; x < x2; x++)
 	{
@@ -23,7 +24,12 @@ int __CountCharacters(unsigned char **matrix, int x1, int x2, int y1, int y2)
 		}
 		else
 		{
-			state = 0;
+			space++;
+			if(space > 1)
+			{
+				state = 0;
+				space = 0;
+			}
 		}
 	}
 
@@ -34,6 +40,7 @@ int __IdentifyCharacters(unsigned char **matrix, int x1, int x2, int y1, int y2,
 {
 	int numberOfCharacters = 0;
 	int state = 0;
+	int space = 0;
 	
 	for(int x = x1; x < x2; x++)
 	{
@@ -44,12 +51,17 @@ int __IdentifyCharacters(unsigned char **matrix, int x1, int x2, int y1, int y2,
 		if(y != y2)
 		{
 			numberOfCharacters += (state == 0) ? 1 : 0;
-			*sumCharactersWidth += (state == 1) ? 1 : 0;
 			state = 1;
+			*sumCharactersWidth += (state == 1) ? 1 : 0;
 		}
 		else
 		{
-			state = 0;
+			space++;
+			if (space > 1)
+			{
+				state = 0;
+				space = 0;
+			}
 		}
 	}
 
@@ -100,6 +112,7 @@ Text GetWords(Image image, Text text)
 			int sumCharactersWidth = 0;
 			int numberOfCharacters = __IdentifyCharacters(image.binarized, x1, x2, y1, y2, &sumCharactersWidth);
 			int averageCharactersWidth = sumCharactersWidth / numberOfCharacters;
+			averageCharactersWidth = (averageCharactersWidth == 0) ? 1 : averageCharactersWidth;
 
 			int numberOfWords = __CountWords(image.binarized, x1, x2, y1, y2, averageCharactersWidth);
 			Word *words = (Word*)malloc(sizeof(Word) * numberOfWords);

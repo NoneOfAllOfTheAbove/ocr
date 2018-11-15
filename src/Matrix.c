@@ -126,6 +126,7 @@ void SaveMatrixAsImage(unsigned char **matrix, int width, int height, char *path
 	SDL_Surface *surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
 	int bpp = surface->format->BytesPerPixel;
 
+
 	// Convert image to SDL surface
 	for (int y = 0; y < height; y++)
 	{
@@ -143,4 +144,5 @@ void SaveMatrixAsImage(unsigned char **matrix, int width, int height, char *path
 
 	// Export SDL surface to file
 	SDL_SaveBMP(surface, path);
+	SDL_FreeSurface(surface);
 }
