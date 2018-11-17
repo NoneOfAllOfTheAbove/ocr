@@ -139,7 +139,7 @@ static void runButton_activated(GtkWidget *runButton, gpointer *window)
     Des textes en 16.796 signes ? Un roman de 58.786 mots ? Tu n'y penses pas !"); 
 
     gtk_box_set_homogeneous(GTK_BOX(box2), TRUE);   
-    gtk_box_set_spacing(GTK_BOX(box2), -350); //If this line is removed. In the text area, there will be blank space at the left of TextArea.
+    gtk_box_set_spacing(GTK_BOX(box2), -340); //If this line is removed. In the text area, there will be blank space at the left of TextArea.
 }
 
 /*------------------Draw function------------------*/
@@ -463,8 +463,8 @@ int main (int argc, char *argv[])
     GtkWidget *image;
     //width*heigth = 700*700.
     image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size("/home/sphird/Images/GUI_OCR.jpg"
-                                                                        ,700
-                                                                        ,700
+                                                                        ,800
+                                                                        ,800
                                                                         ,NULL));
     
     //The 3 lines is to add "image" in "overlay" and control their display.
