@@ -1,5 +1,10 @@
 #include <gtk/gtk.h>
 
+
+//Gloabal Variable.
+GtkWidget *label; //Need it as G.V in order to change text.
+GtkWidget *box2; //In order to get 50/50 on boxA and boxB size.
+
 /*------------------File's GCallback------------------*/
 
 static void loadImage_activated (GtkWidget *fileMenu_loadImage, gpointer window)
@@ -117,41 +122,65 @@ static void helpAbout_activated()
     g_print("Help -> About activated.\n");
 }
 
-/*------------------Run's GCallback------------------*/
-static void runButton_activated()
-{
-    g_print("Run activated.\n");
-}
-
 /*------------------------------------|FOR THEO|------------------------------------*/
 
-/*------------------Write function------------------*/
-
-static const gchar* writeFunction()
-{
-    const gchar* text = "Si tu ne comprends pas, ou ne maîtrises pas, la notion de coefficient binomial,\
+/*------------------Run's GCallback------------------*/ 
+// This is the Run"s GCallback and at the same time write function.
+//-> When clicked on run, text displays in the text area.
+static void runButton_activated(GtkWidget *runButton, gpointer *window)
+{   
+    (void)window;
+    (void)runButton;
+    g_print("Run activated.\n");
+    gtk_label_set_text(GTK_LABEL (label), "Si tu ne comprends pas, ou ne maîtrises pas, la notion de coefficient binomial,\
     inutile de chercher à calculer toi-même les nombres de Catalan, que tu découvris dans cette obscure revue américaine d'algèbre,\
     croyant qu'il s'agissait de “nombres catalans” (l'anglais Catalan numbers est équivoque), avant de faire le chemin historique et de\
     découvrir qu'ils auraient tout aussi bien pu se nommer suite d'Euler, entiers de Seger, ou nombres de Ming Antu.\
-    Des textes en 16.796 signes ? Un roman de 58.786 mots ? Tu n'y penses pas !";
-    return text;
+    Des textes en 16.796 signes ? Un roman de 58.786 mots ? Tu n'y penses pas !"); 
+
+    gtk_box_set_homogeneous(GTK_BOX(box2), TRUE);   
+    gtk_box_set_spacing(GTK_BOX(box2), -350); //If this line is removed. In the text area, there will be blank space at the left of TextArea.
 }
 
 /*------------------Draw function------------------*/
-
-gboolean drawFunction ()
+//Enable you to draw.
+static void drawFunction (GtkWidget *widget, cairo_t *cr, gpointer window)
 {   
-    /*FILL ME*/
-    return TRUE;
+    (void)window;
+    guint width, height;
+    GdkRGBA color;
+    GtkStyleContext *context;
+
+    context = gtk_widget_get_style_context (widget);
+
+    width = gtk_widget_get_allocated_width (widget);
+    height = gtk_widget_get_allocated_height (widget);
+
+    gtk_render_background (context, cr, 0, 0, width, height);
+
+    cairo_arc (cr,
+                width / 2.0, height / 2.0,
+                MIN (width, height) / 2.0,
+                0, 2 * G_PI);
+
+    gtk_style_context_get_color (context,
+                                gtk_style_context_get_state (context),
+                                &color);
+    gdk_cairo_set_source_rgba (cr, &color);
+
+    cairo_fill (cr);
 }
 
 //For me, keep int main(). But when have to push, replace int main() -> int StartGUI().
-int StartGUI (int argc, char *argv[])
-{
+int main (int argc, char *argv[])
+{   
+    //size of the window
+    gint width;
+    gint height;
 
     GtkWidget *window;
     GtkWidget *mainBox;
-    GtkWidget *box2;
+    //GtkWidget *box2; Set as global variable at the begining of our file.
     GtkWidget *boxA;
     GtkWidget *boxB;
 
@@ -185,7 +214,7 @@ int StartGUI (int argc, char *argv[])
     GtkWidget *helpMenu_about;
     
     //For writing in boxB of case(2) of mainBox
-    GtkWidget *label;
+    //GtkWidget *label; It is declared as Global variable.
 
     /*For "Run" button*/
     GtkWidget *runButton;
@@ -194,10 +223,12 @@ int StartGUI (int argc, char *argv[])
     /*--------------------STEP 1: Initialisation of window--------------------*/ 
 
     gtk_init(&argc, &argv);
-
-    /*Create a window of size 400x250 entitled "OCR"*/
+    width = 1400;
+    height = 800;
+    /*Create a window of size width and height entitled "OCR"*/
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_default_size(GTK_WINDOW(window), 400, 250);
+    gtk_window_set_default_size(GTK_WINDOW(window), width, height);
+    gtk_window_set_resizable (GTK_WINDOW(window), FALSE);
     gtk_window_set_title(GTK_WINDOW(window), "OCR");
 
     /*--------------------STEP 2: Creation of the Menu bar--------------------*/ 
@@ -373,7 +404,7 @@ int StartGUI (int argc, char *argv[])
     /*-------------------- STEP 3: Creation of button Run --------------------*/ 
     
     runButton = gtk_button_new_with_label("Run");
-    //For Run button.
+    //For Run button
     g_signal_connect(G_OBJECT(runButton), "clicked", G_CALLBACK(runButton_activated), NULL);
     
     /*-------------------- STEP 4: Creation of mainBox --------------------*/ 
@@ -406,63 +437,92 @@ int StartGUI (int argc, char *argv[])
 
     mainBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     
-    /*----------------------CASE 1----------------------*/
+    /*--------------------------------------------CASE 1--------------------------------------------*/
     //Add "menuBar" to case (1) of "mainBox"
     gtk_box_pack_start(GTK_BOX(mainBox), menuBar, FALSE, FALSE, 0);
     
-    /*----------------------CASE 2----------------------*/
-    //Add "boxA" and "boxB" to case (2) of "mainBox". Case (2) will be called "box2"
-    box2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    /*--------------------------------------------CASE 2--------------------------------------------*/
+    //Add "boxA" and "boxB" to "box2". "box2" will later be add to case(2) of "mainBox"
+    box2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL,0);
     boxA = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     boxB = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 
-    //Add "boxA" to "box2"
-    gtk_box_pack_start(GTK_BOX(box2),boxA, TRUE, TRUE, 0);
+                        
+                                //-----------------------ADD "boxA" TO "box2"-----------------------
 
-    /*----------------------TEST----------------------*/
-    /*
+    gtk_box_pack_start(GTK_BOX(box2),boxA, TRUE, TRUE, 0);
+    //gtk_drag_dest_set(boxA,GTK_DEST_DEFAULT_ALL,) => For drag and drop.
+
+
+    /*--------Create an "overlay" in order to put "drawing area" on top of "image"--------*/
+    
+    //Create an "overlay" and put in "boxA"
+    GtkWidget *overlay = gtk_overlay_new();
+    gtk_box_pack_start(GTK_BOX(boxA), overlay, TRUE, TRUE, 0);
+    
+    //Creation of "image"
+    GtkWidget *image;
+    //width*heigth = 700*700.
+    image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size("/home/sphird/Images/GUI_OCR.jpg"
+                                                                        ,700
+                                                                        ,700
+                                                                        ,NULL));
+    
+    //The 3 lines is to add "image" in "overlay" and control their display.
+    gtk_overlay_add_overlay (GTK_OVERLAY(overlay), image);
+    gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
+    gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
+  
+    //Creation of drawing_area and its callBack Function.
     GtkWidget *drawing_area = gtk_drawing_area_new ();
     gtk_widget_set_size_request (drawing_area, 100, 100);
-    gtk_box_pack_start(GTK_BOX(boxA),drawing_area, TRUE, TRUE, 0);
-    g_signal_connect (G_OBJECT (drawing_area), "draw",
-                    G_CALLBACK (draw_callback), NULL);
-    */
-    /*------------------------------------------------*/
+    g_signal_connect_after(G_OBJECT (drawing_area), "draw",
+                    G_CALLBACK (drawFunction), NULL);
+        
+    //The 3 lines is to add "drawing_area" in "overlay" and control their display.
+    gtk_overlay_add_overlay (GTK_OVERLAY(overlay), drawing_area);
+    gtk_widget_set_halign (drawing_area, GTK_ALIGN_CENTER);
+    gtk_widget_set_valign (drawing_area, GTK_ALIGN_CENTER);
+  
+
+                            /*-----------------------ADD SEPARATOR-------------------------*/
     //Add Separator between box A and B
     GtkWidget *separator;
-    separator = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
-    gtk_box_pack_start(GTK_BOX(box2),separator, FALSE, TRUE, 0);
+    separator = gtk_separator_new(GTK_ORIENTATION_VERTICAL);
+    gtk_box_pack_start(GTK_BOX(box2),separator, FALSE, FALSE, 0);
 
     //Add "boxB" to "box2"
     gtk_box_pack_start(GTK_BOX(box2),boxB, TRUE, TRUE, 0);
 
     /*Add "label" to "boxB"*/
-    label = gtk_label_new(writeFunction());
+    label = gtk_label_new(NULL);
+    
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-    g_object_set (label, "margin", 0, NULL);
-    //Can select and copy from GUI.
+    //Put Text at the left side of the box.
+    gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_LEFT);
+    //Can select and copy "label" from GUI.
     gtk_label_set_selectable(GTK_LABEL(label), TRUE);
-
     //Enable us to wrapped the text in multiple line.
     gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-    gtk_label_set_max_width_chars (GTK_LABEL (label), 30);
+    gtk_label_set_max_width_chars (GTK_LABEL (label), 0);
+    
 
-    //Add "label" to "boxB"
+                            //-----------------------Add "label" to "boxB-----------------------
+    
     gtk_box_pack_start(GTK_BOX(boxB), label, FALSE, FALSE, 0);
 
     //Add "box2" to case (2) of "mainBox"
     gtk_box_pack_start(GTK_BOX(mainBox), box2, TRUE, TRUE, 0);
-
-    /*----------------------CASE 3----------------------*/
+    
+    /*--------------------------------------------CASE 3--------------------------------------------*/
     //Add "run" to case (3) of "mainBox"
     gtk_box_pack_end(GTK_BOX(mainBox), runButton, FALSE, FALSE, 0);
 
+
+    /*-------------------- Step 5: Show window --------------------*/ 
     //Add mainBox to the container window.
     gtk_container_add(GTK_CONTAINER(window), mainBox);
 
-
-    /*-------------------- Step 5: Show window --------------------*/ 
-    
     //Enable us to quit the program.
     g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
     gtk_widget_show_all(window);
