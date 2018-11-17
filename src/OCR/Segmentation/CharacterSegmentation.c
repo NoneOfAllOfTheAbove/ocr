@@ -14,10 +14,8 @@ Character __PrepareCharacter(int cx1, int cx2, int cy1, int cy2, unsigned char *
 	character.y1 = cy1;
 	character.y2 = cy2;
 	character.character = '\0';
-	unsigned char **sub = GetSubMatrix(matrix, cx1, cy1, cx2, cy2);
-	unsigned char **normalized = ToSquareMatrix(sub, cx2 - cx1, cy2 - cy1, 16);
-	character.matrix = normalized;
-
+	character.matrix = GetSubMatrix(matrix, cx1, cy1, cx2, cy2);
+	character.matrix = ToSquareMatrix(character.matrix, cx2 - cx1, cy2 - cy1, 16);
 	return character;
 }
 
@@ -29,8 +27,6 @@ Text GetCharacters(Image image, Text text)
 		{
 			for(int k = 0; k < text.paragraphs[i].lines[j].numberOfWords; k++)
 			{
-				int characterId = 0;
-
 				// Prepare data
 				Line line = text.paragraphs[i].lines[j];
 				Word word = text.paragraphs[i].lines[j].words[k];
@@ -38,7 +34,7 @@ Text GetCharacters(Image image, Text text)
 
 				// Handle characters
 				int cx1 = 0, cx2 = 0, cy1 = 0, cy2 = 0;
-				int state = 0;
+				int characterId = 0, state = 0;
 				for (int x = word.x1; x < word.x2; x++)
 				{
 					// Check for black pixels on vertical line x
@@ -68,7 +64,6 @@ Text GetCharacters(Image image, Text text)
 						}
 						else
 						{
-							cx2 = x;
 							if (yMin < cy1)
 								cy1 = yMin;
 							if (yMax > cy2)
@@ -77,9 +72,10 @@ Text GetCharacters(Image image, Text text)
 					}
 					else
 					{
-						if (state == 1 && x - cx2 > 4)
+						if (state == 1)
 						{
 							cx2 = x;
+
 							/*if (cx2 - cx1 >= 2 * line.averageCharactersWidth)
 							{
 								int mid = (cx2 - cx1) / 2;
