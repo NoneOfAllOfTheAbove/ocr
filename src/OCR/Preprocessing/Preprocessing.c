@@ -106,7 +106,7 @@ Image BinarizeImage(Image image)
 	{
 		for (int x = 0; x < image.width; x++)
 		{
-			if(image.grayscale[y][x] > threshold)
+			if(image.grayscale[y][x] > 251)
 			{
 				matrix[y][x] = 0;
 			}

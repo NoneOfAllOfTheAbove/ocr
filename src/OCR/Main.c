@@ -10,8 +10,8 @@
 
 #include "TrainNeuralNetwork.h"
 
-int main()
-{ /*int argc, char** argv
+int main(int argc, char** arg)
+{
 	// ----------------------
 	// STEP 1 : PREPROCESSING
 	// ----------------------
@@ -35,15 +35,13 @@ int main()
 	// STEP 3 : CHARACTERS RECOGNITION
 	// -------------------------------
 
-	*/
-	Prepare();
-	/*
+	
 
 	// ----------------------------
 	// STEP 4 : GUI AND TEXT EXPORT
 	// ----------------------------
 
 	StartDemoGUI(image, text);
-*/
+
 	return 0;
 }

@@ -55,8 +55,8 @@ int GetNumberVerticalWhiteNeighbors(unsigned char **array, int x, int y, int max
 
 unsigned char **RLSA(unsigned char **binarizedImageMatrix, int imageWidth, int imageHeight)
 {
-	int horizontalStep = 150; 
-	int verticalStep = 30; 
+	int horizontalStep = 1000; 
+	int verticalStep = 300; 
 	unsigned char **horizontalResult = CreateCharMatrix(imageWidth, imageHeight);
 	unsigned char **verticalResult = CreateCharMatrix(imageWidth, imageHeight);
 
@@ -197,12 +197,12 @@ Paragraph* IdentifyBlocks(unsigned char** blocksMap, int *blockNumber, int image
 				p.x = xMin;
 				p.y = yMin;
 				p.width = xMax - xMin + 5;
-				p.height = yMax - yMin + 5;
+				p.height = yMax - yMin + 10;
 
-				if (p.width > imageWidth)
+				/*if (p.width > imageWidth)
 					p.width = (xMax - xMin) + (imageWidth - xMax);
 				if (p.height > imageHeight)
-					p.height = (yMax - yMin) + (imageHeight - yMax);
+					p.height = (yMax - yMin) + (imageHeight - yMax);*/
 
 				list[i] = p;
 				

@@ -25,7 +25,7 @@ int __CountCharacters(unsigned char **matrix, int x1, int x2, int y1, int y2)
 		else
 		{
 			space++;
-			if(space > 1)
+			if(space > 4)
 			{
 				state = 0;
 				space = 0;
@@ -57,7 +57,7 @@ int __IdentifyCharacters(unsigned char **matrix, int x1, int x2, int y1, int y2,
 		else
 		{
 			space++;
-			if (space > 1)
+			if (space > 4)
 			{
 				state = 0;
 				space = 0;
@@ -133,7 +133,7 @@ Text GetWords(Image image, Text text)
 					// printf("%d -> %d \n", startX, lastX + 1);
 					Word word;
 					word.x1 = startX;
-					word.x2 = lastX + 2;
+					word.x2 = lastX + 7;
 					word.numberOfCharacters = __CountCharacters(image.binarized, word.x1, word.x2, y1, y2);
 					word.spaces = (x - word.x2) / averageCharactersWidth;
 					words[wordId] = word;
@@ -150,7 +150,7 @@ Text GetWords(Image image, Text text)
 						// printf("%d -> %d \n", startX, lastX + 1);
 						Word word;
 						word.x1 = startX;
-						word.x2 = lastX + 2;
+						word.x2 = lastX + 7;
 						word.numberOfCharacters = __CountCharacters(image.binarized, word.x1, word.x2, y1, y2);
 						word.spaces = (x - word.x2) / averageCharactersWidth;
 						words[wordId] = word;
