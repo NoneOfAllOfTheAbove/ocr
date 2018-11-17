@@ -327,7 +327,7 @@ int main (int argc, char *argv[])
     option = gtk_menu_item_new_with_label("Options");
     
     //In order to have the "tick" feature.
-    optionMenu_basicSeg = gtk_check_menu_item_new_with_label("Basic segmentation");
+    optionMenu_basicSeg = gtk_check_menu_item_new_with_label("Handle sticked characters");
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(optionMenu_basicSeg), FALSE);
 
     /*Add "optionMenu_basicSeg" to optionMenu */
@@ -403,7 +403,7 @@ int main (int argc, char *argv[])
 
     /*-------------------- STEP 3: Creation of button Run --------------------*/ 
     
-    runButton = gtk_button_new_with_label("Run");
+    runButton = gtk_button_new_with_label("Extract text");
     //For Run button
     g_signal_connect(G_OBJECT(runButton), "clicked", G_CALLBACK(runButton_activated), NULL);
     
@@ -452,7 +452,6 @@ int main (int argc, char *argv[])
 
     gtk_box_pack_start(GTK_BOX(box2),boxA, TRUE, TRUE, 0);
     //gtk_drag_dest_set(boxA,GTK_DEST_DEFAULT_ALL,) => For drag and drop.
-
 
     /*--------Create an "overlay" in order to put "drawing area" on top of "image"--------*/
     
