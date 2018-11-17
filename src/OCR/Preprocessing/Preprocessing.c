@@ -8,7 +8,6 @@
 Image LoadImageAsGrayscale(Image image)
 {
 	// Load image
-	//IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF);
 	SDL_Surface *imageSurface;
 	imageSurface = IMG_Load(image.path);
 	if(!imageSurface)
@@ -106,7 +105,7 @@ Image BinarizeImage(Image image)
 	{
 		for (int x = 0; x < image.width; x++)
 		{
-			if(image.grayscale[y][x] > 251)
+			if(image.grayscale[y][x] > threshold)
 			{
 				matrix[y][x] = 0;
 			}
@@ -117,5 +116,6 @@ Image BinarizeImage(Image image)
 		}
 	}
 	image.binarized = matrix;
+
 	return image;
 }
