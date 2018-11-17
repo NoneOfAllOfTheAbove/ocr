@@ -8,9 +8,7 @@
 #include "NeuralNetwork/NeuralNetwork.h"
 #include "GUI/DemoGUI.h"
 
-#include "TrainNeuralNetwork.h"
-
-int main(int argc, char** arg)
+int main(int argc, char** argv)
 {
 	// ----------------------
 	// STEP 1 : PREPROCESSING
