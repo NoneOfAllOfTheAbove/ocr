@@ -6,7 +6,7 @@
 #include "Segmentation.h"
 #include "WordSegmentation.h"
 
-Character __PrepareCharacter(int l, int k, int c, int cx1, int cx2, int cy1, int cy2, unsigned char **matrix)
+Character __PrepareCharacter(int cx1, int cx2, int cy1, int cy2, unsigned char **matrix)
 {
 	Character character;
 	character.x1 = cx1;
@@ -17,43 +17,6 @@ Character __PrepareCharacter(int l, int k, int c, int cx1, int cx2, int cy1, int
 	unsigned char **sub = GetSubMatrix(matrix, cx1, cy1, cx2, cy2);
 	unsigned char **normalized = ToSquareMatrix(sub, cx2 - cx1, cy2 - cy1, 16);
 	character.matrix = normalized;
-
-	/*if(k == 1 && c == 0 && l == 0)
-	{
-		unsigned char **test = GetSubMatrix(matrix, cx1, cy1, cx2, cy2);
-		printf("- %d %d %d %d \n", cx1, cx2, cy1, cy2);
-		for(int y = 0; y < cy2 - cy1; y++)
-		{
-			for(int x = 0; x < cx2 - cx1; x++)
-			{
-				printf("%d ", test[y][x]);
-			}
-			printf("\n");
-		}
-		printf("\n");
-		
-		unsigned char **test2 = ToSquareMatrix(test, cx2 - cx1, cy2 - cy1, 16);
-		for(int y = 0; y < 16; y++)
-		{
-			for(int x = 0; x < 16; x++)
-			{
-				printf("%d ", test2[y][x]);
-			}
-			printf("\n");
-		}
-		printf("\n");
-		
-		for(int y = 0; y < 16; y++)
-		{
-			for(int x = 0; x < 16; x++)
-			{
-				printf("%d ", character.matrix[y][x]);
-			}
-			printf("\n");
-		}
-		printf("\n");
-
-	}*/
 
 	return character;
 }
@@ -67,7 +30,6 @@ Text GetCharacters(Image image, Text text)
 			for(int k = 0; k < text.paragraphs[i].lines[j].numberOfWords; k++)
 			{
 				int characterId = 0;
-				//printf("%d %d %d %d \n", i, j, k, characterId);
 
 				// Prepare data
 				Line line = text.paragraphs[i].lines[j];
@@ -126,7 +88,7 @@ Text GetCharacters(Image image, Text text)
 								word.numberOfCharacters += 1;
 								characters[characterId] = __PrepareCharacter(1 + cx1 + mid, cx2, cy1, cy2, image.binarized);
 							}*/
-							characters[characterId] = __PrepareCharacter(j, k, characterId, cx1, cx2, cy1, cy2, image.binarized);
+							characters[characterId] = __PrepareCharacter(cx1, cx2, cy1, cy2, image.binarized);
 
 							characterId++;
 							state = 0;
