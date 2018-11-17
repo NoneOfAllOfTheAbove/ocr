@@ -1,6 +1,10 @@
-To compile: gcc -Wall -Wextra -g GUI.c `pkg-config --cflags --libs gtk+-3.0` -o GUI -export-dynamic
+To compile: gcc -Wall -Wextra -g GUI.c `pkg-config --cflags --libs gtk+-3.0` -o GUI -export-dynamic 
+|
+=> Use this only if you want to compile directly, else you need to change "int main()" by "int StartGui()" and called make.
 
 For Theo:
 ---------
 
-_To write, use the "writeFunction()".
+_There is a part dedicated to you called "FOR THEO".
+_It includes functions that enable you to write in the text Area and draw.
+
