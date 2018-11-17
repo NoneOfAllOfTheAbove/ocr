@@ -1,18 +1,12 @@
 #include <stdio.h>
+#include <err.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <err.h>
 
 #include "Preprocessing/Preprocessing.h"
 #include "Segmentation/Segmentation.h"
 #include "NeuralNetwork/NeuralNetwork.h"
 #include "GUI/DemoGUI.h"
-
-void Process()
-{
-	// Link NN with Segmentation
-	// Export text...
-}
 
 int main(int argc, char** argv)
 {
