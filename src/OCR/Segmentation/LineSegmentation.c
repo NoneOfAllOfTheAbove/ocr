@@ -11,8 +11,10 @@ int CountLines(unsigned char **matrix, int x1, int x2, int y1, int y2)
 	int space = 0;
 	int number = 0;
 
-	for(int y = y1; y < y2; y++)
+
+	for (int y = y1; y < y2; y++)
 	{
+		// printf("--- %d \n", y2 - y);
 		if(state == 0)
 		{
 			int x = x1;
@@ -23,7 +25,7 @@ int CountLines(unsigned char **matrix, int x1, int x2, int y1, int y2)
 			if(x == x2)
 			{
 				space++;
-				if(space > 2)
+				if(space > 5)
 				{
 					number++;
 					state = 1;
@@ -82,7 +84,7 @@ Text GetLines(Image image, Text text)
 				if(x == x2)
 				{
 					space++;
-					if(space > 2)
+					if (space > 5)
 					{
 						// Create a line
 						Line line;
