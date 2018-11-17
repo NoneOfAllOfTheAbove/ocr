@@ -103,7 +103,7 @@ unsigned char **ToSquareMatrix(unsigned char **matrix, int oldX, int oldY, int s
 						sum += result[scale * y + y1][scale * x + x1];
 					}
 				}
-				if(sum > 0)
+				if(sum > scale)
 				{
 					resized[y][x] = 1;
 				}
@@ -126,13 +126,14 @@ void SaveMatrixAsImage(unsigned char **matrix, int width, int height, char *path
 	SDL_Surface *surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
 	int bpp = surface->format->BytesPerPixel;
 
-
 	// Convert image to SDL surface
 	for (int y = 0; y < height; y++)
 	{
 		for (int x = 0; x < width; x++)
 		{
 			int color = 255;
+			//printf("llloo %d\n", matrix[y][x]);
+			// printf("lllodddo\n");
 			if (matrix[y][x] == 1)
 			{
 				color = 0;
@@ -143,6 +144,6 @@ void SaveMatrixAsImage(unsigned char **matrix, int width, int height, char *path
 	}
 
 	// Export SDL surface to file
-	SDL_SaveBMP(surface, path);
+	IMG_SavePNG(surface, path);
 	SDL_FreeSurface(surface);
 }
