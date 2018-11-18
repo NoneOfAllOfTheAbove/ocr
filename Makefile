@@ -5,7 +5,7 @@ BIN = bin/OCR
 SRC = src/OCR/*.c src/OCR/*/*.c
 
 TOOLS_BIN = bin/Tools
-TOOLS_SRC = src/OCR/NeuralNetwork/*.c src/OCR/Matrix.c src/Tools/*.c
+TOOLS_SRC = src/OCR/NeuralNetwork/*.c src/OCR/Matrix.c src/OCR/Preprocessing/*.c src/Tools/*.c
 
 GTK = `pkg-config --libs --cflags gtk+-3.0`
 SDL = -lSDL2 -lSDL2_image
