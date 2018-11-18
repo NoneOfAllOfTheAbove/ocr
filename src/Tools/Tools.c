@@ -4,14 +4,11 @@
 #include <sys/stat.h>
 
 #include "../OCR/Matrix.h"
-#include "../OCR/Preprocessing/Preprocessing.h"
-#include "../OCR/Segmentation/Segmentation.h"
 #include "../OCR/NeuralNetwork/NeuralNetwork.h"
-#include "../OCR/GUI/DemoGUI.h"
 
 void PrepareSecialCharsDataset()
 {
-	int total = 0;
+	/*int total = 0;
 	int characterId = 0;
 	for(int a = 62; a < 62 + 24; a++)
 	{
@@ -59,12 +56,12 @@ void PrepareSecialCharsDataset()
 				}
 			}
 		}
-	}
+	}*/
 }
 
 void TrainNeuralNetwork()
 {
-	// Your turn Ari ;)
+	printf("Your turn Ari ;)\n");
 }
 
 int main()
