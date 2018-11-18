@@ -5,6 +5,7 @@
 
 #include "../OCR/Matrix.h"
 #include "../OCR/NeuralNetwork/NeuralNetwork.h"
+#include "../OCR/Preprocessing/Preprocessing.h"
 
 void PrepareSecialCharsDataset()
 {
