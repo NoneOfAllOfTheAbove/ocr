@@ -5,13 +5,16 @@ BIN = bin/OCR
 SRC = src/OCR/*.c src/OCR/*/*.c
 
 TOOLS_BIN = bin/Tools
-TOOLS_SRC = src/OCR/Preprocessing/*.c src/OCR/Segmentation/*.c src/OCR/NeuralNetwork/*.c src/OCR/Matrix.c src/Tools/*.c
+TOOLS_SRC = src/OCR/NeuralNetwork/*.c src/OCR/Matrix.c src/Tools/*.c
 
 GTK = `pkg-config --libs --cflags gtk+-3.0`
 SDL = -lSDL2 -lSDL2_image
 MATH = -lm
 
-all: $(BIN) $(TOOLS_BIN)
+all: prebuild $(TOOLS_BIN)
+
+prebuild:
+	mkdir -p bin
 
 $(BIN): $(SRC)
 	$(CC) $(SRC) $(GTK) $(CFLAGS) -o $(BIN) $(GTK) $(SDL) $(MATH)
