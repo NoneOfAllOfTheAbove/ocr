@@ -1,28 +1,22 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
-void waitForKeyPressed()
+#include "../Preprocessing/Preprocessing.h"
+#include "../Segmentation/Segmentation.h"
+
+void WaitSDL()
 {
 	SDL_Event event;
+	SDL_PollEvent(&event);
 
-	do
+	while(event.type != SDL_KEYDOWN || event.key.keysym.sym != SDLK_RETURN)
 	{
 		SDL_PollEvent(&event);
-	} while(event.type != SDL_KEYDOWN);
-
-	do
-	{
-		SDL_PollEvent(&event);
-	} while(event.type != SDL_KEYUP);
+	}
 }
 
-void DrawMatrix(
-	SDL_Renderer *renderer,
-	int width,
-	int height,
-	unsigned char **matrix,
-	int opacity
-)
+void DrawMatrix(SDL_Renderer *renderer, unsigned char **matrix, int width, int height)
 {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	SDL_RenderClear(renderer);
@@ -35,50 +29,90 @@ void DrawMatrix(
 			{
 				color = 255;
 			}
-			SDL_SetRenderDrawColor(renderer, color, color, color, opacity);
+			SDL_SetRenderDrawColor(renderer, color, color, color, 255);
 			SDL_RenderDrawPoint(renderer, x, y);
 		}
 	}
-	SDL_RenderPresent(renderer);
+	//SDL_RenderPresent(renderer);
 }
 
-void StartDemoGUI(
-	int width,
-	int height,
-	unsigned char **binarizedImageMatrix,
-	int **blocks,
-	int blockNumber,
-	int **lines
-)
+void StartDemoGUI(Image image, Text text)
 {
 	SDL_Renderer *renderer;
 	SDL_Window *window;
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_CreateWindowAndRenderer(width, height, 0, &window, &renderer);
+	SDL_CreateWindowAndRenderer(image.width, image.height, 0, &window, &renderer);
 
-	DrawMatrix(renderer, width, height, binarizedImageMatrix, 255);
-	waitForKeyPressed();
-	for(int i = 0; i < blockNumber; i++)
+	DrawMatrix(renderer, text.blocksMap, image.width, image.height);
+	SDL_RenderPresent(renderer);
+	WaitSDL();
+	DrawMatrix(renderer, image.binarized, image.width, image.height);
+	for (int i = 0; i < text.numberOfParagraphs; i++)
 	{
-		// Blocks
+		// Paragraphs
+		Paragraph paragraph = text.paragraphs[i];
 		SDL_Rect rect;
-		rect.x = blocks[i][0];
-		rect.y = blocks[i][1];
-		rect.w = blocks[i][2] - blocks[i][0];
-		rect.h = blocks[i][3] - blocks[i][1];
+		rect.x = paragraph.x;
+		rect.y = paragraph.y;
+		rect.w = paragraph.width;
+		rect.h = paragraph.height;
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 		SDL_RenderDrawRect(renderer, &rect);
 
 		// Lines
-		for(int j = 1; j < lines[i][0] + 1; j++)
+		for(int j = 0; j < paragraph.numberOfLines; j++)
 		{
 			SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-			SDL_RenderDrawLine(renderer, blocks[i][0], lines[i][j], blocks[i][2], lines[i][j]);
+			SDL_RenderDrawLine(
+					renderer,
+					paragraph.x,
+					paragraph.lines[j].y2,
+					paragraph.x + paragraph.width,
+					paragraph.lines[j].y2
+			);
+			SDL_RenderDrawLine(
+					renderer,
+					paragraph.x,
+					paragraph.lines[j].y1,
+					paragraph.x + paragraph.width,
+					paragraph.lines[j].y1
+			);
+
+			// Words
+			for (int k = 0; k < paragraph.lines[j].numberOfWords; k++)
+			{
+				Word word = paragraph.lines[j].words[k];
+				SDL_Rect rect;
+				rect.x = word.x1;
+				rect.y = paragraph.lines[j].y1;
+				rect.w = word.x2 - word.x1;
+				rect.h = paragraph.lines[j].y2 - paragraph.lines[j].y1;
+				SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+				SDL_RenderDrawRect(renderer, &rect);
+
+				// Characters
+				for (int c = 0; c < word.numberOfCharacters; c++)
+				{
+					SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+					Character character = word.characters[c];
+					SDL_Rect rect;
+					rect.x = character.x1;
+					rect.y = character.y1;
+					rect.w = character.x2 - character.x1;
+					rect.h = character.y2 - character.y1;
+					SDL_RenderDrawRect(renderer, &rect);
+				}
+			}
 		}
 	}
 	SDL_RenderPresent(renderer);
 
-	waitForKeyPressed();
+	// Take screenshot
+	SDL_Surface *surface = SDL_CreateRGBSurface(0, image.width, image.height, 32, 0, 0, 0, 0);
+	SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_ARGB8888, surface->pixels, surface->pitch);
+	IMG_SavePNG(surface, "docs/lastDebugScreenshot.png");
+
+	WaitSDL();
 
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
