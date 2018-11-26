@@ -2,16 +2,16 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c99
 
 BIN = bin/OCR
-SRC = src/OCR/*.c src/OCR/*/*.c
+SRC = src/main.c src/Matrix.c src/Stack.c src/*/*.c
 
 TOOLS_BIN = bin/Tools
-TOOLS_SRC = src/OCR/NeuralNetwork/*.c src/OCR/Matrix.c src/OCR/Preprocessing/*.c src/Tools/*.c
+TOOLS_SRC = src/NeuralNetwork/*.c src/Matrix.c src/Preprocessing/*.c src/tools.c
 
 GTK = `pkg-config --libs --cflags gtk+-3.0`
 SDL = -lSDL2 -lSDL2_image
 MATH = -lm
 
-all: prebuild $(TOOLS_BIN)
+all: prebuild $(BIN) $(TOOLS_BIN)
 
 prebuild:
 	mkdir -p bin

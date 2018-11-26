@@ -3,9 +3,9 @@
 #include <SDL2/SDL_image.h>
 #include <sys/stat.h>
 
-#include "../OCR/Matrix.h"
-#include "../OCR/NeuralNetwork/NeuralNetwork.h"
-#include "../OCR/Preprocessing/Preprocessing.h"
+#include "Matrix.h"
+#include "NeuralNetwork/NeuralNetwork.h"
+#include "Preprocessing/Preprocessing.h"
 
 void PrepareSecialCharsDataset()
 {
