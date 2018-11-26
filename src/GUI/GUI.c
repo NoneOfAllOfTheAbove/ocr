@@ -42,6 +42,19 @@ static void loadImage_activated (GtkWidget *fileMenu_loadImage, gpointer window)
         //Print path is here.
         g_print("%s\n", filename);
 
+
+        //Add image
+        overlay = gtk_overlay_new();
+        gtk_box_pack_start(GTK_BOX(boxA), overlay, TRUE, TRUE, 0);
+        image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size(filename, 694, 747, NULL));
+        gtk_overlay_add_overlay (GTK_OVERLAY(overlay), image);
+        gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
+        gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
+        
+        //Show image
+        gtk_widget_show_all(overlay);
+
+        
         g_free (filename);
     }
     else
@@ -522,7 +535,7 @@ int StartGUI(int argc, char *argv[])
     gtk_widget_set_valign (drawing_area, GTK_ALIGN_CENTER);
     */
 
-
+   /*
     overlay = gtk_overlay_new();
     gtk_box_pack_start(GTK_BOX(boxA), overlay, TRUE, TRUE, 0);
     image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size("/home/sphird/Images/GUI_OCR.jpg", 694, 747, NULL));
@@ -531,7 +544,7 @@ int StartGUI(int argc, char *argv[])
     gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
     gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
 
-
+    */
     /*-----------------------ADD SEPARATOR-------------------------*/
     //Add Separator between box A and B
     GtkWidget *separator;
