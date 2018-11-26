@@ -1,1 +1,2 @@
-OCR
+bin/*
+resources/nn-training/dataset/
