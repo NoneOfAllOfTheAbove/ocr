@@ -132,8 +132,6 @@ void SaveMatrixAsImage(unsigned char **matrix, int width, int height, char *path
 		for (int x = 0; x < width; x++)
 		{
 			int color = 255;
-			//printf("llloo %d\n", matrix[y][x]);
-			// printf("lllodddo\n");
 			if (matrix[y][x] == 1)
 			{
 				color = 0;
