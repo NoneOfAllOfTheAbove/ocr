@@ -36,7 +36,7 @@ void DrawMatrix(SDL_Renderer *renderer, unsigned char **matrix, int width, int h
 	//SDL_RenderPresent(renderer);
 }
 
-void StartDemoGUI(Image image, Text text)
+void StartDebugGUI(Image image, Text text)
 {
 	SDL_Renderer *renderer;
 	SDL_Window *window;

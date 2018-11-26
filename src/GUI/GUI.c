@@ -200,7 +200,7 @@ void my_getsize(GtkWidget *widget, GtkAllocation *allocation, void *data)
 */
 
 //For me, keep int main(). But when have to push, replace int main() -> int StartGUI().
-int StartGUI() (int argc, char *argv[])
+int StartGUI(int argc, char *argv[])
 {   
     //size of the window
     gint width;
@@ -251,8 +251,8 @@ int StartGUI() (int argc, char *argv[])
     /*--------------------STEP 1: Initialisation of window--------------------*/ 
 
     gtk_init(&argc, &argv);
-    width = 1400;
-    height = 800;
+    width = 800;
+    height = 500;
     /*Create a window of size width and height entitled "OCR"*/
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size(GTK_WINDOW(window), width, height);

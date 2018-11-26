@@ -6,7 +6,8 @@
 #include "Preprocessing/Preprocessing.h"
 #include "Segmentation/Segmentation.h"
 #include "NeuralNetwork/NeuralNetwork.h"
-#include "GUI/DemoGUI.h"
+#include "GUI/GUI.h"
+#include "GUI/DebugGUI.h"
 
 int main(int argc, char** argv)
 {
@@ -39,7 +40,8 @@ int main(int argc, char** argv)
 	// STEP 4 : GUI AND TEXT EXPORT
 	// ----------------------------
 
-	StartDemoGUI(image, text);
+	StartGUI(argc, argv);
+	//StartDebugGUI(image, text);
 
 	return 0;
 }
