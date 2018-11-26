@@ -122,6 +122,7 @@ static void exportNNdata_activated()
 /*------------------Help's GCallback------------------*/
 static void helpAbout_activated()
 {
+    g_app_info_launch_default_for_uri("https://github.com/NoneOfAllOfTheAbove/OCR", NULL, NULL);
     g_print("Help -> About activated.\n");
 }
 
@@ -145,9 +146,7 @@ static void extractText_activated(GtkWidget *extractTextButton, gpointer *window
     gtk_box_set_spacing(GTK_BOX(box2), -340); //If this line is removed. In the text area, there will be blank space at the left of TextArea.
 
     //Clear current image and add another one.
-
     gtk_image_clear(GTK_IMAGE(image));
-    
     image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size("/home/sphird/Images/Wallpapers/sun.jpeg", 694, 747, NULL));
     
     gtk_overlay_add_overlay (GTK_OVERLAY(overlay), image);
@@ -251,8 +250,8 @@ int StartGUI(int argc, char *argv[])
     /*--------------------STEP 1: Initialisation of window--------------------*/ 
 
     gtk_init(&argc, &argv);
-    width = 800;
-    height = 500;
+    width = 1400;
+    height = 800;
     /*Create a window of size width and height entitled "OCR"*/
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size(GTK_WINDOW(window), width, height);
@@ -533,7 +532,7 @@ int StartGUI(int argc, char *argv[])
     gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
 
 
-                            /*-----------------------ADD SEPARATOR-------------------------*/
+    /*-----------------------ADD SEPARATOR-------------------------*/
     //Add Separator between box A and B
     GtkWidget *separator;
 
@@ -557,7 +556,7 @@ int StartGUI(int argc, char *argv[])
     gtk_label_set_max_width_chars (GTK_LABEL (label), 0);
     
 
-                            //-----------------------Add "label" to "boxB-----------------------
+    //-----------------------Add "label" to "boxB-----------------------
     
     gtk_box_pack_start(GTK_BOX(boxB), label, FALSE, FALSE, 0);
 
