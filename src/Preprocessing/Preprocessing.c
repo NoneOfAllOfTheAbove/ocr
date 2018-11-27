@@ -5,6 +5,33 @@
 #include "../Matrix.h"
 #include "Preprocessing.h"
 
+void GetRGBSDLPixel(SDL_Surface *surface, unsigned x, unsigned y, Uint8* r, Uint8* g, Uint8* b)
+{
+	Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel;
+	Uint32 pixel = 0;
+
+	switch (surface->format->BytesPerPixel)
+	{
+		case 1:
+			pixel = *p;
+			break;
+		case 2:
+			pixel = *(Uint16 *)p;
+			break;
+		case 3:
+			if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
+				pixel = p[0] << 16 | p[1] << 8 | p[2];
+			else
+				pixel = p[0] | p[1] << 8 | p[2] << 16;
+			break;
+		case 4:
+			pixel = *(Uint32 *)p;
+			break;
+	}
+
+	SDL_GetRGB(pixel, surface->format, r, g, b);
+}
+
 Image LoadImageAsGrayscale(Image image)
 {
 	// Load image
@@ -28,12 +55,8 @@ Image LoadImageAsGrayscale(Image image)
 	{
 		for (int x = 0; x < imageSurface->w; x++)
 		{
-			Uint8 *p = (Uint8 *)imageSurface->pixels + y * imageSurface->pitch
-				+ x * imageSurface->format->BytesPerPixel;
-			Uint32 pixel = *(Uint32 *)p;
-
 			Uint8 r, g, b;
-			SDL_GetRGB(pixel, imageSurface->format, &r, &g, &b);
+			GetRGBSDLPixel(imageSurface, x, y, &r, &g, &b);
 			matrix[y][x] = (0.3 * r) + (0.59 * g) + (0.11 * b);
 		}
 	}
