@@ -1,6 +1,8 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+#include <stddef.h>
+
 unsigned char **CreateCharMatrix(int width, int height);
 double **CreateDoubleMatrix(size_t line, size_t column);
 
