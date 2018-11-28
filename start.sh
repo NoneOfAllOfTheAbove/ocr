@@ -1,11 +1,11 @@
 #!/bin/bash
 
 COUNTER=0
-while [ $COUNTER -lt 10 ]; do
+while [ $COUNTER -lt 30 ]; do
 	if [ $COUNTER == 0 ]; then
-		echo tools 0
+		./bin/Tools 0
 	else
-		echo tools 1
+		./bin/Tools 1
 	fi
 	let COUNTER=COUNTER+1
 done

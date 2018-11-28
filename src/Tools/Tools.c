@@ -208,16 +208,23 @@ void PrintPredictNN(size_t inputN, size_t hiddenN, size_t outputN, int character
 
 
 
-int main()
+int main(int argc, char** argv)
 {
+
     // ******* TRAINING *******
 
     // if you train for the first time
-    TrainNeuralNetwork(256, 86*4, 86, 1000000,0);
-
+    if (argc != 2)
+        TrainNeuralNetwork(256, 86*4, 86, 1000000,0);
     // else
-    //TrainNeuralNetwork(256, 86*4, 86, 1000000,1);
-
+    else
+    {
+        unsigned long param = strtoul(argv[1], NULL,10);
+        if (param == 1)
+            TrainNeuralNetwork(256, 86*4, 86, 1000000,1);
+        else
+            TrainNeuralNetwork(256, 86*4, 86, 1000000,0);
+    }
 
 
 
