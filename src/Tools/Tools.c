@@ -83,7 +83,7 @@ void GenerateInputNN(long character, long id, double input[])
     // recover the right image
     Image image;
     char path[100] = "";
-    snprintf(path, sizeof(path), "/home/arielle/Documents/Epita/S3/Projet/OCR/resources/nn-training/dataset/%lu/%lu.png", character, id);
+    snprintf(path, sizeof(path), "resources/nn-training/dataset/%lu/%lu.png", character, id);
     image.path = path;
     image = LoadImageAsGrayscale(image);
     image = BinarizeImage(image);
@@ -120,8 +120,8 @@ void TrainNeuralNetwork(size_t inputN, size_t hiddenN, size_t outputN, int tours
 
     // load the nn.data maybe make a mode as before???
     if (mode)
-        Load("/home/arielle/Documents/Epita/S3/Projet/OCR/resources/nn.data");
-   
+        Load("resources/nn.data");
+    
     // print Predict with the values before training?
     
     // sand the rand
@@ -140,7 +140,7 @@ void TrainNeuralNetwork(size_t inputN, size_t hiddenN, size_t outputN, int tours
     
         //print ("%d \n", i );
 
-        character = rand() % 4; // change here
+        character = rand() % 85; // change here
         id = rand() % 1016;
 
         // retrieve the good image --> an array 16*16 with doubles inside
@@ -170,7 +170,7 @@ void TrainNeuralNetwork(size_t inputN, size_t hiddenN, size_t outputN, int tours
         Train(input, target);
     }
     // save in nn.data
-    Save("/home/arielle/Documents/Epita/S3/Projet/OCR/resources/nn.data");
+    Save("resources/nn.data");
 }
 
 
@@ -193,8 +193,8 @@ void PrintPredictNN(size_t inputN, size_t hiddenN, size_t outputN, int character
 {
     if (mode)
     {
-        //Start(inputN, hiddenN, outputN);
-        Load("/home/arielle/Documents/Epita/S3/Projet/OCR/resources/nn.data");
+        Start(inputN, hiddenN, outputN);
+        Load("resources/nn.data");
     }
     double input[256];
     GenerateInputNN(character, id, input);
@@ -210,9 +210,20 @@ void PrintPredictNN(size_t inputN, size_t hiddenN, size_t outputN, int character
 
 int main()
 {
-    //TrainNeuralNetwork(256, 86*4, 86, 1000000,0);
-    
-    srand(time(NULL));
+    // ******* TRAINING *******
+
+    // if you train for the first time
+    TrainNeuralNetwork(256, 86*4, 86, 1000000,0);
+
+    // else
+    TrainNeuralNetwork(256, 86*4, 86, 1000000,1);
+
+
+
+
+    // ******* PREDICT/TESTS *******
+
+    /*srand(time(NULL));
     long int character, id;
 
     printf("******* Before training *******");
@@ -221,7 +232,7 @@ int main()
 
     for (int i = 0; i < 10; i++)
     {
-        character = rand() % 4; // change here
+        character = rand() % 86; // change here
         id = rand() % 1016;
         
         printf("character : %ld,    id : %ld\n\n\n", character, id);
@@ -231,7 +242,7 @@ int main()
 
     printf("\n\n\n******* After Training *******");
 
-    character = rand() % 4; // change here
+    character = rand() % 86; // change here
     id = rand() % 1016;
         
     printf("character : %ld,    id : %ld\n\n\n", character, id);
@@ -243,13 +254,13 @@ int main()
 
     for (int i = 0; i < 10; i++)
     {
-        character = rand() % 4; // change here
+        character = rand() % 86; // change here
         id = rand() % 1016;
         
         printf("character : %ld,    id : %ld\n\n\n", character, id);
 
         PrintPredictNN(256, 86*5, 86, character, id, 0);
-    }
+    }*/
 
 
 	return 0;
