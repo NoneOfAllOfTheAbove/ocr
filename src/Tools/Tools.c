@@ -216,7 +216,7 @@ int main()
     TrainNeuralNetwork(256, 86*4, 86, 1000000,0);
 
     // else
-    TrainNeuralNetwork(256, 86*4, 86, 1000000,1);
+    //TrainNeuralNetwork(256, 86*4, 86, 1000000,1);
 
 
 
