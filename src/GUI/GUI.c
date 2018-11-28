@@ -2,6 +2,10 @@
 
 
 //Gloabal Variable.
+//size of the window
+gint width;
+gint height;
+
 GtkWidget *label; //Need it as G.V in order to change text.
 GtkWidget *box2; //In order to get 50/50 on boxA and boxB size.
 GtkWidget *boxA;
@@ -41,20 +45,18 @@ static void loadImage_activated (GtkWidget *fileMenu_loadImage, gpointer window)
         filename = gtk_file_chooser_get_filename (chooser);
         //Print path is here.
         g_print("%s\n", filename);
-
-
-        //Add image
+        
         overlay = gtk_overlay_new();
         gtk_box_pack_start(GTK_BOX(boxA), overlay, TRUE, TRUE, 0);
-        image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size(filename, 694, 747, NULL));
+
+        //Load Image 
+        image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size(filename, width/2, height/2, NULL));
         gtk_overlay_add_overlay (GTK_OVERLAY(overlay), image);
         gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
         gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
-        
-        //Show image
+        //Display Image
         gtk_widget_show_all(overlay);
 
-        
         g_free (filename);
     }
     else
@@ -135,7 +137,6 @@ static void exportNNdata_activated()
 /*------------------Help's GCallback------------------*/
 static void helpAbout_activated()
 {
-    g_app_info_launch_default_for_uri("https://github.com/NoneOfAllOfTheAbove/OCR", NULL, NULL);
     g_print("Help -> About activated.\n");
 }
 
@@ -156,12 +157,14 @@ static void extractText_activated(GtkWidget *extractTextButton, gpointer *window
     Des textes en 16.796 signes ? Un roman de 58.786 mots ? Tu n'y penses pas !"); 
 
     gtk_box_set_homogeneous(GTK_BOX(box2), TRUE);   
-    gtk_box_set_spacing(GTK_BOX(box2), -340); //If this line is removed. In the text area, there will be blank space at the left of TextArea.
+    gtk_box_set_spacing(GTK_BOX(box2), (-height/2)+60); //previous value: -340 : If this line is removed. In the text area, there will be blank space at the left of TextArea.
 
     //Clear current image and add another one.
+
     gtk_image_clear(GTK_IMAGE(image));
-    image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size("/home/sphird/Images/Wallpapers/sun.jpeg", 694, 747, NULL));
-    
+    //694-747
+    image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size("/home/sphird/Images/Wallpapers/sun.jpeg", width/2, height/2, NULL));
+
     gtk_overlay_add_overlay (GTK_OVERLAY(overlay), image);
     gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
     gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
@@ -212,11 +215,11 @@ void my_getsize(GtkWidget *widget, GtkAllocation *allocation, void *data)
 */
 
 //For me, keep int main(). But when have to push, replace int main() -> int StartGUI().
-int StartGUI(int argc, char *argv[])
+int StartGui(int argc, char *argv[])
 {   
     //size of the window
-    gint width;
-    gint height;
+    //gint width;
+    //gint height;
 
     GtkWidget *window;
     GtkWidget *mainBox;
@@ -535,7 +538,7 @@ int StartGUI(int argc, char *argv[])
     gtk_widget_set_valign (drawing_area, GTK_ALIGN_CENTER);
     */
 
-   /*
+    /*
     overlay = gtk_overlay_new();
     gtk_box_pack_start(GTK_BOX(boxA), overlay, TRUE, TRUE, 0);
     image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size("/home/sphird/Images/GUI_OCR.jpg", 694, 747, NULL));
@@ -543,9 +546,9 @@ int StartGUI(int argc, char *argv[])
     gtk_overlay_add_overlay (GTK_OVERLAY(overlay), image);
     gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
     gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
-
     */
-    /*-----------------------ADD SEPARATOR-------------------------*/
+
+                            /*-----------------------ADD SEPARATOR-------------------------*/
     //Add Separator between box A and B
     GtkWidget *separator;
 
@@ -566,10 +569,10 @@ int StartGUI(int argc, char *argv[])
     gtk_label_set_selectable(GTK_LABEL(label), TRUE);
     //Enable us to wrapped the text in multiple line.
     gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-    gtk_label_set_max_width_chars (GTK_LABEL (label), 0);
+    gtk_label_set_max_width_chars (GTK_LABEL (label), 40);
     
 
-    //-----------------------Add "label" to "boxB-----------------------
+                            //-----------------------Add "label" to "boxB-----------------------
     
     gtk_box_pack_start(GTK_BOX(boxB), label, FALSE, FALSE, 0);
 
