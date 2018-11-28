@@ -2,18 +2,30 @@
 
 
 //Gloabal Variable.
-//size of the window
-gint width;
-gint height;
 
 GtkWidget *label; //Need it as G.V in order to change text.
 GtkWidget *box2; //In order to get 50/50 on boxA and boxB size.
 GtkWidget *boxA;
+GtkWidget *boxB;
 GtkWidget *image;
 GtkWidget *overlay;
+GtkWidget *window;
+
+char *filename;
+GdkPixbuf *pixbuf;
+
+//Returns whether the image is of the following extension.
+gboolean file_isimage(gchar *file_path)
+{
+    return (
+        g_str_has_suffix(file_path, ".jpg") ||
+        g_str_has_suffix(file_path, ".png") ||
+        g_str_has_suffix(file_path, ".jpeg")||
+        g_str_has_suffix(file_path, ".bmp")
+        );
+}
 
 /*------------------File's GCallback------------------*/
-
 static void loadImage_activated (GtkWidget *fileMenu_loadImage, gpointer window)
 {   
 
@@ -40,24 +52,32 @@ static void loadImage_activated (GtkWidget *fileMenu_loadImage, gpointer window)
     if (res == GTK_RESPONSE_ACCEPT)
     {   
         //Creating the path.
-        char *filename;
+        //char *filename;
         GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
         filename = gtk_file_chooser_get_filename (chooser);
         //Print path is here.
         g_print("%s\n", filename);
         
-        overlay = gtk_overlay_new();
-        gtk_box_pack_start(GTK_BOX(boxA), overlay, TRUE, TRUE, 0);
+        if (file_isimage(filename))
+        {   
+            overlay = gtk_overlay_new();
+            gtk_box_pack_start(GTK_BOX(boxA), overlay, TRUE, TRUE, 0);
 
-        //Load Image 
-        image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size(filename, width/2, height/2, NULL));
-        gtk_overlay_add_overlay (GTK_OVERLAY(overlay), image);
-        gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
-        gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
-        //Display Image
-        gtk_widget_show_all(overlay);
+            GtkAllocation allocation;
+        
+            gtk_widget_get_allocation(boxA, &allocation);
+            int desired_width = allocation.width; 
+            int desired_height = allocation.height;
 
-        g_free (filename);
+            //Load Image 
+            image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size(filename, desired_width, desired_height, NULL));
+            
+            gtk_overlay_add_overlay (GTK_OVERLAY(overlay), image);
+            gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
+            gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
+            //Display Image
+            gtk_widget_show_all(overlay);
+        }
     }
     else
     {
@@ -92,11 +112,10 @@ static void exportText_activated(GtkWidget *fileMenu_exportMenu_text, gpointer w
     if (res == GTK_RESPONSE_ACCEPT)
     {   
          //Creating the path.
-        char *filename;
+        //char *filename;
         filename = gtk_file_chooser_get_filename (chooser);
         //Print path is here.
         g_print("%s\n", filename);
-        g_free (filename);
     }
     else
     {
@@ -145,63 +164,87 @@ static void helpAbout_activated()
 /*------------------extractText's GCallback------------------*/ 
 // This is the Run"s GCallback and at the same time write function.
 //-> When clicked on extract Text button, text displays in the text area + clear current image and replace by another.
-static void extractText_activated(GtkWidget *extractTextButton, gpointer *window)
+static void extractText_activated(GtkWidget *extractTextButton)
 {   
-    (void)window;
-    (void)extractTextButton;
-    g_print("Extract text activated.\n");
-    gtk_label_set_text(GTK_LABEL (label), "Si tu ne comprends pas, ou ne maîtrises pas, la notion de coefficient binomial,\
-    inutile de chercher à calculer toi-même les nombres de Catalan, que tu découvris dans cette obscure revue américaine d'algèbre,\
-    croyant qu'il s'agissait de “nombres catalans” (l'anglais Catalan numbers est équivoque), avant de faire le chemin historique et de\
-    découvrir qu'ils auraient tout aussi bien pu se nommer suite d'Euler, entiers de Seger, ou nombres de Ming Antu.\
-    Des textes en 16.796 signes ? Un roman de 58.786 mots ? Tu n'y penses pas !"); 
+    //Can't click on "extractText_activated" if image is not loaded.
+    if(image != NULL)
+    {
+        (void)extractTextButton;
 
-    gtk_box_set_homogeneous(GTK_BOX(box2), TRUE);   
-    gtk_box_set_spacing(GTK_BOX(box2), (-height/2)+60); //previous value: -340 : If this line is removed. In the text area, there will be blank space at the left of TextArea.
+        GtkAllocation allocation;
 
-    //Clear current image and add another one.
+        gtk_widget_get_allocation(boxB, &allocation);
+        int boxB_width = allocation.width; 
 
-    gtk_image_clear(GTK_IMAGE(image));
-    //694-747
-    image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size("/home/sphird/Images/Wallpapers/sun.jpeg", width/2, height/2, NULL));
+        g_print("Extract text activated.\n");
+        gtk_label_set_text(GTK_LABEL (label), "Si tu ne comprends pas, ou ne maîtrises pas, la notion de coefficient binomial,\
+        inutile de chercher à calculer toi-même les nombres de Catalan, que tu découvris dans cette obscure revue américaine d'algèbre,\
+        croyant qu'il s'agissait de “nombres catalans” (l'anglais Catalan numbers est équivoque), avant de faire le chemin historique et de\
+        découvrir qu'ils auraient tout aussi bien pu se nommer suite d'Euler, entiers de Seger, ou nombres de Ming Antu.\
+        Des textes en 16.796 signes ? Un roman de 58.786 mots ? Tu n'y penses pas !"); 
 
-    gtk_overlay_add_overlay (GTK_OVERLAY(overlay), image);
-    gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
-    gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
+        gtk_box_set_homogeneous(GTK_BOX(box2), TRUE);   
+        gtk_box_set_spacing(GTK_BOX(box2), -boxB_width/2);// previous value: -340 : If this line is removed. In the text area, there will be blank space at the left of TextArea.
+        
+        //Clear current image and add another one.
+
+        gtk_image_clear(GTK_IMAGE(image));
+        //694-747
+
+        gtk_widget_get_allocation(boxA, &allocation);
+        int boxA_width = allocation.width; 
+        int boxA_height = allocation.height;
+
+        image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size("/home/sphird/Images/Wallpapers/sun.jpeg", boxA_width, boxA_height, NULL));
+
+        gtk_overlay_add_overlay (GTK_OVERLAY(overlay), image);
+        gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
+        gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
+        gtk_widget_show_all(boxA);
     
-    gtk_widget_show_all(boxA);
+        gtk_widget_queue_resize(window);
+    }
+    
 }   
-/*
 
-//------------------TEST------------------
-
-static void drawFunction (GtkWidget *widget, cairo_t *cr, gpointer window)
+void on_window_size_allocate()
 {   
-    (void)window;
-    guint width, height;
-    GdkRGBA color;
-    GtkStyleContext *context;
+    if (filename == NULL)
+        pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
 
-    context = gtk_widget_get_style_context (widget);
+    GtkAllocation allocation;
+    gtk_widget_get_allocation(
+        boxA,
+        &allocation);
+    int desired_width = allocation.width;
+    int desired_height = allocation.height;
+    
+    float r_box = (float)desired_height/desired_width;
+    float r_image = (float)gdk_pixbuf_get_height(pixbuf)/
+        gdk_pixbuf_get_width(pixbuf);
 
-    width = gtk_widget_get_allocated_width (widget);
-    height = gtk_widget_get_allocated_height (widget);
+    if (r_box > r_image)
+    {
+        desired_width -= 4;
+        desired_height = (int)(desired_width * r_image);
+    }
+    else
+    {
+        desired_height -= 4;
+        desired_width = (int)(desired_height / r_image);
+    }
 
-    gtk_render_background (context, cr, 0, 0, width, height);
 
-    cairo_arc (cr,
-                width / 2.0, height / 2.0,
-                MIN (width, height) / 2.0,
-                0, 2 * G_PI);
+    printf("desired_width : %d\n", desired_width);
+    printf("desired_height : %d\n", desired_height);
 
-    gtk_style_context_get_color (context,
-                                gtk_style_context_get_state (context),
-                                &color);
-    gdk_cairo_set_source_rgba (cr, &color);
+    gtk_image_set_from_pixbuf(GTK_IMAGE(image), gdk_pixbuf_scale_simple(pixbuf,
+        desired_width, desired_height, GDK_INTERP_BILINEAR));
 
-    cairo_fill (cr);
+    gtk_widget_queue_resize(window);
+
 }
-*/
+
 /*
 void my_getsize(GtkWidget *widget, GtkAllocation *allocation, void *data) 
 {   
@@ -215,17 +258,17 @@ void my_getsize(GtkWidget *widget, GtkAllocation *allocation, void *data)
 */
 
 //For me, keep int main(). But when have to push, replace int main() -> int StartGUI().
-int StartGui(int argc, char *argv[])
+int StartGUI(int argc, char *argv[])
 {   
     //size of the window
     //gint width;
     //gint height;
 
-    GtkWidget *window;
+    //GtkWidget *window;
     GtkWidget *mainBox;
     //GtkWidget *box2; Set as global variable at the begining of our file.
     //GtkWidget *boxA; 
-    GtkWidget *boxB;
+    //GtkWidget *boxB;
 
     /*Menu Bar*/
     GtkWidget *menuBar;
@@ -266,12 +309,12 @@ int StartGui(int argc, char *argv[])
     /*--------------------STEP 1: Initialisation of window--------------------*/ 
 
     gtk_init(&argc, &argv);
-    width = 1400;
-    height = 800;
+    int width = 1400;
+    int height = 800;
     /*Create a window of size width and height entitled "OCR"*/
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size(GTK_WINDOW(window), width, height);
-    gtk_window_set_resizable (GTK_WINDOW(window), FALSE);
+    gtk_window_set_resizable (GTK_WINDOW(window), TRUE);
     gtk_window_set_title(GTK_WINDOW(window), "OCR");
 
     /*--------------------STEP 2: Creation of the Menu bar--------------------*/ 
@@ -560,6 +603,7 @@ int StartGui(int argc, char *argv[])
     gtk_box_pack_start(GTK_BOX(box2),boxB, TRUE, TRUE, 0);
 
     /*Add "label" to "boxB"*/
+    
     label = gtk_label_new(NULL);
     
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
@@ -569,8 +613,8 @@ int StartGui(int argc, char *argv[])
     gtk_label_set_selectable(GTK_LABEL(label), TRUE);
     //Enable us to wrapped the text in multiple line.
     gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-    gtk_label_set_max_width_chars (GTK_LABEL (label), 40);
-    
+    //Wrap the text.
+    gtk_label_set_max_width_chars (GTK_LABEL (label), 20);
 
                             //-----------------------Add "label" to "boxB-----------------------
     
@@ -587,6 +631,10 @@ int StartGui(int argc, char *argv[])
     /*-------------------- Step 5: Show window --------------------*/ 
     //Add mainBox to the container window.
     gtk_container_add(GTK_CONTAINER(window), mainBox);  
+
+
+    //Enable us to resize window.
+    g_signal_connect(G_OBJECT(window),"size-allocate", G_CALLBACK(on_window_size_allocate), NULL);
 
     //Enable us to quit the program.
     g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
