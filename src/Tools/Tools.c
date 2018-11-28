@@ -135,8 +135,8 @@ void TrainNeuralNetwork(size_t inputN, size_t hiddenN, size_t outputN, int tours
     {
         if (i % 1000 == 0)
         {
-            printf("%d Done.\n", i);
-        }   
+            printf("%d/100\n", i * 100 / tours);
+        }
     
         //print ("%d \n", i );
 
