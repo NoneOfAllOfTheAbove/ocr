@@ -210,7 +210,7 @@ void PrintPredictNN(size_t inputN, size_t hiddenN, size_t outputN, int character
 
 
 int main(int argc, char** argv)
-{
+{/*
 
     // ******* TRAINING *******
 
@@ -225,10 +225,10 @@ int main(int argc, char** argv)
             TrainNeuralNetwork(256, 86*5, 86, 1000000,1);
         else
             TrainNeuralNetwork(256, 86*5, 86, 1000000,0);
-    }
+    }*/
 
 
-/*
+
     // ******* PREDICT/TESTS *******
 
     srand(time(NULL));
@@ -260,7 +260,7 @@ int main(int argc, char** argv)
     
 
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 100; i++)
     {
         character = rand() % 86; // change here
         id = rand() % 1016;
@@ -269,7 +269,7 @@ int main(int argc, char** argv)
 
         PrintPredictNN(256, 86*5, 86, character, id, 0);
     }
-*/
+
 
 	return 0;
 
