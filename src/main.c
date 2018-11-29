@@ -40,8 +40,8 @@ int main(int argc, char** argv)
 	// STEP 4 : GUI AND TEXT EXPORT
 	// ----------------------------
 
-	// StartGUI(argc, argv);
-	StartDebugGUI(image, text);
+	 StartGUI(argc, argv);
+	//StartDebugGUI(image, text);
 
 	return 0;
 }

@@ -215,7 +215,7 @@ void my_getsize(GtkWidget *widget, GtkAllocation *allocation, void *data)
 */
 
 //For me, keep int main(). But when have to push, replace int main() -> int StartGUI().
-int StartGui(int argc, char *argv[])
+int StartGUI(int argc, char *argv[])
 {   
     //size of the window
     //gint width;
