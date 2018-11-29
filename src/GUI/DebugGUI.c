@@ -110,7 +110,7 @@ void StartDebugGUI(Image image, Text text)
 	// Take screenshot
 	SDL_Surface *surface = SDL_CreateRGBSurface(0, image.width, image.height, 32, 0, 0, 0, 0);
 	SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_ARGB8888, surface->pixels, surface->pitch);
-	IMG_SavePNG(surface, "docs/lastDebugScreenshot.png");
+	IMG_SavePNG(surface, "resources/lastDebugScreenshot.png");
 
 	WaitSDL();
 
