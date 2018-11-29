@@ -14,6 +14,8 @@ GtkWidget *window;
 char *filename;
 GdkPixbuf *pixbuf;
 
+int extractText_clicked = 0;
+
 //Returns whether the image is of the following extension.
 gboolean file_isimage(gchar *file_path)
 {
@@ -77,6 +79,9 @@ static void loadImage_activated (GtkWidget *fileMenu_loadImage, gpointer window)
             gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
             //Display Image
             gtk_widget_show_all(overlay);
+
+            pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+
         }
     }
     else
@@ -173,8 +178,8 @@ static void extractText_activated(GtkWidget *extractTextButton)
 
         GtkAllocation allocation;
 
-        gtk_widget_get_allocation(boxB, &allocation);
-        int boxB_width = allocation.width; 
+        //gtk_widget_get_allocation(boxB, &allocation);
+        //int boxB_width = allocation.width; 
 
         g_print("Extract text activated.\n");
         gtk_label_set_text(GTK_LABEL (label), "Si tu ne comprends pas, ou ne maîtrises pas, la notion de coefficient binomial,\
@@ -184,24 +189,30 @@ static void extractText_activated(GtkWidget *extractTextButton)
         Des textes en 16.796 signes ? Un roman de 58.786 mots ? Tu n'y penses pas !"); 
 
         gtk_box_set_homogeneous(GTK_BOX(box2), TRUE);   
-        gtk_box_set_spacing(GTK_BOX(box2), -boxB_width/2);// previous value: -340 : If this line is removed. In the text area, there will be blank space at the left of TextArea.
+        //gtk_box_set_spacing(GTK_BOX(box2), -boxB_width/2);// previous value: -340 : If this line is removed. In the text area, there will be blank space at the left of TextArea.
         
         //Clear current image and add another one.
 
         gtk_image_clear(GTK_IMAGE(image));
-        //694-747
-
+        
         gtk_widget_get_allocation(boxA, &allocation);
         int boxA_width = allocation.width; 
         int boxA_height = allocation.height;
 
-        image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size("/home/sphird/Images/Wallpapers/sun.jpeg", boxA_width, boxA_height, NULL));
+
+        //pixbuf = gdk_pixbuf_new_from_file_at_size("/home/sphird/Images/Wallpapers/sun.jpeg", boxA_width, boxA_height, NULL);
+        image = gtk_image_new_from_pixbuf(pixbuf);
 
         gtk_overlay_add_overlay (GTK_OVERLAY(overlay), image);
         gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
         gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
+        
         gtk_widget_show_all(boxA);
-    
+        
+        //set_spacing only after clicking on extractText_Button;
+        extractText_clicked = 1;
+        gtk_box_set_spacing(GTK_BOX(box2), -boxA_width/2);
+
         gtk_widget_queue_resize(window);
     }
     
@@ -209,8 +220,6 @@ static void extractText_activated(GtkWidget *extractTextButton)
 
 void on_window_size_allocate()
 {   
-    if (filename == NULL)
-        pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
 
     GtkAllocation allocation;
     gtk_widget_get_allocation(
@@ -223,6 +232,11 @@ void on_window_size_allocate()
     float r_image = (float)gdk_pixbuf_get_height(pixbuf)/
         gdk_pixbuf_get_width(pixbuf);
 
+
+    gtk_widget_get_allocation(boxA, &allocation);
+    int boxA_width = allocation.width; 
+    
+
     if (r_box > r_image)
     {
         desired_width -= 4;
@@ -233,29 +247,17 @@ void on_window_size_allocate()
         desired_height -= 4;
         desired_width = (int)(desired_height / r_image);
     }
-
-
-    printf("desired_width : %d\n", desired_width);
-    printf("desired_height : %d\n", desired_height);
-
+     
     gtk_image_set_from_pixbuf(GTK_IMAGE(image), gdk_pixbuf_scale_simple(pixbuf,
         desired_width, desired_height, GDK_INTERP_BILINEAR));
+
+    if (extractText_clicked)
+        gtk_box_set_spacing(GTK_BOX(box2), -boxA_width/2);
 
     gtk_widget_queue_resize(window);
 
 }
 
-/*
-void my_getsize(GtkWidget *widget, GtkAllocation *allocation, void *data) 
-{   
-    (void)widget;
-    (void)data;
-    
-    desired_width = allocation->width;
-    desired_height = allocation->height;
-    printf("width = %i, height = %i\n",  desired_width,  desired_height);
-}
-*/
 
 //For me, keep int main(). But when have to push, replace int main() -> int StartGUI().
 int StartGUI(int argc, char *argv[])
@@ -309,8 +311,8 @@ int StartGUI(int argc, char *argv[])
     /*--------------------STEP 1: Initialisation of window--------------------*/ 
 
     gtk_init(&argc, &argv);
-    int width = 1400;
-    int height = 800;
+    int width = 800;
+    int height = 500;
     /*Create a window of size width and height entitled "OCR"*/
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size(GTK_WINDOW(window), width, height);
