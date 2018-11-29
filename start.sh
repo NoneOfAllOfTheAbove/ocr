@@ -2,10 +2,7 @@
 
 COUNTER=0
 while [ $COUNTER -lt 30 ]; do
-	if [ $COUNTER == 0 ]; then
-		./bin/Tools 0
-	else
-		./bin/Tools 1
-	fi
+	echo $COUNTER
+    ./bin/Tools 1
 	let COUNTER=COUNTER+1
 done

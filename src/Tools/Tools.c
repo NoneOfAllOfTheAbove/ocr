@@ -130,17 +130,18 @@ void TrainNeuralNetwork(size_t inputN, size_t hiddenN, size_t outputN, int tours
     // character : the number represented the char chosen randomly
     // id : the id of the image in the chosen char folder
     long int character, id;
-    // int count = 0;
+     int count = 0;
     for (int i = 0; i < tours; i++)
     {
-        if (i % 1000 == 0)
+        if (i % 10000 == 0)
         {
-            printf("%d/100\n", i * 100 / tours);
+            printf("%d%\n", count );
+            count += 1;
         }
     
         //print ("%d \n", i );
 
-        character = rand() % 85; // change here
+        character = rand() % 86; // change here
         id = rand() % 1016;
 
         // retrieve the good image --> an array 16*16 with doubles inside
@@ -193,7 +194,7 @@ void PrintPredictNN(size_t inputN, size_t hiddenN, size_t outputN, int character
 {
     if (mode)
     {
-        Start(inputN, hiddenN, outputN);
+        //Start(inputN, hiddenN, outputN);
         Load("resources/nn.data");
     }
     double input[256];
@@ -215,29 +216,29 @@ int main(int argc, char** argv)
 
     // if you train for the first time
     if (argc != 2)
-        TrainNeuralNetwork(256, 86*4, 86, 1000000,0);
+        TrainNeuralNetwork(256, 86*5, 86, 1000000,0);
     // else
     else
     {
         unsigned long param = strtoul(argv[1], NULL,10);
         if (param == 1)
-            TrainNeuralNetwork(256, 86*4, 86, 1000000,1);
+            TrainNeuralNetwork(256, 86*5, 86, 1000000,1);
         else
-            TrainNeuralNetwork(256, 86*4, 86, 1000000,0);
+            TrainNeuralNetwork(256, 86*5, 86, 1000000,0);
     }
 
 
-
+/*
     // ******* PREDICT/TESTS *******
 
-    /*srand(time(NULL));
+    srand(time(NULL));
     long int character, id;
 
     printf("******* Before training *******");
 
     Start(256, 86*5, 86);
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 5; i++)
     {
         character = rand() % 86; // change here
         id = rand() % 1016;
@@ -267,8 +268,9 @@ int main(int argc, char** argv)
         printf("character : %ld,    id : %ld\n\n\n", character, id);
 
         PrintPredictNN(256, 86*5, 86, character, id, 0);
-    }*/
-
+    }
+*/
 
 	return 0;
+
 }
