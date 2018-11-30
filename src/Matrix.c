@@ -103,7 +103,7 @@ unsigned char **ToSquareMatrix(unsigned char **matrix, int oldX, int oldY, int s
 						sum += result[scale * y + y1][scale * x + x1];
 					}
 				}
-				if(sum > scale)
+				if(sum > 0)
 				{
 					resized[y][x] = 1;
 				}

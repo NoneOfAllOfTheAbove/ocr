@@ -4,9 +4,9 @@
 #include <sys/stat.h>
 #include <time.h>
 
-#include "../OCR/Matrix.h"
-#include "../OCR/NeuralNetwork/NeuralNetwork.h"
-#include "../OCR/Preprocessing/Preprocessing.h"
+#include "Matrix.h"
+#include "NeuralNetwork/NeuralNetwork.h"
+#include "Preprocessing/Preprocessing.h"
 
 void PrepareSecialCharsDataset()
 {/*
@@ -135,7 +135,7 @@ void TrainNeuralNetwork(size_t inputN, size_t hiddenN, size_t outputN, int tours
     {
         if (i % 10000 == 0)
         {
-            printf("%d%\n", count );
+            printf("%d\n", count );
             count += 1;
         }
     
@@ -194,7 +194,7 @@ void PrintPredictNN(size_t inputN, size_t hiddenN, size_t outputN, int character
 {
     if (mode)
     {
-        //Start(inputN, hiddenN, outputN);
+        Start(inputN, hiddenN, outputN);
         Load("resources/nn.data");
     }
     double input[256];
@@ -210,7 +210,7 @@ void PrintPredictNN(size_t inputN, size_t hiddenN, size_t outputN, int character
 
 
 int main(int argc, char** argv)
-{/*
+{
 
     // ******* TRAINING *******
 
@@ -225,7 +225,7 @@ int main(int argc, char** argv)
             TrainNeuralNetwork(256, 86*5, 86, 1000000,1);
         else
             TrainNeuralNetwork(256, 86*5, 86, 1000000,0);
-    }*/
+    }
 
 
 

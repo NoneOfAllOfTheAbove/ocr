@@ -1,5 +1,7 @@
 #include <gtk/gtk.h>
 
+#include "../OCR.h"
+
 
 //Gloabal Variable.
 
@@ -161,7 +163,7 @@ static void exportNNdata_activated()
 /*------------------Help's GCallback------------------*/
 static void helpAbout_activated()
 {
-    g_print("Help -> About activated.\n");
+    g_app_info_launch_default_for_uri("https://github.com/NoneOfAllOfTheAbove/OCR", NULL, NULL);
 }
 
 /*------------------------------------|FOR THEO|------------------------------------*/
@@ -179,14 +181,13 @@ static void extractText_activated(GtkWidget *extractTextButton)
         GtkAllocation allocation;
 
         //gtk_widget_get_allocation(boxB, &allocation);
-        //int boxB_width = allocation.width; 
+        //int boxB_width = allocation.width;
+
 
         g_print("Extract text activated.\n");
-        gtk_label_set_text(GTK_LABEL (label), "Si tu ne comprends pas, ou ne maîtrises pas, la notion de coefficient binomial,\
-        inutile de chercher à calculer toi-même les nombres de Catalan, que tu découvris dans cette obscure revue américaine d'algèbre,\
-        croyant qu'il s'agissait de “nombres catalans” (l'anglais Catalan numbers est équivoque), avant de faire le chemin historique et de\
-        découvrir qu'ils auraient tout aussi bien pu se nommer suite d'Euler, entiers de Seger, ou nombres de Ming Antu.\
-        Des textes en 16.796 signes ? Un roman de 58.786 mots ? Tu n'y penses pas !"); 
+        char *o = OCR_Start(filename);
+        gtk_label_set_text(GTK_LABEL (label), o); 
+
 
         gtk_box_set_homogeneous(GTK_BOX(box2), TRUE);   
         //gtk_box_set_spacing(GTK_BOX(box2), -boxB_width/2);// previous value: -340 : If this line is removed. In the text area, there will be blank space at the left of TextArea.
@@ -197,10 +198,10 @@ static void extractText_activated(GtkWidget *extractTextButton)
         
         gtk_widget_get_allocation(boxA, &allocation);
         int boxA_width = allocation.width; 
-        int boxA_height = allocation.height;
+        // int boxA_height = allocation.height;
 
 
-        //pixbuf = gdk_pixbuf_new_from_file_at_size("/home/sphird/Images/Wallpapers/sun.jpeg", boxA_width, boxA_height, NULL);
+        // pixbuf = gdk_pixbuf_new_from_file_at_size("resources/lastDebugScreenshot.png", boxA_width, boxA_height, NULL);
         image = gtk_image_new_from_pixbuf(pixbuf);
 
         gtk_overlay_add_overlay (GTK_OVERLAY(overlay), image);

@@ -30,7 +30,7 @@ double **weightHiddenToOutput;
 // the memory (malloc) permit to let the size of the matrix to determine at
 // the moment of the compilation and create a matrix of the exact needed size.
 
-double *CreateArray(size_t size)
+double* CreateArray(size_t size)
 {
 	double *array = (double *)malloc(sizeof(double) * size);
 	if (array == NULL)
@@ -90,7 +90,7 @@ void Start(size_t inputNodes, size_t hiddenNodes, size_t outputNodes)
 
 // --------------------------------Predict-------------------------------------
 
-double *Predict(double inputs[])
+double* Predict(double inputs[])
 {
 	// get the result from the transition of Input to Hidden
 	// layer by computing the weighted sum add the bias and apply
@@ -161,12 +161,13 @@ double *Predict(double inputs[])
 				outputs[i] = exp(outputs[i]) / sumsoftmax;*/
 
 	// just to test
-	printf("prediction = \t");
+	//printf("prediction = \t");
+    /*
 	for (size_t i = 0; i < numberOutputNodes; i++)
 	{
 		printf("%f\n\t\t", outputs[i]);
 	}
-	printf("\n");
+	printf("\n");*/
 
 	free(hiddenRes);
 

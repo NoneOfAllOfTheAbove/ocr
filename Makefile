@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c99
 
 BIN = bin/OCR
-SRC = src/main.c src/Matrix.c src/Stack.c src/*/*.c
+SRC = src/main.c src/Matrix.c src/Stack.c src/OCR.c src/*/*.c
 
 TOOLS_BIN = bin/Tools
 TOOLS_SRC = src/NeuralNetwork/*.c src/Matrix.c src/Preprocessing/*.c src/tools.c
