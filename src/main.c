@@ -5,7 +5,14 @@
 
 int main(int argc, char** argv)
 {
-	StartGUI(argc, argv);
+	if(argc == 2)
+	{
+		OCR_Debug(argv[1]);
+	}	
+	else
+	{
+		StartGUI(argc, argv);
+	}
 
 	return 0;
 }

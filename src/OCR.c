@@ -6,13 +6,31 @@
 #include "Preprocessing/Preprocessing.h"
 #include "Segmentation/Segmentation.h"
 #include "NeuralNetwork/NeuralNetwork.h"
+#include "Postprocessing/Postprocessing.h"
 #include "GUI/GUI.h"
 #include "GUI/DebugGUI.h"
 
-char NNOutputToChar(double output[])
-{
-	char res[86] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '"', '(', ')', '=', '+', '-', '_', 47, '#', '&', '*', '/', 134, '[', ']', '{', '}', ',', '.', ':', '?', '!', ';', '@'};
 
+char* lastText;
+
+
+char NNFindChar(unsigned char** matrix)
+{
+	// Generate NN inputs
+	double input[256];
+	for (int i = 0; i < 16; i++)
+	{
+		for (int j = 0; j < 16; j++)
+		{
+			input[i * 16 + j] = (double)matrix[i][j];
+		}
+	}
+
+	// Predict output
+	double *output = Predict(input);
+
+	// Find char
+	char res[86] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '"', '(', ')', '=', '+', '-', '_', 47, '#', '&', '*', '/', 134, '[', ']', '{', '}', ',', '.', ':', '?', '!', ';', '@'};
 	int max = 0;
 	for (int i = 0; i < 86; i++)
 	{
@@ -22,7 +40,17 @@ char NNOutputToChar(double output[])
 	return res[max];
 }
 
-char* OCR_Start(char *path)
+void OCR_Debug(char* path)
+{
+	Image image;
+	image.path = path;
+	image = LoadImageAsGrayscale(image);
+	image = BinarizeImage(image);
+	Text text = Segmentation(image);
+	StartDebugGUI(image, text);
+}
+
+char *OCR_Start(char *path, int enableDebugMode, int enablePostprocessing)
 {
 	// Start OCR
 	Image image;
@@ -46,47 +74,50 @@ char* OCR_Start(char *path)
 			}
 			numberOfCharacters += 1;
 		}
+		numberOfCharacters += 1;
 	}
-	char *outputText = malloc(sizeof(char) * numberOfCharacters);
+	char *outputText = malloc(sizeof(char) * numberOfCharacters * 2);
 
 	// Explore text
 	int i = 0;
 	for (int p = 0; p < text.numberOfParagraphs; p++)
 	{
-		for (int l = 0; l < text.paragraphs[p].numberOfLines; l++)
+		Paragraph paragraph = text.paragraphs[p];
+		for (int l = 0; l < paragraph.numberOfLines; l++)
 		{
-			for (int w = 0; w < text.paragraphs[p].lines[l].numberOfWords; w++)
+			for (int w = 0; w < paragraph.lines[l].numberOfWords; w++)
 			{
-				for (int c = 0; c < text.paragraphs[p].lines[l].words[w].numberOfCharacters; c++)
+				Word word = paragraph.lines[l].words[w];
+				char wordText[word.numberOfCharacters];
+				for (int c = 0; c < word.numberOfCharacters; c++)
 				{
-					Character character = text.paragraphs[p].lines[l].words[w].characters[c];
-
-					// Generate NN inputs
-					double input[256];
-					for (int i = 0; i < 16; i++)
+					Character character = word.characters[c];
+					char characterFound = NNFindChar(character.matrix);
+					if (enablePostprocessing)
 					{
-						for (int j = 0; j < 16; j++)
-						{
-							if (character.matrix[i][j] == 1)
-							{
-								printf("%d ", character.matrix[i][j]);
-							}
-							else {
-								printf("  ");
-							}
-							input[i * 16 + j] = (double)character.matrix[i][j];
-						}
-						printf("\n");
+						wordText[c] = characterFound;
 					}
-
-					// Predict output
-					double *output = Predict(input);
-					char characterFound = NNOutputToChar(output);
-					printf("%c \n", characterFound);
-
-					outputText[i] = characterFound;
-					i++;
+					else
+					{
+						outputText[i] = characterFound;
+						i++;
+					}
 				}
+				wordText[word.numberOfCharacters] = '\0';
+				
+				if (enablePostprocessing)
+				{
+					char *correctWordText;
+					correctWordText = Spellcheck(wordText);
+					printf("Spellcheck: %s -> %s \n", wordText, correctWordText);
+					while(*correctWordText != '\0')
+					{
+						outputText[i] = *correctWordText;
+						i++;
+						correctWordText++;
+					}
+				}
+				
 				outputText[i] = ' ';
 				i++;
 			}
@@ -100,15 +131,21 @@ char* OCR_Start(char *path)
 	outputText[i] = '\0';
 
 	// Write text to GUI
-	//StartDebugGUI(image, text);
+	if (enableDebugMode)
+	{
+		StartDebugGUI(image, text);
+	}
 	printf("\n\n%s \n", outputText);
+	lastText = outputText;
 
 	return outputText;
 }
 
-void OCR_ExportAsTextFile()
+void OCR_ExportAsTextFile(char* path)
 {
-	// TO DO
+	FILE *f = fopen(path, "w");
+	fputs(lastText, f);
+	fclose(f);
 }
 
 void OCR_Stop()

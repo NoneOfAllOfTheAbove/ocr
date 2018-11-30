@@ -5,6 +5,9 @@
 
 //Gloabal Variable.
 
+int enableDebugMode = 0;
+int enablePostprocessing = 0;
+
 GtkWidget *label; //Need it as G.V in order to change text.
 GtkWidget *box2; //In order to get 50/50 on boxA and boxB size.
 GtkWidget *boxA;
@@ -129,6 +132,8 @@ static void exportText_activated(GtkWidget *fileMenu_exportMenu_text, gpointer w
         g_print("You pressed Cancel\n");
     }
     
+    OCR_ExportAsTextFile(filename);
+
     gtk_widget_destroy (dialog);
 }
 
@@ -139,25 +144,30 @@ static void quit_activated()
 }
 
 /*------------------Option's GCallback------------------*/
-static void basicSeg_activated()
+static void postprocessing_activated()
 {
-    g_print("Option -> Handle sticked characters.\n");
+    g_print("Option -> Postprocessing.\n");
+    if(enablePostprocessing)
+    {
+        enablePostprocessing = 0;
+    } 
+    else
+    {
+        enablePostprocessing = 1;
+    }
 }
 
-/*------------------Debug's GCallback------------------*/
 static void debugMode_activated()
 {
     g_print("Debug -> Debug Mode activated.\n");
-}
-
-static void loadNNdata_activated()
-{
-    g_print("Debug -> Load NN data activated.\n");
-}
-
-static void exportNNdata_activated()
-{
-    g_print("Debug -> Export NN data activated.\n");
+    if (enableDebugMode)
+    {
+        enableDebugMode = 0;
+    }
+    else
+    {
+        enableDebugMode = 1;
+    }
 }
 
 /*------------------Help's GCallback------------------*/
@@ -185,7 +195,7 @@ static void extractText_activated(GtkWidget *extractTextButton)
 
 
         g_print("Extract text activated.\n");
-        char *o = OCR_Start(filename);
+        char *o = OCR_Start(filename, enableDebugMode, enablePostprocessing);
         gtk_label_set_text(GTK_LABEL (label), o); 
 
 
@@ -288,14 +298,8 @@ int StartGUI(int argc, char *argv[])
     /*For "Option" set*/
     GtkWidget *option;
     GtkWidget *optionMenu;
-    GtkWidget *optionMenu_basicSeg;
-
-    /*For "Debug" set*/
-    GtkWidget *debug;
-    GtkWidget *debugMenu;
-    GtkWidget *debugMenu_debugMode;
-    GtkWidget *debugMenu_loadNN;
-    GtkWidget *debugMenu_exportNN;
+    GtkWidget *optionMenu_postprocessing;
+    GtkWidget *optionMenu_debugMode;
 
     /*For "Help" set*/
     GtkWidget *help;
@@ -344,13 +348,13 @@ int StartGUI(int argc, char *argv[])
         |
         => optionMenu (GtkMenu)
             |
-            => optionMenu_basicSeg: "Basic segmentation" (GtkMenuItem type)
+            => optionMenu_postprocessing: "Basic segmentation" (GtkMenuItem type)
     |
     => debug: "Debug" (GtkMenuItem)
         |
         => debugMenu (GtkMenu)
             |
-            =>debugMenu_debugMode: "Debug Mode" (GtkMenuItem)
+            =>optionMenu_debugMode: "Debug Mode" (GtkMenuItem)
             |
             =>debugMenu_loadNN: "Load NN data" (GtkMenuItem)
             |
@@ -412,62 +416,20 @@ int StartGUI(int argc, char *argv[])
     //----------------------------------For "Option" set----------------------------------
     
     optionMenu = gtk_menu_new();
-
     option = gtk_menu_item_new_with_label("Options");
-    
-    //In order to have the "tick" feature.
-    optionMenu_basicSeg = gtk_check_menu_item_new_with_label("Handle sticked characters");
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(optionMenu_basicSeg), FALSE);
 
-    /*Add "optionMenu_basicSeg" to optionMenu */
-    gtk_menu_shell_append(GTK_MENU_SHELL(optionMenu), optionMenu_basicSeg);
+    optionMenu_debugMode = gtk_check_menu_item_new_with_label("Enable debug mode");
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(optionMenu_debugMode), FALSE);
+    gtk_menu_shell_append(GTK_MENU_SHELL(optionMenu), optionMenu_debugMode);
+    g_signal_connect(G_OBJECT(optionMenu_debugMode), "activate", G_CALLBACK(debugMode_activated), NULL);
 
+    optionMenu_postprocessing = gtk_check_menu_item_new_with_label("Enable postprocessing (spell check)");
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(optionMenu_postprocessing), FALSE);
+    gtk_menu_shell_append(GTK_MENU_SHELL(optionMenu), optionMenu_postprocessing);
+    g_signal_connect(G_OBJECT(optionMenu_postprocessing), "activate", G_CALLBACK(postprocessing_activated), NULL);
 
-    /*Add "optionMenu" to "option"*/
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(option), optionMenu);
-                
-    /*Add "option" to menuBar*/                 
     gtk_menu_shell_append(GTK_MENU_SHELL(menuBar), option);
-
-    //Connects GCallback function.
-    //For Basic segmentation.
-    g_signal_connect(G_OBJECT(optionMenu_basicSeg), "activate", G_CALLBACK(basicSeg_activated), NULL);
-
-
-    //----------------------------------For "Debug" set----------------------------------
-    
-    debugMenu = gtk_menu_new();
-
-    debug = gtk_menu_item_new_with_label("Debug");
-    
-    //In order to have the "tick feature"
-    debugMenu_debugMode = gtk_check_menu_item_new_with_label("Debug Mode");
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(debugMenu_debugMode), FALSE);
-    
-    debugMenu_loadNN = gtk_menu_item_new_with_label("Load NN data");
-    debugMenu_exportNN = gtk_menu_item_new_with_label("Export NN data");
-
-    /*Add "debugMenu_debugMode", "debugMenu_loadNN " and "debugMenu_exportNN"
-     to debugMenu */
-    gtk_menu_shell_append(GTK_MENU_SHELL(debugMenu), debugMenu_debugMode);
-    //add separator to "debugMenu" 
-    gtk_menu_shell_append(GTK_MENU_SHELL(debugMenu), gtk_separator_menu_item_new());
-    gtk_menu_shell_append(GTK_MENU_SHELL(debugMenu), debugMenu_loadNN);
-    gtk_menu_shell_append(GTK_MENU_SHELL(debugMenu), debugMenu_exportNN);
-
-    /*Add "debugMenu" to "debug"*/
-    gtk_menu_item_set_submenu(GTK_MENU_ITEM(debug), debugMenu);
-
-    /*Add "debug" to "menuBar"*/
-    gtk_menu_shell_append(GTK_MENU_SHELL(menuBar), debug);
-
-    //Connects GCallback function.
-    //For Debug Mode
-    g_signal_connect(G_OBJECT(debugMenu_debugMode), "activate", G_CALLBACK(debugMode_activated), NULL);
-    //For Load NN data
-    g_signal_connect(G_OBJECT(debugMenu_loadNN), "activate", G_CALLBACK(loadNNdata_activated), NULL);
-    //For Export NN data
-    g_signal_connect(G_OBJECT(debugMenu_exportNN), "activate", G_CALLBACK(exportNNdata_activated), NULL);
 
     //----------------------------------For "About" set----------------------------------
     

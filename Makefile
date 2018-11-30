@@ -10,6 +10,7 @@ TOOLS_SRC = src/NeuralNetwork/*.c src/Matrix.c src/Preprocessing/*.c src/tools.c
 GTK = `pkg-config --libs --cflags gtk+-3.0`
 SDL = -lSDL2 -lSDL2_image
 MATH = -lm
+HUNSPELL = -lhunspell
 
 all: prebuild $(BIN) $(TOOLS_BIN)
 
@@ -17,7 +18,7 @@ prebuild:
 	mkdir -p bin
 
 $(BIN): $(SRC)
-	$(CC) $(SRC) $(GTK) $(CFLAGS) -o $(BIN) $(GTK) $(SDL) $(MATH)
+	$(CC) $(SRC) $(GTK) $(CFLAGS) -o $(BIN) $(GTK) $(SDL) $(MATH) $(HUNSPELL)
 
 $(TOOLS_BIN): $(TOOLS_SRC)
 	$(CC) $(TOOLS_SRC) $(CFLAGS) -o $(TOOLS_BIN) $(SDL) $(MATH)

@@ -1,6 +1,8 @@
 #ifndef OCR_H
 #define OCR_H
 
-char* OCR_Start(char *path);
+void OCR_Debug(char *path);
+char *OCR_Start(char *path, int enableDebugMode, int enablePostprocessing);
+void OCR_ExportAsTextFile(char *path);
 
 #endif

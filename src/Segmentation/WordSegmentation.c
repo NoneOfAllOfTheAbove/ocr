@@ -44,7 +44,7 @@ int __IdentifyCharacters(unsigned char **matrix, int x1, int x2, int y1, int y2,
 		if(y != y2)
 		{
 			numberOfCharacters += (state == 0) ? 1 : 0;
-			*sumCharactersWidth += (state == 1) ? 1 : 0;
+			*sumCharactersWidth += 1;
 			state = 1;
 		}
 		else
@@ -73,7 +73,7 @@ int __CountWords(unsigned char **matrix, int x1, int x2, int y1, int y2, int ave
 		}
 		else
 		{
-			if(spaceWidth >= averageCharactersWidth - 1)
+			if(spaceWidth >= 1 + averageCharactersWidth / 2)
 			{
 				numberOfWords++;
 			}
@@ -133,7 +133,7 @@ Text GetWords(Image image, Text text)
 				}
 				else
 				{
-					if (spaceWidth >= averageCharactersWidth - 1)
+					if (spaceWidth >= 1 + averageCharactersWidth / 2)
 					{
 						// printf("%d -> %d \n", startX, lastX + 1);
 						Word word;
