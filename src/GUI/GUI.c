@@ -1,9 +1,9 @@
 #include <gtk/gtk.h>
-
+#include <gdk/gdkkeysyms.h>
 #include "../OCR.h"
 
 
-//Gloabal Variable.
+//Global Variables.
 
 int enableDebugMode = 0;
 int enablePostprocessing = 0;
@@ -21,9 +21,8 @@ GdkPixbuf *pixbuf;
 
 int extractText_clicked = 0;
 
-//Returns whether the image is of the following extension.
-gboolean file_isimage(gchar *file_path)
-{
+gboolean file_isImage(gchar *file_path)
+{   //Returns whether the image is of the following extension
     return (
         g_str_has_suffix(file_path, ".jpg") ||
         g_str_has_suffix(file_path, ".png") ||
@@ -43,6 +42,7 @@ static void loadImage_activated (GtkWidget *fileMenu_loadImage, gpointer window)
     To counter that, we do the following thing : (void)name_of_variable.
     */
     (void)fileMenu_loadImage;
+    
 
     GtkWidget *dialog;
     dialog = gtk_file_chooser_dialog_new("Chosse a file", 
@@ -58,20 +58,22 @@ static void loadImage_activated (GtkWidget *fileMenu_loadImage, gpointer window)
     gint res = gtk_dialog_run (GTK_DIALOG (dialog));
     if (res == GTK_RESPONSE_ACCEPT)
     {   
+        if(filename != NULL && file_isImage(filename))   
+            {
+                gtk_image_clear(GTK_IMAGE(image));
+                g_print("Reload image.\n");
+            }
         //Creating the path.
-        //char *filename;
         GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
         filename = gtk_file_chooser_get_filename (chooser);
         //Print path is here.
         g_print("%s\n", filename);
         
-        if (file_isimage(filename))
+        if (file_isImage(filename))
         {   
-            overlay = gtk_overlay_new();
             gtk_box_pack_start(GTK_BOX(boxA), overlay, TRUE, TRUE, 0);
 
             GtkAllocation allocation;
-        
             gtk_widget_get_allocation(boxA, &allocation);
             int desired_width = allocation.width; 
             int desired_height = allocation.height;
@@ -82,11 +84,12 @@ static void loadImage_activated (GtkWidget *fileMenu_loadImage, gpointer window)
             gtk_overlay_add_overlay (GTK_OVERLAY(overlay), image);
             gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
             gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
+            
             //Display Image
             gtk_widget_show_all(overlay);
 
             pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
-
+            
         }
     }
     else
@@ -94,6 +97,7 @@ static void loadImage_activated (GtkWidget *fileMenu_loadImage, gpointer window)
         g_print("You pressed Cancel\n");
     }
     gtk_widget_destroy(dialog);
+    gtk_widget_queue_resize(window);
 }
 
 static void exportText_activated(GtkWidget *fileMenu_exportMenu_text, gpointer window)
@@ -121,9 +125,10 @@ static void exportText_activated(GtkWidget *fileMenu_exportMenu_text, gpointer w
 
     if (res == GTK_RESPONSE_ACCEPT)
     {   
-         //Creating the path.
-        //char *filename;
+        //Creating the path.
         filename = gtk_file_chooser_get_filename (chooser);
+
+        OCR_ExportAsTextFile(filename);
         //Print path is here.
         g_print("%s\n", filename);
     }
@@ -131,8 +136,6 @@ static void exportText_activated(GtkWidget *fileMenu_exportMenu_text, gpointer w
     {
         g_print("You pressed Cancel\n");
     }
-    
-    OCR_ExportAsTextFile(filename);
 
     gtk_widget_destroy (dialog);
 }
@@ -178,9 +181,6 @@ static void helpAbout_activated()
 
 /*------------------------------------|FOR THEO|------------------------------------*/
 
-/*------------------extractText's GCallback------------------*/ 
-// This is the Run"s GCallback and at the same time write function.
-//-> When clicked on extract Text button, text displays in the text area + clear current image and replace by another.
 static void extractText_activated(GtkWidget *extractTextButton)
 {   
     //Can't click on "extractText_activated" if image is not loaded.
@@ -188,28 +188,20 @@ static void extractText_activated(GtkWidget *extractTextButton)
     {
         (void)extractTextButton;
 
-        GtkAllocation allocation;
-
-        //gtk_widget_get_allocation(boxB, &allocation);
-        //int boxB_width = allocation.width;
-
-
         g_print("Extract text activated.\n");
         char *o = OCR_Start(filename, enableDebugMode, enablePostprocessing);
-        gtk_label_set_text(GTK_LABEL (label), o); 
-
-
-        gtk_box_set_homogeneous(GTK_BOX(box2), TRUE);   
-        //gtk_box_set_spacing(GTK_BOX(box2), -boxB_width/2);// previous value: -340 : If this line is removed. In the text area, there will be blank space at the left of TextArea.
+        gtk_label_set_markup(GTK_LABEL(label), o);
         
-        //Clear current image and add another one.
+        //Label to the left.
+        gtk_widget_set_halign (label, GTK_ALIGN_START);
+        gtk_widget_set_valign (label, GTK_ALIGN_START);
 
+        //Clear current image and add another one.
         gtk_image_clear(GTK_IMAGE(image));
         
+        GtkAllocation allocation;
         gtk_widget_get_allocation(boxA, &allocation);
         int boxA_width = allocation.width; 
-        // int boxA_height = allocation.height;
-
 
         // pixbuf = gdk_pixbuf_new_from_file_at_size("resources/lastDebugScreenshot.png", boxA_width, boxA_height, NULL);
         image = gtk_image_new_from_pixbuf(pixbuf);
@@ -218,15 +210,14 @@ static void extractText_activated(GtkWidget *extractTextButton)
         gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
         gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
         
-        gtk_widget_show_all(boxA);
-        
         //set_spacing only after clicking on extractText_Button;
         extractText_clicked = 1;
         gtk_box_set_spacing(GTK_BOX(box2), -boxA_width/2);
+        gtk_box_set_homogeneous(GTK_BOX(box2), TRUE);
 
         gtk_widget_queue_resize(window);
+        gtk_widget_show_all(window);
     }
-    
 }   
 
 void on_window_size_allocate()
@@ -261,7 +252,7 @@ void on_window_size_allocate()
      
     gtk_image_set_from_pixbuf(GTK_IMAGE(image), gdk_pixbuf_scale_simple(pixbuf,
         desired_width, desired_height, GDK_INTERP_BILINEAR));
-
+    
     if (extractText_clicked)
         gtk_box_set_spacing(GTK_BOX(box2), -boxA_width/2);
 
@@ -269,19 +260,45 @@ void on_window_size_allocate()
 
 }
 
+gboolean on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data)
+{   //Function for shortcuts.   
+    (void) widget;
+    (void) user_data;
+    
+    switch(event->keyval)
+    { 
+        case GDK_KEY_q:
+            if(event->state & GDK_CONTROL_MASK)
+                {   //Ctrl + q => quit gui.
+                    gtk_main_quit();        
+                }
+            break;
+        case GDK_KEY_o:
+            if(event->state & GDK_CONTROL_MASK)
+                {   //Ctrl + o => open file chooser.
+                    loadImage_activated(NULL, window);
+                }
+            break;
+         case GDK_KEY_e:
+            if(event->state & GDK_CONTROL_MASK)
+                {   //Ctrl + e => open file chooser.
+                    exportText_activated(NULL, window);
+                }
+            break;
+         case GDK_KEY_KP_Enter:
+            //Enter => extractText button runs.
+            extractText_activated(NULL);
+            break;
+        default:
+            return FALSE;
+    }
+    return FALSE;
+}
 
 //For me, keep int main(). But when have to push, replace int main() -> int StartGUI().
 int StartGUI(int argc, char *argv[])
 {   
-    //size of the window
-    //gint width;
-    //gint height;
-
-    //GtkWidget *window;
     GtkWidget *mainBox;
-    //GtkWidget *box2; Set as global variable at the begining of our file.
-    //GtkWidget *boxA; 
-    //GtkWidget *boxB;
 
     /*Menu Bar*/
     GtkWidget *menuBar;
@@ -305,9 +322,6 @@ int StartGUI(int argc, char *argv[])
     GtkWidget *help;
     GtkWidget *helpMenu;
     GtkWidget *helpMenu_about;
-    
-    //For writing in boxB of case(2) of mainBox
-    //GtkWidget *label; It is declared as Global variable.
 
     /*For "Run" button*/
     GtkWidget *extractTextButton;
@@ -478,12 +492,12 @@ int StartGUI(int argc, char *argv[])
     |   
     |  
     =>  -------------------
-        |       (A)       |    
-        |-----------------|
-        |       (B)       |
+        |        |        |    
+        |  (A)   |  (B)   |
+        |        |        |
         -------------------
 
-    (3): contain the "Run" button.
+    (3): contains the "Run" button.
     */
 
     mainBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
@@ -502,73 +516,16 @@ int StartGUI(int argc, char *argv[])
 
     gtk_box_pack_start(GTK_BOX(box2),boxA, TRUE, TRUE, 0);
     
-                        //----------------------------------TEST----------------------------------
-
-    /*--------Create an "overlay" in order to put "drawing area" on top of "image"--------
-    
-    //Create an "overlay" and put in "boxA"
-    GtkWidget *overlay = gtk_overlay_new();
-    gtk_box_pack_start(GTK_BOX(boxA), overlay, TRUE, TRUE, 0);
-
-    GtkWidget *image;
-
-    //GtkAllocation allocation;
-    //GdkPixbuf *pixbuf;
-
-    //Creation of "image"
-    
-    //gtk_widget_get_allocation(boxA, &allocation);
-    //g_signal_connect(boxA, "size-allocate", G_CALLBACK(my_getsize), NULL);
-    //int desired_width = allocation.width; 
-    //int desired_height = allocation.height;
-
-    image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size("/home/sphird/Images/GUI_OCR.jpg", 694, 747, NULL));
-
-    //pixbuf = gdk_pixbuf_new_from_file("/home/sphird/Images/GUI_OCR.jpg", NULL);
-    //pixbuf = gdk_pixbuf_scale_simple(pixbuf, desired_width, desired_height, GDK_INTERP_BILINEAR);
-    //image = gtk_image_new_from_pixbuf(pixbuf);
-    
-    
-    //The 3 lines is to add "image" in "overlay" and control their display.
-    gtk_overlay_add_overlay (GTK_OVERLAY(overlay), image);
-    gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
-    gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
-  
-    //Creation of drawing_area and its callBack Function.
-    GtkWidget *drawing_area = gtk_drawing_area_new ();
-    gtk_widget_set_size_request (drawing_area, 100, 100);
-    g_signal_connect_after(G_OBJECT (drawing_area), "draw",
-                    G_CALLBACK (drawFunction), NULL);
-        
-    //The 3 lines is to add "drawing_area" in "overlay" and control their display.
-    gtk_overlay_add_overlay (GTK_OVERLAY(overlay), drawing_area);
-    gtk_widget_set_halign (drawing_area, GTK_ALIGN_CENTER);
-    gtk_widget_set_valign (drawing_area, GTK_ALIGN_CENTER);
-    */
-
-    /*
     overlay = gtk_overlay_new();
-    gtk_box_pack_start(GTK_BOX(boxA), overlay, TRUE, TRUE, 0);
-    image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size("/home/sphird/Images/GUI_OCR.jpg", 694, 747, NULL));
-    
-    gtk_overlay_add_overlay (GTK_OVERLAY(overlay), image);
-    gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
-    gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
-    */
-
                             /*-----------------------ADD SEPARATOR-------------------------*/
     //Add Separator between box A and B
     GtkWidget *separator;
-
-
     separator = gtk_separator_new(GTK_ORIENTATION_VERTICAL);
     gtk_box_pack_start(GTK_BOX(box2),separator, FALSE, FALSE, 0);
 
-    //Add "boxB" to "box2"
-    gtk_box_pack_start(GTK_BOX(box2),boxB, TRUE, TRUE, 0);
-
-    /*Add "label" to "boxB"*/
     
+                         //-----------------------Add "label" to "boxB"-----------------------
+
     label = gtk_label_new(NULL);
     
     gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
@@ -578,14 +535,12 @@ int StartGUI(int argc, char *argv[])
     gtk_label_set_selectable(GTK_LABEL(label), TRUE);
     //Enable us to wrapped the text in multiple line.
     gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-    //Wrap the text.
-    gtk_label_set_max_width_chars (GTK_LABEL (label), 20);
-
-                            //-----------------------Add "label" to "boxB-----------------------
-    
     gtk_box_pack_start(GTK_BOX(boxB), label, FALSE, FALSE, 0);
 
-    //Add "box2" to case (2) of "mainBox"
+                         //-----------------------Add "boxB" to "box2"-----------------------
+    gtk_box_pack_start(GTK_BOX(box2),boxB, TRUE, TRUE, 0);
+    
+                         //-----------------------Add "box2" to "mainBox"-----------------------
     gtk_box_pack_start(GTK_BOX(mainBox), box2, TRUE, TRUE, 0);
     
     /*--------------------------------------------CASE 3--------------------------------------------*/
@@ -600,9 +555,11 @@ int StartGUI(int argc, char *argv[])
 
     //Enable us to resize window.
     g_signal_connect(G_OBJECT(window),"size-allocate", G_CALLBACK(on_window_size_allocate), NULL);
-
     //Enable us to quit the program.
     g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    //Enable us to have shortcuts.
+    g_signal_connect (G_OBJECT (window), "key_press_event", G_CALLBACK (on_key_press), NULL);
+
     gtk_widget_show_all(window);
     gtk_main();
 
