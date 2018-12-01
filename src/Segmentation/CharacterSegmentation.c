@@ -15,7 +15,7 @@ Character __PrepareCharacter(int cx1, int cx2, int cy1, int cy2, unsigned char *
 	character.y2 = cy2;
 	character.character = '\0';
 	character.matrix = GetSubMatrix(matrix, cx1, cy1, cx2, cy2);
-	character.matrix = ToSquareMatrix(character.matrix, cx2 - cx1, cy2 - cy1, 16);
+	character.matrix = ToSquareMatrix(character.matrix, cx2 - cx1, cy2 - cy1, 24);
 	return character;
 }
 

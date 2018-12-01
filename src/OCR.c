@@ -83,6 +83,7 @@ char *OCR_Start(char *path, int enableDebugMode, int enablePostprocessing)
 
 	// Explore text
 	int i = 0;
+	int t = 0;
 	for (int p = 0; p < text.numberOfParagraphs; p++)
 	{
 		Paragraph paragraph = text.paragraphs[p];
@@ -95,7 +96,9 @@ char *OCR_Start(char *path, int enableDebugMode, int enablePostprocessing)
 				for (int c = 0; c < word.numberOfCharacters; c++)
 				{
 					Character character = word.characters[c];
-					char characterFound = NNFindChar(character.matrix);
+
+					// char characterFound = NNFindChar(character.matrix);
+					char characterFound = 'L';
 					if (enablePostprocessing)
 					{
 						wordText[c] = characterFound;
