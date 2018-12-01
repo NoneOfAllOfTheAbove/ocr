@@ -5,6 +5,7 @@
 
 #include "Matrix.h"
 #include "Preprocessing/Preprocessing.h"
+#include "Preprocessing/Filters.h"
 #include "Segmentation/Segmentation.h"
 #include "NeuralNetwork/NeuralNetwork.h"
 #include "Postprocessing/Postprocessing.h"
@@ -48,8 +49,13 @@ void OCR_Debug(char* path)
 	Image image;
 	image.path = path;
 	image = LoadImageAsGrayscale(image);
+	// image = Blur(image);
+	// image = Sharpen(image);
+	// image = GaussianBlur(image);
 	image = BinarizeImage(image);
+
 	Text text = Segmentation(image);
+
 	StartDebugGUI(image, text);
 }
 
@@ -59,9 +65,14 @@ char *OCR_Start(char *path, int enableDebugMode, int enablePostprocessing)
 	Image image;
 	image.path = path;
 	image = LoadImageAsGrayscale(image);
+	// image = Blur(image);
+	// image = Sharpen(image);
+	// image = GaussianBlur(image);
 	image = BinarizeImage(image);
+
 	Start(256, 430, 86);
 	Load("resources/nn.data");
+
 	Text text = Segmentation(image);
 
 	// Prepare outputText
@@ -83,7 +94,6 @@ char *OCR_Start(char *path, int enableDebugMode, int enablePostprocessing)
 
 	// Explore text
 	int i = 0;
-	int t = 0;
 	for (int p = 0; p < text.numberOfParagraphs; p++)
 	{
 		Paragraph paragraph = text.paragraphs[p];
@@ -95,7 +105,7 @@ char *OCR_Start(char *path, int enableDebugMode, int enablePostprocessing)
 				char wordText[word.numberOfCharacters];
 				for (int c = 0; c < word.numberOfCharacters; c++)
 				{
-					Character character = word.characters[c];
+					// Character character = word.characters[c];
 
 					// char characterFound = NNFindChar(character.matrix);
 					char characterFound = 'L';
