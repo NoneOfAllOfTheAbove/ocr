@@ -1,2 +1,3 @@
+.vscode
 bin/*
 resources/nn-training/dataset/
