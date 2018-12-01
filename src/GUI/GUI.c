@@ -58,11 +58,12 @@ static void loadImage_activated (GtkWidget *fileMenu_loadImage, gpointer window)
     gint res = gtk_dialog_run (GTK_DIALOG (dialog));
     if (res == GTK_RESPONSE_ACCEPT)
     {   
-        if(filename != NULL && file_isImage(filename))   
-            {
-                gtk_image_clear(GTK_IMAGE(image));
-                g_print("Reload image.\n");
-            }
+        if(filename != NULL && file_isImage(filename))  
+        {
+            gtk_image_clear(GTK_IMAGE(image));
+            gtk_label_set_markup(GTK_LABEL(label), "");
+            g_print("Reload image.\n");
+        }
         //Creating the path.
         GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
         filename = gtk_file_chooser_get_filename (chooser);

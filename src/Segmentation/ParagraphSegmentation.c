@@ -101,6 +101,7 @@ unsigned char **RLSA(unsigned char **binarizedImageMatrix, int imageWidth, int i
 		}
 	}
 
+	DestroyCharMatrix(horizontalResult, imageHeight);
 	return verticalResult;
 }
 
@@ -142,6 +143,8 @@ void __GetBoundsOfParagraph(unsigned char **matrix, int xStart, int yStart, int 
 			StackPush(&stack, bottom);
 		}
 	}
+
+	StackDestroy(&stack);
 }
 
 void __CountParagraphs(unsigned char **matrix, int xStart, int yStart, int width, int height)
@@ -170,6 +173,8 @@ void __CountParagraphs(unsigned char **matrix, int xStart, int yStart, int width
 			StackPush(&stack, bottom);
 		}
 	}
+
+	StackDestroy(&stack);
 }
 
 Paragraph *IdentifyBlocks(unsigned char **blocksMap, int *blockNumber, int imageWidth, int imageHeight)
@@ -228,6 +233,7 @@ Paragraph *IdentifyBlocks(unsigned char **blocksMap, int *blockNumber, int image
 		}
 	}
 
+	DestroyCharMatrix(matrix, imageHeight);
 	return paragraphs;
 }
 

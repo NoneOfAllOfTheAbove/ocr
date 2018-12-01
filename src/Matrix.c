@@ -25,6 +25,15 @@ double **CreateDoubleMatrix(size_t line, size_t column)
 	return matrix;
 }
 
+void DestroyCharMatrix(unsigned char **matrix, int lines)
+{
+	for (int i = 0; i < lines; i++)
+	{
+		free(matrix[i]);
+	}
+	free(matrix);
+}
+
 void FreeMatrix(double **matrix, size_t line)
 {
 	for (size_t i = 0; i < line; i++)

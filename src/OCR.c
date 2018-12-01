@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "Matrix.h"
 #include "Preprocessing/Preprocessing.h"
 #include "Segmentation/Segmentation.h"
 #include "NeuralNetwork/NeuralNetwork.h"
@@ -11,7 +12,9 @@
 #include "GUI/DebugGUI.h"
 
 
+
 char* lastText;
+
 
 
 char NNFindChar(unsigned char** matrix)
@@ -138,6 +141,27 @@ char *OCR_Start(char *path, int enableDebugMode, int enablePostprocessing)
 	printf("\n\n%s \n", outputText);
 	lastText = outputText;
 
+	// Free
+	DestroyCharMatrix(image.grayscale, image.height);
+	DestroyCharMatrix(image.binarized, image.height);
+	for (int p = 0; p < text.numberOfParagraphs; p++)
+	{
+		for (int l = 0; l < text.paragraphs[p].numberOfLines; l++)
+		{
+			for (int w = 0; w < text.paragraphs[p].lines[l].numberOfWords; w++)
+			{
+				for (int c = 0; c < text.paragraphs[p].lines[l].words[w].numberOfCharacters; c++)
+				{
+					DestroyCharMatrix(text.paragraphs[p].lines[l].words[w].characters[c].matrix, 16);
+				}
+				free(text.paragraphs[p].lines[l].words[w].characters);
+			}
+			free(text.paragraphs[p].lines[l].words);
+		}
+		free(text.paragraphs[p].lines);
+	}
+	free(text.paragraphs);
+
 	return outputText;
 }
 
@@ -146,9 +170,4 @@ void OCR_ExportAsTextFile(char* path)
 	FILE *f = fopen(path, "w");
 	fputs(lastText, f);
 	fclose(f);
-}
-
-void OCR_Stop()
-{
-	// Free segmentation and image
 }

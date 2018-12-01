@@ -9,7 +9,7 @@ struct Image
 	int height;
 	
 	unsigned char **grayscale;
-	unsigned char **binarized;	
+	unsigned char **binarized;
 };
 
 Image LoadImageAsGrayscale(Image);

@@ -17,6 +17,7 @@ struct Stack
 };
 
 void StackCreate(Stack *stack, int size);
+void StackDestroy(Stack *stack);
 int IsStackFull(Stack *stack);
 int IsStackEmpty(Stack *stack);
 Coord StackPeek(Stack *stack);

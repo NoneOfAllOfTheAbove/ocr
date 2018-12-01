@@ -14,6 +14,11 @@ void StackCreate(Stack *stack, int size)
 	stack->stack = data;
 }
 
+void StackDestroy(Stack *stack)
+{
+	free(stack->stack);
+}
+
 int IsStackFull(Stack *stack)
 {
 	return stack->top >= stack->size - 1;
