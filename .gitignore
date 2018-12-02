@@ -1,4 +1,4 @@
 .vscode/
 bin/
 resources/nn-training/dataset/
-# docs/*.pdf
+docs/*.pdf
