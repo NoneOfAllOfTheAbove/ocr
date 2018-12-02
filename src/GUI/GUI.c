@@ -7,6 +7,7 @@
 
 int enableDebugMode = 0;
 int enablePostprocessing = 0;
+int enableFilters = 0;
 
 GtkWidget *label; //Need it as G.V in order to change text.
 GtkWidget *box2; //In order to get 50/50 on boxA and boxB size.
@@ -161,6 +162,19 @@ static void postprocessing_activated()
     }
 }
 
+static void filters_activated()
+{
+    g_print("Option -> Filters.\n");
+    if (enableFilters)
+    {
+        enableFilters = 0;
+    }
+    else
+    {
+        enableFilters = 1;
+    }
+}
+
 static void debugMode_activated()
 {
     g_print("Debug -> Debug Mode activated.\n");
@@ -190,7 +204,7 @@ static void extractText_activated(GtkWidget *extractTextButton)
         (void)extractTextButton;
 
         g_print("Extract text activated.\n");
-        char *o = OCR_Start(filename, enableDebugMode, enablePostprocessing);
+        char *o = OCR_Start(filename, enableDebugMode, enableFilters, enablePostprocessing);
         gtk_label_set_markup(GTK_LABEL(label), o);
         
         //Label to the left.
@@ -317,6 +331,7 @@ int StartGUI(int argc, char *argv[])
     GtkWidget *option;
     GtkWidget *optionMenu;
     GtkWidget *optionMenu_postprocessing;
+    GtkWidget *optionMenu_filters;
     GtkWidget *optionMenu_debugMode;
 
     /*For "Help" set*/
@@ -437,6 +452,11 @@ int StartGUI(int argc, char *argv[])
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(optionMenu_debugMode), FALSE);
     gtk_menu_shell_append(GTK_MENU_SHELL(optionMenu), optionMenu_debugMode);
     g_signal_connect(G_OBJECT(optionMenu_debugMode), "activate", G_CALLBACK(debugMode_activated), NULL);
+
+    optionMenu_filters = gtk_check_menu_item_new_with_label("Enable noise cancellation and contrast enhancement");
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(optionMenu_filters), FALSE);
+    gtk_menu_shell_append(GTK_MENU_SHELL(optionMenu), optionMenu_filters);
+    g_signal_connect(G_OBJECT(optionMenu_filters), "activate", G_CALLBACK(filters_activated), NULL);
 
     optionMenu_postprocessing = gtk_check_menu_item_new_with_label("Enable postprocessing (spell check)");
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(optionMenu_postprocessing), FALSE);

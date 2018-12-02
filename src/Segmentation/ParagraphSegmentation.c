@@ -56,7 +56,7 @@ int GetNumberVerticalWhiteNeighbors(unsigned char **array, int x, int y, int max
 
 unsigned char **RLSA(unsigned char **binarizedImageMatrix, int imageWidth, int imageHeight)
 {
-	int horizontalStep = 150; 
+	int horizontalStep = 180; 
 	int verticalStep = 30; 
 	unsigned char **horizontalResult = CreateCharMatrix(imageWidth, imageHeight);
 	unsigned char **verticalResult = CreateCharMatrix(imageWidth, imageHeight);

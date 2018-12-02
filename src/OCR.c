@@ -59,15 +59,18 @@ void OCR_Debug(char* path)
 	StartDebugGUI(image, text);
 }
 
-char *OCR_Start(char *path, int enableDebugMode, int enablePostprocessing)
+char *OCR_Start(char *path, int enableDebugMode, int enableFilters, int enablePostprocessing)
 {
 	// Start OCR
 	Image image;
 	image.path = path;
 	image = LoadImageAsGrayscale(image);
-	// image = Blur(image);
-	// image = Sharpen(image);
-	// image = GaussianBlur(image);
+	if(enableFilters)
+	{
+		image = Blur(image);
+		image = Sharpen(image);
+		image = GaussianBlur(image);
+	}
 	image = BinarizeImage(image);
 
 	Start(256, 430, 86);
