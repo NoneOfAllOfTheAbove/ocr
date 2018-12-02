@@ -73,7 +73,7 @@ unsigned char **RLSA(
 )
 {
 	int horizontalStep = 100; 
-	int verticalStep = 30; 
+	int verticalStep = 50; 
 	unsigned char **horizontalResult = CreateCharMatrix(
 		imageWidth, imageHeight
 	);
