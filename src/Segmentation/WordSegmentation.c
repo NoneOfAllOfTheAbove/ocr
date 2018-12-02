@@ -68,6 +68,7 @@ int __CountWords(
 {
 	int numberOfWords = 0;
 	int spaceWidth = 0;
+	int state = 0;
 
 	for (int x = x1; x < x2; x++)
 	{
@@ -77,10 +78,14 @@ int __CountWords(
 
 		if (y == y2)
 		{
-			spaceWidth++;
+			if(state == 1)
+			{
+				spaceWidth++;
+			}
 		}
 		else
 		{
+			state = 1;
 			if(spaceWidth >= 1 + averageCharactersWidth / 2)
 			{
 				numberOfWords++;
@@ -126,6 +131,7 @@ Text GetWords(Image image, Text text)
 			int startX = x1;
 			int lastX = x1;
 			int spaceWidth = 0;
+			int state = 0;
 			for (int x = x1; x < x2; x++)
 			{
 				int y = y1;
@@ -148,10 +154,18 @@ Text GetWords(Image image, Text text)
 				}
 				if (y == y2)
 				{
-					spaceWidth++;
+					if(state == 1)
+					{
+						spaceWidth++;
+					}
 				}
 				else
 				{
+					if(state == 0)
+					{
+						startX = x;
+					}
+					state = 1;
 					if (spaceWidth >= 1 + averageCharactersWidth / 2)
 					{
 						// printf("%d -> %d \n", startX, lastX + 1);

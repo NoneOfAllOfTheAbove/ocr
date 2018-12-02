@@ -90,13 +90,13 @@ void StartDebugGUI(Image image, Text text)
 			for (int k = 0; k < paragraph.lines[j].numberOfWords; k++)
 			{
 				Word word = paragraph.lines[j].words[k];
-				SDL_Rect rect;
+				/*SDL_Rect rect;
 				rect.x = word.x1;
 				rect.y = paragraph.lines[j].y1;
 				rect.w = word.x2 - word.x1;
 				rect.h = paragraph.lines[j].y2 - paragraph.lines[j].y1;
 				SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-				SDL_RenderDrawRect(renderer, &rect);
+				SDL_RenderDrawRect(renderer, &rect);*/
 
 				// Characters
 				for (int c = 0; c < word.numberOfCharacters; c++)
