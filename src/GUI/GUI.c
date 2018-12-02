@@ -364,7 +364,7 @@ int StartGUI(int argc, char *argv[])
 
 
 	/*--------------------STEP 1: Initialisation of window------------------*/
-
+	gtk_disable_setlocale();
 	gtk_init(&argc, &argv);
 	int width = 800;
 	int height = 500;

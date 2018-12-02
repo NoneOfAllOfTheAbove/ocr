@@ -21,12 +21,12 @@ char* lastText;
 char NNFindChar(unsigned char** matrix)
 {
 	// Generate NN inputs
-	double input[256];
-	for (int i = 0; i < 16; i++)
+	double input[576];
+	for (int i = 0; i < 24; i++)
 	{
-		for (int j = 0; j < 16; j++)
+		for (int j = 0; j < 24; j++)
 		{
-			input[i * 16 + j] = (double)matrix[i][j];
+			input[i * 24 + j] = (double)matrix[i][j];
 		}
 	}
 
@@ -34,17 +34,17 @@ char NNFindChar(unsigned char** matrix)
 	double *output = Predict(input);
 
 	// Find char
-	char res[86] = {
+	char res[85] = {
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
 		'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
 		'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-		'"', '(', ')', '=', '+', '-', '_', 47, '#', '&', '*', '/', 134,
-		'[', ']', '{', '}', ',', '.', ':', '?', '!', ';', '@'
+		'(', ')', '=', '+', ';', '.', '\'', '#', '&', '*', '-', '_',
+		'{', '!', '}', ',', ':', '/', '?', '\\', '[', ']', '@'
 	};
 	int max = 0;
-	for (int i = 0; i < 86; i++)
+	for (int i = 0; i < 85; i++)
 	{
 		if (output[max] < output[i])
 			max = i;
@@ -87,7 +87,7 @@ char *OCR_Start(
 	}
 	image = BinarizeImage(image);
 
-	Start(256, 430, 86);
+	Start(576, 595, 85);
 	Load("resources/nn.data");
 
 	Text text = Segmentation(image);
@@ -123,10 +123,9 @@ char *OCR_Start(
 				char wordText[word.numberOfCharacters];
 				for (int c = 0; c < word.numberOfCharacters; c++)
 				{
-					// Character character = word.characters[c];
+					Character character = word.characters[c];
 
-					// char characterFound = NNFindChar(character.matrix);
-					char characterFound = 'L';
+					char characterFound = NNFindChar(character.matrix);
 					if (enablePostprocessing)
 					{
 						wordText[c] = characterFound;
@@ -186,7 +185,7 @@ char *OCR_Start(
 				for (int c = 0; c < nbc; c++)
 				{
 					Character character = word.characters[c];
-					DestroyCharMatrix(character.matrix, 16);
+					DestroyCharMatrix(character.matrix, 24);
 				}
 				free(text.paragraphs[p].lines[l].words[w].characters);
 			}
