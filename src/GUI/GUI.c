@@ -82,7 +82,7 @@ static void loadImage_activated (
 			gtk_widget_get_allocation(boxA, &allocation);
 			int desired_width = allocation.width; 
 			int desired_height = allocation.height;
-
+			printf("%d\n",desired_height);
 			//Load Image 
 			image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size(
 				filename,
@@ -268,11 +268,6 @@ void on_window_size_allocate()
 	float r_image = (float)gdk_pixbuf_get_height(pixbuf)/
 		gdk_pixbuf_get_width(pixbuf);
 
-
-	gtk_widget_get_allocation(boxA, &allocation);
-	int boxA_width = allocation.width; 
-	
-
 	if (r_box > r_image)
 	{
 		desired_width -= 4;
@@ -288,8 +283,8 @@ void on_window_size_allocate()
 		desired_width, desired_height, GDK_INTERP_BILINEAR));
 	
 	if (extractText_clicked)
-		gtk_box_set_spacing(GTK_BOX(box2), -boxA_width/2);
-
+		gtk_box_set_spacing(GTK_BOX(box2), -desired_width/2);
+	gtk_widget_set_size_request(window, desired_width, desired_height);
 	gtk_widget_queue_resize(window);
 
 }
