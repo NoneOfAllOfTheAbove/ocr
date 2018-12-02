@@ -51,15 +51,22 @@ void DebugSegmentation(Text text)
 	printf("Text (%d paragraphs)\n\n", text.numberOfParagraphs);
 	for(int i = 0; i < text.numberOfParagraphs; i++)
 	{
-		printf("\t Paragraph %d (%d lines)\n\n", i, text.paragraphs[i].numberOfLines);
+		printf(
+			"\t Paragraph %d (%d lines)\n\n",
+			i,
+			text.paragraphs[i].numberOfLines
+		);
 		for(int j = 0; j < text.paragraphs[i].numberOfLines; j++)
 		{
-			printf("\t\t Line %d (%d characters) \n", j, text.paragraphs[i].lines[j].numberOfCharacters);
+			printf(
+				"\t\t Line %d (%d characters) \n",
+				j,
+				text.paragraphs[i].lines[j].numberOfCharacters
+			);
 			PrintLine(text.paragraphs[i].lines[j]);
 			printf("\n\n");
 		}
 	}
-	PrintLine(text.paragraphs[0].lines[0]);
 }*/
 
 Text Segmentation(Image image)

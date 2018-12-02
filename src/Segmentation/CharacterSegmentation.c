@@ -6,7 +6,10 @@
 #include "Segmentation.h"
 #include "WordSegmentation.h"
 
-Character __PrepareCharacter(int cx1, int cx2, int cy1, int cy2, unsigned char **matrix)
+Character __PrepareCharacter(
+	int cx1, int cx2, int cy1, int cy2,
+	unsigned char **matrix
+)
 {
 	Character character;
 	character.x1 = cx1;
@@ -15,7 +18,9 @@ Character __PrepareCharacter(int cx1, int cx2, int cy1, int cy2, unsigned char *
 	character.y2 = cy2;
 	character.character = '\0';
 	character.matrix = GetSubMatrix(matrix, cx1, cy1, cx2, cy2);
-	character.matrix = ToSquareMatrix(character.matrix, cx2 - cx1, cy2 - cy1, 24);
+	character.matrix = ToSquareMatrix(
+		character.matrix, cx2 - cx1, cy2 - cy1, 24
+	);
 	return character;
 }
 
@@ -30,7 +35,9 @@ Text GetCharacters(Image image, Text text)
 				// Prepare data
 				Line line = text.paragraphs[i].lines[j];
 				Word word = text.paragraphs[i].lines[j].words[k];
-				Character *characters = (Character *)malloc(sizeof(Character) * 2 * word.numberOfCharacters);
+				Character *characters = (Character *)malloc(
+					sizeof(Character) * 2 * word.numberOfCharacters
+				);
 
 				// Handle characters
 				int cx1 = 0, cx2 = 0, cy1 = 0, cy2 = 0;
@@ -79,12 +86,21 @@ Text GetCharacters(Image image, Text text)
 							/*if (cx2 - cx1 >= 2 * line.averageCharactersWidth)
 							{
 								int mid = (cx2 - cx1) / 2;
-								characters[characterId] = __PrepareCharacter(cx1, cx1 + mid, cy1, cy2, image.binarized);
+								characters[characterId] = __PrepareCharacter(
+									cx1, cx1 + mid, cy1, cy2,
+									image.binarized
+								);
 								characterId++;
 								word.numberOfCharacters += 1;
-								characters[characterId] = __PrepareCharacter(1 + cx1 + mid, cx2, cy1, cy2, image.binarized);
+								characters[characterId] = __PrepareCharacter(
+									1 + cx1 + mid, cx2, cy1, cy2,
+									image.binarized
+								);
 							}*/
-							characters[characterId] = __PrepareCharacter(cx1, cx2, cy1, cy2, image.binarized);
+							characters[characterId] = __PrepareCharacter(
+								cx1, cx2, cy1, cy2,
+								image.binarized
+							);
 
 							characterId++;
 							state = 0;

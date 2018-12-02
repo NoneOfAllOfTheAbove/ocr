@@ -5,9 +5,16 @@
 #include "../Matrix.h"
 #include "Preprocessing.h"
 
-void GetRGBSDLPixel(SDL_Surface *surface, unsigned x, unsigned y, Uint8* r, Uint8* g, Uint8* b)
+void GetRGBSDLPixel(
+	SDL_Surface *surface,
+	unsigned x, unsigned y,
+	Uint8* r, Uint8* g, Uint8* b
+)
 {
-	Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel;
+	Uint8 *p =
+		(Uint8 *)surface->pixels +
+		y * surface->pitch +
+		x * surface->format->BytesPerPixel;
 	Uint32 pixel = 0;
 
 	switch (surface->format->BytesPerPixel)

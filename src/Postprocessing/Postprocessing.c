@@ -4,7 +4,10 @@
 
 char* Spellcheck(char *word)
 {
-	Hunhandle *h = Hunspell_create("/usr/share/hunspell/en_US.aff", "/usr/share/hunspell/en_US.dic");
+	Hunhandle *h = Hunspell_create(
+		"/usr/share/hunspell/en_US.aff",
+		"/usr/share/hunspell/en_US.dic"
+	);
 
 	int correct = Hunspell_spell(h, word);
 	if(correct == 0)

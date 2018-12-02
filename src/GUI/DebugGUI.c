@@ -16,7 +16,12 @@ void WaitSDL()
 	}
 }
 
-void DrawMatrix(SDL_Renderer *renderer, unsigned char **matrix, int width, int height)
+void DrawMatrix(
+	SDL_Renderer *renderer,
+	unsigned char **matrix,
+	int width,
+	int height
+)
 {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	SDL_RenderClear(renderer);
@@ -41,7 +46,10 @@ void StartDebugGUI(Image image, Text text)
 	SDL_Renderer *renderer;
 	SDL_Window *window;
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_CreateWindowAndRenderer(image.width, image.height, 0, &window, &renderer);
+	SDL_CreateWindowAndRenderer(
+		image.width, image.height,
+		0, &window, &renderer
+	);
 
 	DrawMatrix(renderer, text.blocksMap, image.width, image.height);
 	SDL_RenderPresent(renderer);
@@ -108,8 +116,14 @@ void StartDebugGUI(Image image, Text text)
 	SDL_RenderPresent(renderer);
 
 	// Take screenshot
-	SDL_Surface *surface = SDL_CreateRGBSurface(0, image.width, image.height, 32, 0, 0, 0, 0);
-	SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_ARGB8888, surface->pixels, surface->pitch);
+	SDL_Surface *surface = SDL_CreateRGBSurface(
+		0, image.width, image.height,
+		32, 0, 0, 0, 0
+	);
+	SDL_RenderReadPixels(
+		renderer, NULL, SDL_PIXELFORMAT_ARGB8888,
+		surface->pixels, surface->pitch
+	);
 	IMG_SavePNG(surface, "resources/lastDebugScreenshot.png");
 
 	WaitSDL();

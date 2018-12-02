@@ -30,7 +30,11 @@ int __CountCharacters(unsigned char **matrix, int x1, int x2, int y1, int y2)
 	return numberOfCharacters;
 }
 
-int __IdentifyCharacters(unsigned char **matrix, int x1, int x2, int y1, int y2, int *sumCharactersWidth)
+int __IdentifyCharacters(
+	unsigned char **matrix,
+	int x1, int x2, int y1, int y2,
+	int *sumCharactersWidth
+)
 {
 	int numberOfCharacters = 0;
 	int state = 0;
@@ -56,7 +60,11 @@ int __IdentifyCharacters(unsigned char **matrix, int x1, int x2, int y1, int y2,
 	return numberOfCharacters;
 }
 
-int __CountWords(unsigned char **matrix, int x1, int x2, int y1, int y2, int averageCharactersWidth)
+int __CountWords(
+	unsigned char **matrix,
+	int x1, int x2, int y1, int y2,
+	int averageCharactersWidth
+)
 {
 	int numberOfWords = 0;
 	int spaceWidth = 0;
@@ -98,11 +106,19 @@ Text GetWords(Image image, Text text)
 
 			// Prepare data
 			int sumCharactersWidth = 0;
-			int numberOfCharacters = __IdentifyCharacters(image.binarized, x1, x2, y1, y2, &sumCharactersWidth);
-			int averageCharactersWidth = sumCharactersWidth / numberOfCharacters;
-			averageCharactersWidth = (averageCharactersWidth == 0) ? 1 : averageCharactersWidth;
+			int numberOfCharacters = __IdentifyCharacters(
+				image.binarized, x1, x2, y1, y2,
+				&sumCharactersWidth
+			);
+			int averageCharactersWidth =
+				sumCharactersWidth / numberOfCharacters;
+			averageCharactersWidth =
+				(averageCharactersWidth == 0) ? 1 : averageCharactersWidth;
 
-			int numberOfWords = __CountWords(image.binarized, x1, x2, y1, y2, averageCharactersWidth);
+			int numberOfWords = __CountWords(
+				image.binarized, x1, x2, y1, y2,
+				averageCharactersWidth
+			);
 			Word *words = (Word*)malloc(sizeof(Word) * numberOfWords);
 
 			// Register words
@@ -122,7 +138,10 @@ Text GetWords(Image image, Text text)
 					Word word;
 					word.x1 = startX;
 					word.x2 = lastX + 2;
-					word.numberOfCharacters = __CountCharacters(image.binarized, word.x1, word.x2, y1, y2);
+					word.numberOfCharacters = __CountCharacters(
+						image.binarized,
+						word.x1, word.x2, y1, y2
+					);
 					word.spaces = (x - word.x2) / averageCharactersWidth;
 					words[wordId] = word;
 					wordId++;
@@ -139,7 +158,13 @@ Text GetWords(Image image, Text text)
 						Word word;
 						word.x1 = startX;
 						word.x2 = lastX + 2;
-						word.numberOfCharacters = __CountCharacters(image.binarized, word.x1, word.x2, y1, y2);
+						word.numberOfCharacters = __CountCharacters(
+							image.binarized,
+							word.x1,
+							word.x2,
+							y1,
+							y2
+						);
 						word.spaces = (x - word.x2) / averageCharactersWidth;
 						words[wordId] = word;
 						wordId++;
@@ -151,7 +176,8 @@ Text GetWords(Image image, Text text)
 			}
 
 			// Update line
-			text.paragraphs[i].lines[j].averageCharactersWidth = averageCharactersWidth;
+			text.paragraphs[i].lines[j].averageCharactersWidth =
+				averageCharactersWidth;
 			text.paragraphs[i].lines[j].numberOfWords = numberOfWords;
 			text.paragraphs[i].lines[j].words = words;
 		}

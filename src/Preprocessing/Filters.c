@@ -103,9 +103,13 @@ Image SobelsEdgeDetection(Image image)
 	{
 		for (size_t y = 1; (int)y < size_y-1; y++)
 		{
-			double gradient = sqrt(pow(matrix_gx[y][x], 2) + pow(matrix_gy[y][x], 2) );
+			double gradient = sqrt(
+				pow(matrix_gx[y][x], 2) +
+				pow(matrix_gy[y][x], 2)
+			);
 			//printf("%f\n", gradient);
-			//image.grayscale[y][x] = (char)(((double)image.grayscale[y][x] + gradient)/2);
+			//image.grayscale[y][x] =
+				// (char)(((double)image.grayscale[y][x] + gradient)/2);
 			image.grayscale[y][x] = gradient;
 		}
 	}

@@ -6,7 +6,13 @@
 #include "../Preprocessing/Preprocessing.h"
 #include "Segmentation.h"
 
-int GetNumberHorizontalWhiteNeighbors(unsigned char **array, int x, int y, int maxPos, int step)
+int GetNumberHorizontalWhiteNeighbors(
+	unsigned char **array,
+	int x,
+	int y,
+	int maxPos,
+	int step
+)
 {
 	int count = 0;
 	int i = x + 1;
@@ -30,7 +36,13 @@ int GetNumberHorizontalWhiteNeighbors(unsigned char **array, int x, int y, int m
 	return count;
 }
 
-int GetNumberVerticalWhiteNeighbors(unsigned char **array, int x, int y, int maxPos, int step)
+int GetNumberVerticalWhiteNeighbors(
+	unsigned char **array,
+	int x,
+	int y,
+	int maxPos,
+	int step
+)
 {
 	int count = 0;
 	int i = y + 1;
@@ -54,12 +66,20 @@ int GetNumberVerticalWhiteNeighbors(unsigned char **array, int x, int y, int max
 	return count;
 }
 
-unsigned char **RLSA(unsigned char **binarizedImageMatrix, int imageWidth, int imageHeight)
+unsigned char **RLSA(
+	unsigned char **binarizedImageMatrix,
+	int imageWidth,
+	int imageHeight
+)
 {
 	int horizontalStep = 180; 
 	int verticalStep = 30; 
-	unsigned char **horizontalResult = CreateCharMatrix(imageWidth, imageHeight);
-	unsigned char **verticalResult = CreateCharMatrix(imageWidth, imageHeight);
+	unsigned char **horizontalResult = CreateCharMatrix(
+		imageWidth, imageHeight
+	);
+	unsigned char **verticalResult = CreateCharMatrix(
+		imageWidth, imageHeight
+	);
 
 	// Horizontal pass
 	for(int y = 0; y < imageHeight; y++)
@@ -68,7 +88,12 @@ unsigned char **RLSA(unsigned char **binarizedImageMatrix, int imageWidth, int i
 		{
 			if(binarizedImageMatrix[y][x] == 0)
 			{
-				int n = GetNumberHorizontalWhiteNeighbors(binarizedImageMatrix, x, y, imageWidth, horizontalStep);
+				int n = GetNumberHorizontalWhiteNeighbors(
+					binarizedImageMatrix,
+					x, y,
+					imageWidth,
+					horizontalStep
+				);
 				if(n <= horizontalStep)
 				{
 					horizontalResult[y][x] = 1;
@@ -88,7 +113,12 @@ unsigned char **RLSA(unsigned char **binarizedImageMatrix, int imageWidth, int i
 		{
 			if(horizontalResult[y][x] == 0)
 			{
-				int n = GetNumberVerticalWhiteNeighbors(horizontalResult, x, y, imageHeight, verticalStep);
+				int n = GetNumberVerticalWhiteNeighbors(
+					horizontalResult,
+					x, y,
+					imageHeight,
+					verticalStep
+				);
 				if(n <= verticalStep)
 				{
 					verticalResult[y][x] = 1;
@@ -105,7 +135,13 @@ unsigned char **RLSA(unsigned char **binarizedImageMatrix, int imageWidth, int i
 	return verticalResult;
 }
 
-void __GetBoundsOfParagraph(unsigned char **matrix, int xStart, int yStart, int width, int height, int *xMin, int *yMin, int *xMax, int *yMax)
+void __GetBoundsOfParagraph(
+	unsigned char **matrix,
+	int xStart, int yStart,
+	int width, int height,
+	int *xMin, int *yMin,
+	int *xMax, int *yMax
+)
 {
 	Stack stack;
 	StackCreate(&stack, width * height * 2);
@@ -116,7 +152,11 @@ void __GetBoundsOfParagraph(unsigned char **matrix, int xStart, int yStart, int 
 	{
 		Coord coord = StackPop(&stack);
 
-		if (coord.x >= 0 && coord.x < width && coord.y >= 0 && coord.y < height && matrix[coord.y][coord.x] == 2)
+		if (
+			coord.x >= 0 && coord.x < width &&
+			coord.y >= 0 && coord.y < height &&
+			matrix[coord.y][coord.x] == 2
+		)
 		{
 			matrix[coord.y][coord.x] = 3;
 
@@ -147,7 +187,13 @@ void __GetBoundsOfParagraph(unsigned char **matrix, int xStart, int yStart, int 
 	StackDestroy(&stack);
 }
 
-void __CountParagraphs(unsigned char **matrix, int xStart, int yStart, int width, int height)
+void __CountParagraphs(
+	unsigned char **matrix,
+	int xStart,
+	int yStart,
+	int width,
+	int height
+)
 {
 	Stack stack;
 	StackCreate(&stack, width * height * 2);
@@ -158,7 +204,11 @@ void __CountParagraphs(unsigned char **matrix, int xStart, int yStart, int width
 	{
 		Coord coord = StackPop(&stack);
 
-		if (coord.x >= 0 && coord.x < width && coord.y >= 0 && coord.y < height && matrix[coord.y][coord.x] == 1)
+		if (
+			coord.x >= 0 && coord.x < width &&
+			coord.y >= 0 && coord.y < height &&
+			matrix[coord.y][coord.x] == 1
+		)
 		{
 			matrix[coord.y][coord.x] = 2;
 
@@ -177,7 +227,11 @@ void __CountParagraphs(unsigned char **matrix, int xStart, int yStart, int width
 	StackDestroy(&stack);
 }
 
-Paragraph *IdentifyBlocks(unsigned char **blocksMap, int *blockNumber, int imageWidth, int imageHeight)
+Paragraph *IdentifyBlocks(
+	unsigned char **blocksMap,
+	int *blockNumber,
+	int imageWidth, int imageHeight
+)
 {
 	// Make a copy of blocksMap to not alter it
 	unsigned char **matrix = CreateCharMatrix(imageWidth, imageHeight);
@@ -204,10 +258,12 @@ Paragraph *IdentifyBlocks(unsigned char **blocksMap, int *blockNumber, int image
 	}
 	*blockNumber = numberOfParagraphs;
 
-	// Register every paragraphs' bounds, matrix[y][x] == 2 => matrix[y][x] == 3
+	// Register every paragraphs' bounds, matrix[y][x]==2 => matrix[y][x]==3
 	int paragraphId = 0;
 	int xMin, yMin, xMax, yMax;
-	Paragraph *paragraphs = (Paragraph*)malloc(sizeof(Paragraph) * numberOfParagraphs); 
+	Paragraph *paragraphs = (Paragraph*)malloc(
+		sizeof(Paragraph) * numberOfParagraphs
+	);
 	for(int y = 0; y < imageHeight; y++)
 	{
 		for(int x = 0; x < imageWidth; x++)
@@ -215,7 +271,12 @@ Paragraph *IdentifyBlocks(unsigned char **blocksMap, int *blockNumber, int image
 			if(matrix[y][x] == 2)
 			{
 				xMin = x, yMin = y, xMax = x, yMax = y;
-				__GetBoundsOfParagraph(matrix, x, y, imageWidth, imageHeight, &xMin, &yMin, &xMax, &yMax);
+				__GetBoundsOfParagraph(
+					matrix, x, y,
+					imageWidth, imageHeight,
+					&xMin, &yMin,
+					&xMax, &yMax
+				);
 
 				Paragraph paragraph;
 				paragraph.x = xMin;
@@ -241,7 +302,11 @@ Text GetParagraphs(Image image, Text text)
 {
 	int number = 0;
 	text.blocksMap = RLSA(image.binarized, image.width, image.height);
-	Paragraph *paragraphs = IdentifyBlocks(text.blocksMap, &number, image.width, image.height);
+	Paragraph *paragraphs = IdentifyBlocks(
+		text.blocksMap,
+		&number,
+		image.width, image.height
+	);
 
 	text.numberOfParagraphs = number;
 	text.paragraphs = paragraphs;

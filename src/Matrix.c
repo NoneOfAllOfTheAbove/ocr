@@ -43,7 +43,13 @@ void FreeMatrix(double **matrix, size_t line)
 	free(matrix);
 }
 
-unsigned char **GetSubMatrix(unsigned char **matrix, int x1, int y1, int x2, int y2)
+unsigned char **GetSubMatrix(
+	unsigned char **matrix,
+	int x1,
+	int y1,
+	int x2,
+	int y2
+)
 {
 	unsigned char **result = CreateCharMatrix(x2 - x1, y2 - y1);
 	
@@ -58,9 +64,14 @@ unsigned char **GetSubMatrix(unsigned char **matrix, int x1, int y1, int x2, int
 	return result;
 }
 
-unsigned char **ToSquareMatrix(unsigned char **matrix, int oldX, int oldY, int size)
+unsigned char **ToSquareMatrix(
+	unsigned char **matrix,
+	int oldX,
+	int oldY,
+	int size
+)
 {
-	// Step 1: Put matrix in a new matrix of size a * (16 * 16) 	
+	// Step 1: Put matrix in a new matrix of size a * (16 * 16) 
 	int side = oldX;
 	if(oldY > oldX)
 	{
@@ -129,10 +140,18 @@ unsigned char **ToSquareMatrix(unsigned char **matrix, int oldX, int oldY, int s
 	return result;
 }
 
-void SaveMatrixAsImage(unsigned char **matrix, int width, int height, char *path)
+void SaveMatrixAsImage(
+	unsigned char **matrix,
+	int width,
+	int height,
+	char *path
+)
 {
 	// Create SDL surface
-	SDL_Surface *surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+	SDL_Surface *surface = SDL_CreateRGBSurface(
+		0, width, height,
+		32, 0, 0, 0, 0
+	);
 	int bpp = surface->format->BytesPerPixel;
 
 	// Convert image to SDL surface
