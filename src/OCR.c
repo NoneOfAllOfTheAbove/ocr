@@ -7,6 +7,7 @@
 #include "Preprocessing/Preprocessing.h"
 #include "Preprocessing/Filters.h"
 #include "Segmentation/Segmentation.h"
+#include "Preprocessing/Deskew.h"
 #include "NeuralNetwork/NeuralNetwork.h"
 #include "Postprocessing/Postprocessing.h"
 #include "GUI/GUI.h"
@@ -63,6 +64,7 @@ void OCR_Debug(char* path)
 	image = BinarizeImage(image);
 
 	Text text = Segmentation(image);
+	text = Deskew(image, text);
 
 	StartDebugGUI(image, text);
 }

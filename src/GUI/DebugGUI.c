@@ -54,6 +54,17 @@ void StartDebugGUI(Image image, Text text)
 	DrawMatrix(renderer, text.blocksMap, image.width, image.height);
 	SDL_RenderPresent(renderer);
 	WaitSDL();
+
+	SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+	SDL_RenderDrawLine(
+		renderer,
+		text.deskewX1,
+		text.deskewY1,
+		text.deskewX2,
+		text.deskewY2);
+	SDL_RenderPresent(renderer);
+
+	WaitSDL();
 	DrawMatrix(renderer, image.binarized, image.width, image.height);
 	for (int i = 0; i < text.numberOfParagraphs; i++)
 	{

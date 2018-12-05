@@ -55,6 +55,11 @@ struct Text
 {
 	unsigned char **blocksMap;
 
+	int deskewX1;
+	int deskewX2;
+	int deskewY1;
+	int deskewY2;
+
 	int numberOfParagraphs;
 	Paragraph *paragraphs;
 };
