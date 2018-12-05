@@ -66,13 +66,13 @@ static void loadImage_activated (
 		{
 			gtk_image_clear(GTK_IMAGE(image));
 			gtk_label_set_markup(GTK_LABEL(label), "");
-			g_print("Reload image.\n");
+			// g_print("Reload image.\n");
 		}
 		//Creating the path.
 		GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
 		filename = gtk_file_chooser_get_filename (chooser);
 		//Print path is here.
-		g_print("%s\n", filename);
+		// g_print("%s\n", filename);
 		
 		if (file_isImage(filename))
 		{   
@@ -82,7 +82,6 @@ static void loadImage_activated (
 			gtk_widget_get_allocation(boxA, &allocation);
 			int desired_width = allocation.width; 
 			int desired_height = allocation.height;
-			printf("%d\n",desired_height);
 			//Load Image 
 			image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file_at_size(
 				filename,
@@ -103,7 +102,7 @@ static void loadImage_activated (
 	}
 	else
 	{
-		g_print("You pressed Cancel\n");
+		// g_print("You pressed Cancel\n");
 	}
 	gtk_widget_destroy(dialog);
 	gtk_widget_queue_resize(window);
@@ -142,11 +141,11 @@ static void exportText_activated(
 
 		OCR_ExportAsTextFile(filename);
 		//Print path is here.
-		g_print("%s\n", filename);
+		// g_print("%s\n", filename);
 	}
 	else
 	{
-		g_print("You pressed Cancel\n");
+		// g_print("You pressed Cancel\n");
 	}
 
 	gtk_widget_destroy (dialog);
@@ -154,14 +153,14 @@ static void exportText_activated(
 
 static void quit_activated()
 {
-	g_print("File -> Quit activated.\n");
+	// g_print("File -> Quit activated.\n");
 	gtk_main_quit();
 }
 
 /*------------------Option's GCallback------------------*/
 static void postprocessing_activated()
 {
-	g_print("Option -> Postprocessing.\n");
+	// g_print("Option -> Postprocessing.\n");
 	if(enablePostprocessing)
 	{
 		enablePostprocessing = 0;
@@ -174,7 +173,7 @@ static void postprocessing_activated()
 
 static void filters_activated()
 {
-	g_print("Option -> Filters.\n");
+	// g_print("Option -> Filters.\n");
 	if (enableFilters)
 	{
 		enableFilters = 0;
@@ -187,7 +186,7 @@ static void filters_activated()
 
 static void debugMode_activated()
 {
-	g_print("Debug -> Debug Mode activated.\n");
+	// g_print("Debug -> Debug Mode activated.\n");
 	if (enableDebugMode)
 	{
 		enableDebugMode = 0;
@@ -215,7 +214,7 @@ static void extractText_activated(GtkWidget *extractTextButton)
 	{
 		(void)extractTextButton;
 
-		g_print("Extract text activated.\n");
+		// g_print("Extract text activated.\n");
 		char *o = OCR_Start(
 			filename,
 			enableDebugMode, enableFilters, enablePostprocessing
@@ -496,7 +495,7 @@ int StartGUI(int argc, char *argv[])
 	);
 
 	optionMenu_filters = gtk_check_menu_item_new_with_label(
-		"Enable noise cancellation and contrast enhancement"
+		"Enable noise canceling and contrast enhancement"
 	);
 	gtk_check_menu_item_set_active(
 		GTK_CHECK_MENU_ITEM(optionMenu_filters), FALSE
@@ -508,7 +507,7 @@ int StartGUI(int argc, char *argv[])
 	);
 
 	optionMenu_postprocessing = gtk_check_menu_item_new_with_label(
-		"Enable postprocessing (spell check)"
+		"Enable spell check"
 	);
 	gtk_check_menu_item_set_active(
 		GTK_CHECK_MENU_ITEM(optionMenu_postprocessing), FALSE

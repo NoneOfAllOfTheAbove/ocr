@@ -9,7 +9,7 @@ char* Spellcheck(char *word)
 		"/usr/share/hunspell/en_US.dic"
 	);
 
-	int correct = Hunspell_spell(h, word);
+	int correct = Hunspell_spell(h, "hello");
 	if(correct == 0)
 	{
 		char ***s = malloc(sizeof(char));

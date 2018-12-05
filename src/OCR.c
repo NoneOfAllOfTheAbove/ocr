@@ -132,7 +132,23 @@ char *OCR_Start(
 					}
 					else
 					{
-						outputText[i] = characterFound;
+						if(characterFound == '&')
+						{
+							outputText[i] = '&';
+							i++;
+							outputText[i] = 'a';
+							i++;
+							outputText[i] = 'm';
+							i++;
+							outputText[i] = 'p';
+							i++;
+							outputText[i] = ';';
+						}
+						else
+						{
+							outputText[i] = characterFound;
+						}
+						
 						i++;
 					}
 				}
@@ -142,7 +158,7 @@ char *OCR_Start(
 				{
 					char *correctWordText;
 					correctWordText = Spellcheck(wordText);
-					printf("Spellcheck: %s->%s\n", wordText, correctWordText);
+					// printf("Spellcheck: %s->%s\n", wordText, correctWordText);
 					while(*correctWordText != '\0')
 					{
 						outputText[i] = *correctWordText;
@@ -168,7 +184,6 @@ char *OCR_Start(
 	{
 		StartDebugGUI(image, text);
 	}
-	printf("\n\n%s \n", outputText);
 	lastText = outputText;
 
 	// Free
