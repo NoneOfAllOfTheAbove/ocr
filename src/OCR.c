@@ -64,7 +64,7 @@ void OCR_Debug(char* path)
 	image = BinarizeImage(image);
 
 	Text text = Segmentation(image);
-	text = Deskew(image, text);
+	text = Deskew(&image, text);
 
 	StartDebugGUI(image, text);
 }
