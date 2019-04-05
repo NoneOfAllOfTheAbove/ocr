@@ -4,9 +4,9 @@
 
 ## Project
 
-![Screenshot](https://raw.githubusercontent.com/NoneOfAllOfTheAbove/OCR/master/docs/screenshot.png)  
+![Screenshot](https://raw.githubusercontent.com/NoneOfAllOfTheAbove/ocr/master/docs/screenshot.png)  
 
-OCR stands for Optical Character Recognition software. As part of a student project, our objective is to make a program capable of extracting text from images. It must be written in the C language, rely on a neural network and be used through a GUI. To learn more, please take a look at [the book of specifications](https://github.com/NoneOfAllOfTheAbove/OCR/tree/master/docs/book-of-specifications.pdf).
+OCR stands for Optical Character Recognition software. As part of a student project, our objective is to make a program capable of extracting text from images. It must be written in the C language, rely on a neural network and be used through a GUI. To learn more, please take a look at [the book of specifications](https://github.com/NoneOfAllOfTheAbove/ocr/tree/master/docs/book-of-specifications.pdf).
 
 ## Usage
 
@@ -32,4 +32,4 @@ Features we are working on:
 
 ## Contributing
 
-Refer to [CONTRIBUTING.md](https://github.com/NoneOfAllOfTheAbove/OCR/blob/master/CONTRIBUTING.md).
+Refer to [CONTRIBUTING.md](https://github.com/NoneOfAllOfTheAbove/ocr/blob/master/CONTRIBUTING.md).
